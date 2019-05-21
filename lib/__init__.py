@@ -6,6 +6,3 @@ from typing import *
 ID = 'id'
 COLOR = 'color'
 NAME = 'name'
-
-# graph attributes
-VTRACK

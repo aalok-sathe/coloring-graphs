@@ -76,6 +76,7 @@ class BaseGraph(Graph):
 
 
     def build_coloring_graph(self) -> typing.NewType('ColoringGraph', Graph):
+
         '''
         generates and returns a ColoringGraph object for the current
         BaseGraph object
@@ -87,7 +88,6 @@ class ColoringGraph(Graph):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
 
 
 def Tarjans(g: Graph):
