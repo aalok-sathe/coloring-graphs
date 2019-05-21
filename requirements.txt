@@ -1,1 +1,3 @@
-tqdm
+graph_tool==2.11
+tqdm==4.32.1
+typing==3.6.6
