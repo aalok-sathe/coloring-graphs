@@ -3,6 +3,7 @@
 
 def pad_output_str(fn) -> str:
     '''
+    wrapper (decorator) function to pad output of recursive function
     '''
     def innerfn(n: int=None, base: int=None, pad: int=None):
         output = fn(n, base)
