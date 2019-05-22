@@ -5,6 +5,7 @@ from .Vertex import *
 from pathlib import Path
 import typing
 from tqdm import tqdm
+import pygraphviz as pgv
 
 
 class Graph:#(gt.Graph):
@@ -18,6 +19,22 @@ class Graph:#(gt.Graph):
         # super().__init__(*args, **kwargs, directed=False)
         self.vertices = dict()
         self.n = 0
+
+
+    def __str__(self) -> str:
+        '''
+        string representation of the graph for print output
+        '''
+        returnable = ''
+        returnable += ('='*80 + '\n')
+        returnable += ('Graph class: %s\n' % self.__class__.__name__)
+        returnable += ('Graph size: %d\n' % len(self))
+        returnable += ('='*80 + '\n')
+        returnable += ('Vertices:\n')
+        for v in self.get_vertices():
+            returnable += str(v) + '\n'
+
+        return returnable
 
 
     def __len__(self) -> int:
@@ -97,15 +114,10 @@ class Graph:#(gt.Graph):
                 v[attr] = None
 
 
-    def __str__(self) -> str:
+    def draw(self):
         '''
-        string representation of the graph for print output
         '''
-        print('Graph size: %d' % len(self))
-        print('='*80)
-        print('Vertices:')
-        for v in self.get_vertices():
-            print(v)
+        G = pgv.
 
 
 
@@ -145,7 +157,7 @@ class BaseGraph(Graph):
         generates all possible colorings of the graph for k colors
         '''
         for coloring in tqdm(range(k ** len(self)),
-                             desc='generating colorings for k=%d' % k):
+                             desc='\ngenerating colorings for k=%d' % k):
             if self.is_valid_coloring(coloring, k):
                 yield coloring
             else:
@@ -185,6 +197,7 @@ class ColoringGraph(Graph):
         # self.vertices[id][ID] = id
         self.vertices[id][NAME] = name
         self.vertices[id][COLORS] = self.k
+        self.vertices[id].graph = self
         self.n += 1
 
 
@@ -197,7 +210,7 @@ class ColoringGraph(Graph):
         valid = all.intersection(self.vertices.keys())
         for vertex in map(lambda id: self[id], valid):
             yield vertex
-            
+
 
     def draw_vertex_surroundings(self, v):
         pass

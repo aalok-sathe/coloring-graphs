@@ -4,11 +4,13 @@
 from pathlib import Path
 from collections import defaultdict
 import typing
+from utils import mathtools
 
 # vertex attributes
 ID = 'id'
 COLORS = 'colors'
 NAME = 'name'
+GRAPH = 'graph'
 
 class Vertex:#(gt.Vertex):
     attrs = None
@@ -42,10 +44,17 @@ class Vertex:#(gt.Vertex):
     def __str__(self) -> str:
         '''
         '''
-        print(repr(self))
-        for k, v in self.attrs:
-            print('{}: {}'.format(k, v))
-        print('number of neighbors: {}'.format(len(self.neighbors)))
+        returnable = '{}\t'.format(repr(self))
+        returnable += 'neighbors: ' + str(self.get_neighbors())
+
+        for k, v in self.attrs.items():
+            returnable += '{}: {} '.format(k, v)
+
+        returnable += 'number of neighbors: '
+        returnable += '%d ' % len([*self.get_neighbors()])
+
+        return returnable
+
 
 
     def add_neighbors(self, *vertices: typing.Container[__name__]):
@@ -70,6 +79,15 @@ class ColoringVertex(Vertex):
         super().__init__(*args, **kwargs)
 
 
+    def __str__(self) -> str:
+        '''
+        '''
+        returnable = super().__str__()
+        returnable += 'coloring: %s ' % mathtools.convert_base(self[NAME],
+                                                              self[COLORS])
+        return returnable
+
+
     def add_neighbors(self, *vertices: typing.Container[__name__]):
         '''
         adds vertices to self's neighboring vertices
@@ -86,7 +104,14 @@ class ColoringVertex(Vertex):
         return (coloring // self[COLORS] ** self[ID]) % self[COLORS]
 
 
-    def get_possible_neighbors(self, n):
+    def get_neighbors(self) -> typing.Set[__name__]:
+        '''
+        returns neighbors of self
+        '''
+        return self.get_possible_neighbors(n=len(self.graph))
+
+
+    def get_possible_neighbors(self, n: int=None):
         '''
         creates a generator over all possible (potential) neighbors
         of a vertex, given coloring size k
