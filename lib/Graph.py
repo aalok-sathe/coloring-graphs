@@ -97,8 +97,22 @@ class Graph:#(gt.Graph):
                 v[attr] = None
 
 
+    def __str__(self) -> str:
+        '''
+        string representation of the graph for print output
+        '''
+        print('Graph size: %d' % len(self))
+        print('='*80)
+        print('Vertices:')
+        for v in self.get_vertices():
+            print(v)
+
+
 
 class BaseGraph(Graph):
+    '''
+    derived 'Base' class to hold a regular BaseGraph
+    '''
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -108,7 +122,7 @@ class BaseGraph(Graph):
         '''
         returns the color of vertex v in the given coloring
         '''
-        return (coloring / k ** v[ID]) % k
+        return (coloring // k ** v[ID]) % k
 
 
     def is_valid_coloring(self, coloring: int, k: int) -> bool:
@@ -131,19 +145,20 @@ class BaseGraph(Graph):
         generates all possible colorings of the graph for k colors
         '''
         for coloring in tqdm(range(k ** len(self)),
-                             desc=f'generating colorings for k={k}'):
+                             desc='generating colorings for k=%d' % k):
             if self.is_valid_coloring(coloring, k):
                 yield coloring
             else:
                 continue
 
 
-    def build_coloring_graph(self, k: int) -> Graph:
+    def build_coloring_graph(self, k: int=None) -> Graph:
         '''
         generates and returns a ColoringGraph object for the current
         BaseGraph object
         '''
-        colgraph = ColoringGraph()
+        colgraph = ColoringGraph(k)
+        colgraph.base = self
         for i, coloring in enumerate(self.get_colorings(k)):
             colgraph.add_vertex(i, name=coloring)
 
@@ -151,9 +166,15 @@ class BaseGraph(Graph):
 
 
 class ColoringGraph(Graph):
+    '''
+    specifically to hold a ColoringGraph of a BaseGraph
+    '''
+    base = None
+    k = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, k: int, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.k = k
 
 
     def add_vertex(self, id: int=None, name: str=None) -> None:
@@ -161,9 +182,25 @@ class ColoringGraph(Graph):
         adds new vertex with given id and additional attrs
         '''
         self.vertices[id] = ColoringVertex(id)
+        # self.vertices[id][ID] = id
         self.vertices[id][NAME] = name
+        self.vertices[id][COLORS] = self.k
         self.n += 1
 
+
+    def get_neighbors(self, v: ColoringVertex) -> set:
+        '''
+        gets the neighbors of ColoringVertex v
+        '''
+        all = v.get_possible_neighbors(len(self))
+        all = set(all)
+        valid = all.intersection(self.vertices.keys())
+        for vertex in map(lambda id: self[id], valid):
+            yield vertex
+            
+
+    def draw_vertex_surroundings(self, v):
+        pass
 
 
 def Tarjans(g: Graph):
