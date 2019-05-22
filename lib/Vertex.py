@@ -88,8 +88,8 @@ class ColoringVertex(Vertex):
         #                                                        self[COLORS],
         #                                                        pad=len(self.graph))
         # return returnable
-        if len(self.graph) >= 12: return str(self[NAME])
-        return mathtools.convert_base(self[NAME], self[COLORS], len(self.graph))
+        if len(self.graph) >= 128: return str(self[NAME])
+        return mathtools.convert_base(self[NAME], self[COLORS], len(self.graph.base))
 
 
     def add_neighbors(self, *vertices: typing.Container[__name__]):
@@ -105,9 +105,9 @@ class ColoringVertex(Vertex):
         '''
         returns the color of the vertex in the given coloring bitstring
         '''
-        return mathtools.convert_base(coloring, self[COLORS],
-                                      len(self.graph))[self[ID]]
-        # return (coloring // self[COLORS] ** self[ID]) % self[COLORS]
+        # return mathtools.convert_base(coloring, self[COLORS],
+        #                               len(self.graph))[self[ID]]
+        return (coloring // self[COLORS] ** (len(self.graph)-self[ID]-1)) % self[COLORS]
 
 
     def get_neighbors(self) -> typing.Set[__name__]:
@@ -125,15 +125,18 @@ class ColoringVertex(Vertex):
         coloring = self[NAME]
         # manipulate each position for a potential neighbor
         for position in range(n):
-            curcol = coloring // self[COLORS] ** position
-            curcol %= self[COLORS]
-            # int(mathtools.convert_base(coloring, self[COLORS],
-            #                                     len(self.graph))[position])
-            # try each alternate coloring other than current
+            divisor = self[COLORS] ** (n-position-1)
+            curcol = (coloring // divisor) % self[COLORS]
+            # try each new color
             for c in range(self[COLORS]):
-                if c == curcol: continue
-                newcoloring = coloring // self[COLORS] ** position
+                if c == curcol:
+                    continue
+                newcoloring = coloring // divisor
+
                 newcoloring -= newcoloring % self[COLORS]
                 newcoloring += c
-                newcoloring += coloring % self[COLORS] ** position
+
+                newcoloring *= divisor
+                newcoloring += (coloring % divisor)
+                
                 yield newcoloring
