@@ -16,11 +16,11 @@ from lib import *
 
 # set default test file or try to infer testfile from commandline args
 try:
-    k = sys.argv[1]
+    k = int(sys.argv[1])
 except IndexError:
     k = 3
 try:
-    test_file = Path(*Path(sys.argv[2]).parts[1:])
+    test_file = str(Path(*Path(sys.argv[2]).parts[1:]))
 except IndexError:
     # test_file = 'input/g1.in'
     test_file = 'input/bipartite_test_graph0.in'
