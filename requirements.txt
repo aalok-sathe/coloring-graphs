@@ -1,3 +1,4 @@
-graph_tool==2.11
 tqdm==4.32.1
+networkx==2.1
+matplotlib==2.2.2
 typing==3.6.6
