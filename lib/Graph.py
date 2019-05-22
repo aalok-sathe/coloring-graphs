@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
 
 # import graph_tool as gt
+from .Vertex import *
 from pathlib import Path
-from Vertex import Vertex
 import typing
 from tqdm import tqdm
 
+
 class Graph:#(gt.Graph):
     '''
-    OG graph class
+    The OG graph class
     '''
     n = None
     vertices = None
 
     def __init__(self, *args, **kwargs):
         # super().__init__(*args, **kwargs, directed=False)
-        self.vertices = []
+        self.vertices = dict()
+        self.n = 0
+
 
     def __len__(self) -> int:
         '''
@@ -24,6 +27,15 @@ class Graph:#(gt.Graph):
         if self.n:
             return self.n
         return 0
+
+
+    def __getitem__(self, ID) -> Vertex:
+        '''
+        override __getitem__ method to get vertex via subscripting
+        whose ID is ID
+        '''
+        return self.get_vertex(ID)
+
 
     def load_txt(self, path: typing.Union[str, Path]) -> None:
         '''
@@ -35,8 +47,8 @@ class Graph:#(gt.Graph):
         if not isinstance(path, Path):
             path = Path(path)
         with path.open(mode='r') as f:
-            self.n = int(f.readline())
-            self.vertices = [Vertex() for _ in range(self.n)]
+            for i in range(int(f.readline())):
+                self.add_vertex(i)
             for i, line in enumerate(f):
                 if i >= self.n: break
                 adjacent = [ix for ix, v in enumerate(line.split()) if int(v)]
@@ -44,12 +56,28 @@ class Graph:#(gt.Graph):
                                                for j in adjacent])
 
 
+    def add_vertex(self, id: int=None, name: str=None) -> None:
+        '''
+        adds new vertex with given id and additional attrs
+        '''
+        self.vertices[id] = Vertex(id)
+        self.vertices[id][NAME] = name
+        self.n += 1
+
+
+    def get_vertex(self, ID: int) -> Vertex:
+        '''
+        returns vertex with supplied ID
+        '''
+        return self.vertices[ID]
+
+
     def get_vertices(self) -> typing.Iterable[Vertex]:
         '''
         returns an iterable over vertices (using a generator)
         '''
-        for v in self.vertices:
-            yield v
+        for i in range(len(self)):
+            yield self.vertices[i]
 
 
     def get_some_vertex(self) -> Vertex:
@@ -69,25 +97,73 @@ class Graph:#(gt.Graph):
                 v[attr] = None
 
 
+
 class BaseGraph(Graph):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 
-    def build_coloring_graph(self) -> typing.NewType('ColoringGraph', Graph):
+    def get_color(self, coloring: int=0, v: Vertex=None, k: int=1) -> int:
+        '''
+        returns the color of vertex v in the given coloring
+        '''
+        return (coloring / k ** v[ID]) % k
 
+
+    def is_valid_coloring(self, coloring: int, k: int) -> bool:
+        '''
+        given a coloring as an integer (bit-string in base k), determines
+        if it is valid or not
+        '''
+        for v in self.get_vertices():
+            vcol = self.get_color(coloring=coloring, v=v, k=k)
+            neighbors = v.get_neighbors()
+            for n in neighbors:
+                if vcol == self.get_color(coloring=coloring, v=n, k=k):
+                    return False
+
+        return True
+
+
+    def get_colorings(self, k: int) -> typing.Iterable[int]:
+        '''
+        generates all possible colorings of the graph for k colors
+        '''
+        for coloring in tqdm(range(k ** len(self)),
+                             desc=f'generating colorings for k={k}'):
+            if self.is_valid_coloring(coloring, k):
+                yield coloring
+            else:
+                continue
+
+
+    def build_coloring_graph(self, k: int) -> Graph:
         '''
         generates and returns a ColoringGraph object for the current
         BaseGraph object
         '''
-        pass
+        colgraph = ColoringGraph()
+        for i, coloring in enumerate(self.get_colorings(k)):
+            colgraph.add_vertex(i, name=coloring)
+
+        return colgraph
 
 
 class ColoringGraph(Graph):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+
+    def add_vertex(self, id: int=None, name: str=None) -> None:
+        '''
+        adds new vertex with given id and additional attrs
+        '''
+        self.vertices[id] = ColoringVertex(id)
+        self.vertices[id][NAME] = name
+        self.n += 1
+
 
 
 def Tarjans(g: Graph):
