@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 import argparse
 import random
+import sys
 from matplotlib import pyplot as plt
 import networkx as nx
 
@@ -11,8 +12,10 @@ import sys
 sys.path.append(str((Path(__file__).parent.resolve() / '..').resolve()))
 from lib import *
 
-
-test_file = 'input/g2.in' # bipartite_test_graph0.in
+try:
+    test_file = Path(*Path(sys.argv[1]).parts[1:])
+except IndexError:
+    test_file = 'input/g2.in' # bipartite_test_graph0.in
 
 
 if __name__ == '__main__':
@@ -44,7 +47,7 @@ if __name__ == '__main__':
 
     plt.subplot(1, 2, 2)
     plt.xlabel(colgraph.__class__.__name__)
-    colgraph.draw(draw_fn, **kwargs)
+    colgraph.draw(draw_fn, with_labels=1)
 
     plt.tight_layout()
     plt.show()
