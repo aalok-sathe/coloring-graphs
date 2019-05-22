@@ -28,13 +28,14 @@ if __name__ == '__main__':
     draw_fn = nx.draw
     kwargs = dict(with_labels=1, node_size=2048, font_size=10)
 
+
+
     plt.subplot(1, 2, 1)
-    plt.xlabel(graph.__class__.__name__)
     graph.draw(draw_fn, **kwargs)
+    plt.title(test_file + '\n' + str(graph))
 
     plt.subplot(1, 2, 2)
-    plt.xlabel(colgraph.__class__.__name__)
     colgraph.draw(draw_fn, **kwargs)
+    plt.title(str(colgraph))
 
-    plt.tight_layout()
     plt.show()
