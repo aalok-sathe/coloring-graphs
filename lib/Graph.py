@@ -171,7 +171,7 @@ class BaseGraph(Graph):
         generates all possible colorings of the graph for k colors
         '''
         for coloring in tqdm(range(k ** len(self)),
-                             desc='\ngenerating colorings for k=%d' % k):
+                             desc='generating colorings for k=%d' % k):
             if self.is_valid_coloring(coloring, k):
                 yield coloring
             else:
