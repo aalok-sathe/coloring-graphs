@@ -43,10 +43,10 @@ for questions, reach out.
     `make test`
     
     - try the sandbox file (`test/sandbox.py`) to see how plotting works
-    `python3 test/sandbox.py 3`
-    `python3 test/sandbox.py 3 test/input/g1.py`
+        - `python3 test/sandbox.py 3`
+        - `python3 test/sandbox.py 3 test/input/g1.py`
     
     
 ### help
 
-    
+full documentation coming soon
