@@ -15,7 +15,7 @@ from lib import *
 try:
     test_file = Path(*Path(sys.argv[1]).parts[1:])
 except IndexError:
-    test_file = 'input/g2.in' # bipartite_test_graph0.in
+    test_file = 'input/g1.in' # bipartite_test_graph0.in
 
 
 if __name__ == '__main__':
@@ -27,19 +27,19 @@ if __name__ == '__main__':
     print(graph)
     # print(colgraph)
 
-    for v in colgraph.get_vertices():
-        print(repr(v))
-        print('coloring repr: %s' % mathtools.convert_base(v[NAME], v[COLORS]))
-        print('possible neighbors v: %d' % len([*v.get_possible_neighbors(len(colgraph))]))
-        print('actual neighbors v: %d' % len([*colgraph.get_neighbors(v)]))
-        # for nbr in colgraph.get_neighbors(v):
-        #     print(repr(nbr))
-        #     print('nbr coloring: %s' % mathtools.convert_base(nbr[NAME],
-        #                                                       nbr[COLORS]))
-        print()
+    # for v in colgraph.get_vertices():
+    #     print(repr(v))
+    #     print('coloring repr: %s' % mathtools.convert_base(v[NAME], v[COLORS]))
+    #     print('possible neighbors v: %d' % len([*v.get_possible_neighbors(len(colgraph))]))
+    #     print('actual neighbors v: %d' % len([*colgraph.get_neighbors(v)]))
+    #     # for nbr in colgraph.get_neighbors(v):
+    #     #     print(repr(nbr))
+    #     #     print('nbr coloring: %s' % mathtools.convert_base(nbr[NAME],
+    #     #                                                       nbr[COLORS]))
+    #     print()
 
     draw_fn = nx.draw
-    kwargs = dict(with_labels=1, node_size=1000)
+    kwargs = dict(with_labels=1, node_size=512)
 
     plt.subplot(1, 2, 1)
     plt.xlabel(graph.__class__.__name__)
@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     plt.subplot(1, 2, 2)
     plt.xlabel(colgraph.__class__.__name__)
-    colgraph.draw(draw_fn, with_labels=1)
+    colgraph.draw(draw_fn, **kwargs)
 
     plt.tight_layout()
     plt.show()
