@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+# stdlib and other necessary imports
 import unittest
 from pathlib import Path
 import argparse
@@ -8,27 +9,36 @@ import sys
 from matplotlib import pyplot as plt
 import networkx as nx
 
+# figure out the path of this module and import the library to work with
 import sys
 sys.path.append(str((Path(__file__).parent.resolve() / '..').resolve()))
 from lib import *
 
+# set default test file or try to infer testfile from commandline args
 try:
-    test_file = Path(*Path(sys.argv[1]).parts[1:])
+    k = sys.argv[1]
+except IndexError:
+    k = 3
+try:
+    test_file = Path(*Path(sys.argv[2]).parts[1:])
 except IndexError:
     # test_file = 'input/g1.in'
     test_file = 'input/bipartite_test_graph0.in'
 
-
+# execute if file called directly
 if __name__ == '__main__':
     rel = Path(__file__).parent
+
+    # construct a base graph
     graph = Graph.BaseGraph()
     graph.load_txt(rel / test_file)
-    colgraph = graph.build_coloring_graph(3)
 
+    # construct a coloring graph from the base graph
+    colgraph = graph.build_coloring_graph(k)
+
+    # do some drawing
     draw_fn = nx.draw
     kwargs = dict(with_labels=1, node_size=2048, font_size=10)
-
-
 
     plt.subplot(1, 2, 1)
     graph.draw(draw_fn, **kwargs)
@@ -38,4 +48,5 @@ if __name__ == '__main__':
     colgraph.draw(draw_fn, **kwargs)
     plt.title(str(colgraph))
 
+    # if non-interactive, explicitly show the plot
     plt.show()
