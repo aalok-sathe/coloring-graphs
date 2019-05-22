@@ -1,11 +1,14 @@
-
+#!/bin/bash
 
 install: deps
-	echo "installing deps. now please call appropriate install method based on "
-	echo "your operating system: install[mac|ubuntu|redhat]"
+	echo "installing"
 
 deps:
 	python3 -m pip install --user -r requirements.txt
 
-test:
-	python3 lib/test/graphtest.py
+test: FORCE
+	echo "running tests"
+	python3 test/graphtest.py
+
+
+FORCE:
