@@ -5,10 +5,12 @@ from .Vertex import *
 from pathlib import Path
 import typing
 from tqdm import tqdm
-import pygraphviz as pgv
+import networkx as nx
+from utils import mathtools
+from matplotlib import pyplot as plt
 
 
-class Graph:#(gt.Graph):
+class Graph(object):#(gt.Graph):
     '''
     The OG graph class
     '''
@@ -89,6 +91,12 @@ class Graph:#(gt.Graph):
         return self.vertices[ID]
 
 
+    def get_neighbors(self, v: Vertex=None) -> typing.List[Vertex]:
+        '''
+        '''
+        return v.get_neighbors()
+
+
     def get_vertices(self) -> typing.Iterable[Vertex]:
         '''
         returns an iterable over vertices (using a generator)
@@ -114,11 +122,16 @@ class Graph:#(gt.Graph):
                 v[attr] = None
 
 
-    def draw(self):
+    def draw(self, draw_fn=nx.draw_random, **kwargs):
         '''
         '''
-        G = pgv.
-
+        G = nx.Graph()
+        # G.add_nodes_from(self.vertices.keys())
+        for v in self.get_vertices():
+            G.add_node(v)
+            for nbr in self.get_neighbors(v):
+                G.add_edge(v, nbr)
+        draw_fn(G, **kwargs)
 
 
 class BaseGraph(Graph):
@@ -134,7 +147,8 @@ class BaseGraph(Graph):
         '''
         returns the color of vertex v in the given coloring
         '''
-        return (coloring // k ** v[ID]) % k
+        return mathtools.convert_base(coloring, k, len(self))[v[ID]]
+        # return (coloring // k ** v[ID]) % k
 
 
     def is_valid_coloring(self, coloring: int, k: int) -> bool:
@@ -213,7 +227,7 @@ class ColoringGraph(Graph):
 
 
     def draw_vertex_surroundings(self, v):
-        pass
+        raise NotImplementedError
 
 
 def Tarjans(g: Graph):
