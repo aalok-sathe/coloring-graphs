@@ -6,9 +6,13 @@ install: deps
 deps:
 	python3 -m pip install --user -r requirements.txt
 
-test: FORCE
+test: clean
 	echo "running tests"
-	python3 test/graphtest.py
+	PYTHONDONTWRITEBYTECODE=True python3 test/graphtest.py
+
+clean: FORCE
+	find . -name "*.pyc" -type f -delete
+	find . -name "__pycache__" -type f -delete
 
 
 FORCE:
