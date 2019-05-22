@@ -44,16 +44,17 @@ class Vertex:#(gt.Vertex):
     def __str__(self) -> str:
         '''
         '''
-        returnable = '{}\t'.format(repr(self))
-        returnable += 'neighbors: ' + str(self.get_neighbors())
-
-        for k, v in self.attrs.items():
-            returnable += '{}: {} '.format(k, v)
-
-        returnable += 'number of neighbors: '
-        returnable += '%d ' % len([*self.get_neighbors()])
-
-        return returnable
+        # returnable = '{}\t'.format(repr(self))
+        # returnable += 'neighbors: ' + str(self.get_neighbors())
+        #
+        # for k, v in self.attrs.items():
+        #     returnable += '{}: {} '.format(k, v)
+        #
+        # returnable += 'number of neighbors: '
+        # returnable += '%d ' % len([*self.get_neighbors()])
+        #
+        # return returnable
+        return str(self[ID])
 
 
 
@@ -82,10 +83,13 @@ class ColoringVertex(Vertex):
     def __str__(self) -> str:
         '''
         '''
-        returnable = super().__str__()
-        returnable += 'coloring: %s ' % mathtools.convert_base(self[NAME],
-                                                              self[COLORS])
-        return returnable
+        # returnable = super().__str__()
+        # returnable += 'coloring: %s ' % mathtools.convert_base(self[NAME],
+        #                                                        self[COLORS],
+        #                                                        pad=len(self.graph))
+        # return returnable
+        if len(self.graph) >= 12: return str(self[NAME])
+        return mathtools.convert_base(self[NAME], self[COLORS], len(self.graph))
 
 
     def add_neighbors(self, *vertices: typing.Container[__name__]):
@@ -101,7 +105,9 @@ class ColoringVertex(Vertex):
         '''
         returns the color of the vertex in the given coloring bitstring
         '''
-        return (coloring // self[COLORS] ** self[ID]) % self[COLORS]
+        return mathtools.convert_base(coloring, self[COLORS],
+                                      len(self.graph))[self[ID]]
+        # return (coloring // self[COLORS] ** self[ID]) % self[COLORS]
 
 
     def get_neighbors(self) -> typing.Set[__name__]:
@@ -119,11 +125,15 @@ class ColoringVertex(Vertex):
         coloring = self[NAME]
         # manipulate each position for a potential neighbor
         for position in range(n):
-            curcol = (coloring // self[COLORS] ** position) % self[COLORS]
+            curcol = coloring // self[COLORS] ** position
+            curcol %= self[COLORS]
+            # int(mathtools.convert_base(coloring, self[COLORS],
+            #                                     len(self.graph))[position])
             # try each alternate coloring other than current
             for c in range(self[COLORS]):
                 if c == curcol: continue
                 newcoloring = coloring // self[COLORS] ** position
                 newcoloring -= newcoloring % self[COLORS]
                 newcoloring += c
+                newcoloring += coloring % self[COLORS] ** position
                 yield newcoloring
