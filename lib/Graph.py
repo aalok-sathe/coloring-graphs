@@ -32,9 +32,9 @@ class Graph(object):#(gt.Graph):
         returnable += ('Graph class: %s\n' % self.__class__.__name__)
         returnable += ('Graph size: %d\n' % len(self))
         returnable += ('='*80 + '\n')
-        returnable += ('Vertices:\n')
-        for v in self.get_vertices():
-            returnable += str(v) + '\n'
+        # returnable += ('Vertices:\n')
+        # for v in self.get_vertices():
+        #     returnable += str(v) + '\n'
 
         return returnable
 
@@ -101,8 +101,8 @@ class Graph(object):#(gt.Graph):
         '''
         returns an iterable over vertices (using a generator)
         '''
-        for i in range(len(self)):
-            yield self.vertices[i]
+        for k, v in self.vertices.items():
+            yield v
 
 
     def get_some_vertex(self) -> Vertex:
@@ -122,9 +122,11 @@ class Graph(object):#(gt.Graph):
                 v[attr] = None
 
 
-    def draw(self, draw_fn=nx.draw_random, **kwargs):
+    def draw(self, draw_fn=nx.draw, **kwargs):
         '''
+        internal method to draw graph
         '''
+        print(self)
         G = nx.Graph()
         # G.add_nodes_from(self.vertices.keys())
         for v in self.get_vertices():
@@ -147,8 +149,8 @@ class BaseGraph(Graph):
         '''
         returns the color of vertex v in the given coloring
         '''
-        return mathtools.convert_base(coloring, k, len(self))[v[ID]]
-        # return (coloring // k ** v[ID]) % k
+        # return mathtools.convert_base(coloring, k, len(self))[v[ID]]
+        return (coloring // k ** (len(self)-v[ID]-1)) % k
 
 
     def is_valid_coloring(self, coloring: int, k: int) -> bool:
@@ -207,11 +209,11 @@ class ColoringGraph(Graph):
         '''
         adds new vertex with given id and additional attrs
         '''
-        self.vertices[id] = ColoringVertex(id)
+        self.vertices[name] = ColoringVertex(id)
         # self.vertices[id][ID] = id
-        self.vertices[id][NAME] = name
-        self.vertices[id][COLORS] = self.k
-        self.vertices[id].graph = self
+        self.vertices[name][NAME] = name
+        self.vertices[name][COLORS] = self.k
+        self.vertices[name].graph = self
         self.n += 1
 
 
@@ -219,7 +221,7 @@ class ColoringGraph(Graph):
         '''
         gets the neighbors of ColoringVertex v
         '''
-        all = v.get_possible_neighbors(len(self))
+        all = v.get_possible_neighbors(len(self.base))
         all = set(all)
         valid = all.intersection(self.vertices.keys())
         for vertex in map(lambda id: self[id], valid):
