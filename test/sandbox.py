@@ -4,6 +4,9 @@ import unittest
 from pathlib import Path
 import argparse
 import random
+from matplotlib import pyplot as plt
+import networkx as nx
+
 import sys
 sys.path.append(str((Path(__file__).parent.resolve() / '..').resolve()))
 from lib import *
@@ -31,3 +34,17 @@ if __name__ == '__main__':
         #     print('nbr coloring: %s' % mathtools.convert_base(nbr[NAME],
         #                                                       nbr[COLORS]))
         print()
+
+    draw_fn = nx.draw
+    kwargs = dict(with_labels=1, node_size=1000)
+
+    plt.subplot(1, 2, 1)
+    plt.xlabel(graph.__class__.__name__)
+    graph.draw(draw_fn, **kwargs)
+
+    plt.subplot(1, 2, 2)
+    plt.xlabel(colgraph.__class__.__name__)
+    colgraph.draw(draw_fn, **kwargs)
+
+    plt.tight_layout()
+    plt.show()
