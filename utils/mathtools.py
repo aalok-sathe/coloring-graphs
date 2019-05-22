@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
 
 
+def pad_output_str(fn) -> str:
+    '''
+    '''
+    def innerfn(n: int=None, base: int=None, pad: int=None):
+        output = fn(n, base)
+        if pad and pad > len(output):
+            return '0'*(pad - len(output)) + output
+        return output
+
+    return innerfn
+
+
+@pad_output_str
 def convert_base(n: int=None, base: int=None) -> str:
     '''
     converts n to specified base
