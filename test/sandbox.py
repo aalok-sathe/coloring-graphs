@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     # do some drawing
     draw_fn = nx.draw
-    kwargs = dict(with_labels=1, node_size=2048, font_size=10)
+    kwargs = dict(with_labels=1, node_size=1024, font_size=10)
 
     plt.subplot(1, 2, 1)
     graph.draw(draw_fn, **kwargs)

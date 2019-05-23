@@ -4,6 +4,7 @@ install: deps
 	echo "installing"
 
 deps:
+	python3 utils/install.py
 	python3 -m pip install --user -r requirements.txt
 
 test: clean
