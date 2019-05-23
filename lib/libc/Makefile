@@ -17,6 +17,8 @@ Graph.o: Vertex.h Graph.h
 
 Vertex.o: Vertex.h
 
+brute:
+	g++ *.cpp
 
 clean:
 	/bin/rm -f main *.o core
