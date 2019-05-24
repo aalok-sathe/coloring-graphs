@@ -42,7 +42,7 @@ buildc: $(wildcard MODULE_TARGETS) setup.py
 	$(PYTHON) setup.py build_ext --inplace
 	# $(PYTHON) setup.py install
 
-buildpy: test.py setup.py
+buildpy: setup.py
 
 
 ##################

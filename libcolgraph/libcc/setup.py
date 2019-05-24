@@ -9,6 +9,5 @@ colgraph_module = Extension('_libcolgraph', sources=['libcolgraph.i',
                              swig_opts=['-c++'],
                              extra_compile_args=['-std=gnu++11'])
 
-if __name__ == '__main__':
-    setup(name='libcolgraph', ext_modules=[colgraph_module],
-          py_modules=['libcolgraph'])
+setup(name='libcolgraph', ext_modules=[colgraph_module],
+      py_modules=['libcolgraph'])
