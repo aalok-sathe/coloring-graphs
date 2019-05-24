@@ -3,8 +3,12 @@
 
 from distutils.core import setup, Extension
 
-example_module = Extension('_example', sources=['example.i',
-                                                'example.c'])
+colgraph_module = Extension('_libcolgraph', sources=['libcolgraph.i',
+                                                     'Graph.cpp',
+                                                     'Vertex.cpp'],
+                             swig_opts=['-c++'],
+                             extra_compile_args=['-std=gnu++11'])
 
 if __name__ == '__main__':
-    setup(name='example', ext_modules=[example_module], py_modules=['example'])
+    setup(name='libcolgraph', ext_modules=[colgraph_module],
+          py_modules=['libcolgraph'])
