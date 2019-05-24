@@ -8,10 +8,19 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     cout << "before init!" << endl;
-    
+
+    string testpath("../../test/input/g1.in");
+
     Graph g;
-    
-    cout << "after init!" << endl;
+
+    cout << "loading graph from " << testpath << endl;
+    g.load_txt(testpath);
+
+    cout << "graph size: " << g.size() << endl;
+
+
+
+    cout << "reached EOF tester" << endl;
 
     return 0;
 }
