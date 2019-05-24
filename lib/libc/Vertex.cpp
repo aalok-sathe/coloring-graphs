@@ -3,4 +3,30 @@
 
 #include "Vertex.h"
 
+Vertex::
+Vertex() {}
+
+Vertex::
+Vertex(long name_)
+    : name(name_)
+{}
+
+Vertex::
+~Vertex()
+{}
+
+long
+Vertex::
+get_name()
+{
+    return name;
+}
+
+void
+Vertex::
+add_neighbor(Vertex& other)
+{
+    neighbors.insert(other.get_name());
+}
+
 #endif

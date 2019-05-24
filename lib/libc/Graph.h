@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <fstream>
 #include "Vertex.h"
 
 using namespace std;
@@ -19,13 +20,14 @@ class Graph
 
     public:
 
-        Graph() {};
+        Graph();
+        ~Graph();
 
-        ~Graph() {};
+        void load_txt(string path);
 
-        void add_vertex(int name) {};
+        void add_vertex(int name);
 
-        void load_txt(char* path) {};
+        map<long, Vertex>::iterator get_vertices
 
 };
 

@@ -1,11 +1,14 @@
 #ifndef __VERTEX_H__
 #define __VERTEX_H__
 
+#include <unordered_set>
+
+using namespace std;
 
 enum V_ATTR
 {
-  NAME,
-  COLOR
+    NAME,
+    COLOR
 };
 
 
@@ -16,12 +19,20 @@ class Vertex
     private:
 
     protected:
+        long name;
+        unordered_set<long> neighbors;
 
     public:
+        Vertex();
+        Vertex(long name_);
 
-        Vertex() {};
+        ~Vertex();
 
-        ~Vertex() {};
+        long get_name();
+
+        void add_neighbor(Vertex& other);
+
+        unordered_set<long>::iterator get_neighbors();
 };
 
 

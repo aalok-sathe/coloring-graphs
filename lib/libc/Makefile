@@ -2,8 +2,10 @@
 # use to compile and test the assembler ASM for the STACK computer and
 # its various components
 
-DEBUG_FLAG= #-g -Wall
-CFLAGS= #-g -Wall
+DEBUG_FLAG= -g -Wall
+CFLAGS= -std=gnu++11 -g -Wall
+
+default: brute
 
 .SUFFIXES: .cpp .o
 
@@ -18,7 +20,7 @@ Graph.o: Vertex.h Graph.h
 Vertex.o: Vertex.h
 
 brute:
-	g++ *.cpp
+	g++ $(CFLAGS) *.cpp
 
 clean:
 	/bin/rm -f main *.o core
