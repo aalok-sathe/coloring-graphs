@@ -1,9 +1,25 @@
-# makefile
-# use to compile and test the assembler ASM for the STACK computer and
-# its various components
+#!/bin/bash
+
+####################################
+########      MAKEFILE      ########
+####################################
+
+
+##################
+####   DEFS   ####
 
 DEBUG_FLAG= -g -Wall
 CFLAGS= -std=gnu++11 -g -Wall
+PYTHON = "python3"
+MODULE_TARGETS = $("PYTHON ./generate_targets.py")
+
+
+##################
+####   BUILD  ####
+
+default: TESTER build
+
+## CPP
 
 .SUFFIXES: .cpp .o
 
@@ -18,8 +34,39 @@ Graph.o: Graph.h Vertex.h
 
 Vertex.o: Vertex.h
 
-brute:
-	g++ $(CFLAGS) *.cpp
+## SWIG
 
-clean:
+build: buildc buildpy clean_nonessential
+
+buildc: $(wildcard MODULE_TARGETS) setup.py
+	$(PYTHON) setup.py build_ext --inplace
+	# $(PYTHON) setup.py install
+
+buildpy: test.py setup.py
+
+
+##################
+####   TEST   ####
+
+test: FORCE
+	./TESTER
+	$(PYTHON) test.py
+
+
+##################
+#### CLEANUP  ####
+
+clean: clean_nonessential clean_cpp FORCE
+	rm -rf *.so
+
+clean_nonessential: FORCE
+	rm -rf build *wrap.c __pycache__
+
+clean_cpp:
 	/bin/rm -f main *.o *.out TESTER core
+
+
+##################
+####   DUMMY  ####
+
+FORCE: ;
