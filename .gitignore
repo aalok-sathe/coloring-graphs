@@ -6,3 +6,12 @@ javaCode2
 *.o
 *.out
 *.d
+# SWIG
+*wrap.c
+*.d
+*.o
+*.dll
+*.so
+*.so.*
+__pycache__
+*.pyc
