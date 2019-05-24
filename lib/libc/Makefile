@@ -5,17 +5,15 @@
 DEBUG_FLAG= -g -Wall
 CFLAGS= -std=gnu++11 -g -Wall
 
-default: brute
-
 .SUFFIXES: .cpp .o
 
 .cpp.o:
 	g++ $(CFLAGS) -c $<
 
 TESTER: tester.o Graph.o Vertex.o
-	g++ -o TESTER Graph.o Vertex.o
+	g++ -o TESTER tester.o Graph.o Vertex.o
 
-Graph.o: Vertex.h Graph.h
+Graph.o: Graph.h Vertex.h
 
 Vertex.o: Vertex.h
 
