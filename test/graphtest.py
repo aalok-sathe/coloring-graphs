@@ -8,7 +8,7 @@ import random
 import sys
 sys.path.append(str((Path(__file__).parent.resolve() / '..').resolve()))
 
-from lib import *
+from libcolgraph import *
 
 
 # test_file = 'input/g1.in'
