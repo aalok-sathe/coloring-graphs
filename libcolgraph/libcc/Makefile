@@ -62,7 +62,7 @@ clean: clean_nonessential clean_cpp FORCE
 clean_nonessential: FORCE
 	rm -rf build *wrap.c* __pycache__
 
-clean_cpp:
+clean_cpp: FORCE
 	/bin/rm -f main *.o *.out TESTER core
 
 
