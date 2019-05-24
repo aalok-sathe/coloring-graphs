@@ -11,7 +11,7 @@ CFLAGS= -std=gnu++11 -g -Wall
 	g++ $(CFLAGS) -c $<
 
 TESTER: tester.o Graph.o Vertex.o
-	g++ -o TESTER tester.o Graph.o Vertex.o
+	g++ tester.o Graph.o Vertex.o
 
 Graph.o: Graph.h Vertex.h
 
