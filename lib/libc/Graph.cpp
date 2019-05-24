@@ -34,11 +34,19 @@ load_txt(string path)
 }
 
 
+long
+Graph::
+size()
+{
+    return vertices.size();
+}
+
+
 map<long, Vertex>::iterator
 Graph::
 get_vertices()
 {
-    
+
 }
 
 

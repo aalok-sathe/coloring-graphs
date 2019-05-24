@@ -25,6 +25,8 @@ class Graph
 
         void load_txt(string path);
 
+        long size();
+
         void add_vertex(int name);
 
         map<long, Vertex>::iterator get_vertices();
