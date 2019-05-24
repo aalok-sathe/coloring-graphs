@@ -29,4 +29,11 @@ add_neighbor(Vertex& other)
     neighbors.insert(other.get_name());
 }
 
+std::unordered_set<long>::iterator
+Vertex::
+get_neighbors()
+{
+    // TODO
+}
+
 #endif

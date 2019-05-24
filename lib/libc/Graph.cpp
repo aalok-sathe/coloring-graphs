@@ -3,7 +3,6 @@
 
 #include "Graph.h"
 
-using namespace std;
 
 Graph::
 Graph() {}
@@ -14,9 +13,10 @@ Graph::
 
 void
 Graph::
-load_txt(string path)
+load_txt(char* path)
 {
-    ifstream file(path);
+    std::string path_ = std::string(path);
+    std::ifstream file(path_);
     int n;
     file >> n;
 
@@ -42,7 +42,15 @@ size()
 }
 
 
-map<long, Vertex>::iterator
+void
+Graph::
+add_vertex(int name)
+{
+    // TODO
+}
+
+
+std::map<long, Vertex>::iterator
 Graph::
 get_vertices()
 {

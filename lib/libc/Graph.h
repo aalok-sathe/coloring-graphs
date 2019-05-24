@@ -6,7 +6,6 @@
 #include <fstream>
 #include "Vertex.h"
 
-using namespace std;
 
 /*
  *  the OG graph class
@@ -16,20 +15,20 @@ class Graph
     private:
 
     protected:
-        map<long, Vertex> vertices;
+        std::map<long, Vertex> vertices;
 
     public:
 
         Graph();
         ~Graph();
 
-        void load_txt(string path);
+        void load_txt(char* path);
 
         long size();
 
         void add_vertex(int name);
 
-        map<long, Vertex>::iterator get_vertices();
+        std::map<long, Vertex>::iterator get_vertices();
 
 };
 

@@ -3,8 +3,6 @@
 
 #include <unordered_set>
 
-using namespace std;
-
 enum V_ATTR
 {
     NAME,
@@ -20,7 +18,7 @@ class Vertex
 
     protected:
         long name;
-        unordered_set<long> neighbors;
+        std::unordered_set<long> neighbors;
 
     public:
         Vertex();
@@ -32,7 +30,7 @@ class Vertex
 
         void add_neighbor(Vertex& other);
 
-        unordered_set<long>::iterator get_neighbors();
+        std::unordered_set<long>::iterator get_neighbors();
 };
 
 
