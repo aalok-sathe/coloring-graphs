@@ -3,12 +3,14 @@
 
 #include "Graph.h"
 
+using namespace std;
 
 Graph::
 Graph() {}
 
 Graph::
 ~Graph() {}
+
 
 void
 Graph::
@@ -30,5 +32,14 @@ load_txt(string path)
                 vertices[i].add_neighbor(vertices[j]);
         }
 }
+
+
+map<long, Vertex>::iterator
+Graph::
+get_vertices()
+{
+    
+}
+
 
 #endif

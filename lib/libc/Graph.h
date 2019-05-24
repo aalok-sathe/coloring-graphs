@@ -27,7 +27,7 @@ class Graph
 
         void add_vertex(int name);
 
-        map<long, Vertex>::iterator get_vertices
+        map<long, Vertex>::iterator get_vertices();
 
 };
 
