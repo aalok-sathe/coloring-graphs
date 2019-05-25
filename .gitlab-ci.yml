@@ -8,9 +8,10 @@ stages:
     - status
 
 build:
-    image: python:3.6
+    image: ubuntu:16.04
     stage: deploy
     before_script:
+        - apt install bison flex
         - python3 -m pip install -U setuptools wheel twine
         - python3 -m pip install -U anybadge
         - git clone https://github.com/swig/swig.git
