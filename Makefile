@@ -4,13 +4,17 @@
 default: build
 
 
+package: setup.py
+	python3 setup.py sdist bdist_wheel
+
+
 install: deps build
 	echo "installing"
-	echo '# Added by libcolgraph (https://github.com/aalok-sathe/coloring-graphs)'
-	echo "export PYTHONPATH=$(PWD):$(PYTHONPATH)" >> ~/.bashrc
-	echo "export PYTHONPATH=$(PWD):$(PYTHONPATH)" >> ~/.bash_profile
-	source ~/.bashrc
-	source ~/.bash_profile
+	# echo '# Added by libcolgraph (https://github.com/aalok-sathe/coloring-graphs)'
+	# echo "export PYTHONPATH=$(PWD):$(PYTHONPATH)" >> ~/.bashrc
+	# echo "export PYTHONPATH=$(PWD):$(PYTHONPATH)" >> ~/.bash_profile
+	# source ~/.bashrc
+	# source ~/.bash_profile
 
 deps:
 	python3 utils/install.py
@@ -35,8 +39,8 @@ clean: FORCE
 	find . -name "*.pyc" -type f -delete
 	find . -name "__pycache__" -type f -delete
 	$(MAKE) -C "./libcolgraph/libcc" "clean"
-	# python3 setup.py clean
-	# rm -rf build dist *.egg-info
+	python3 setup.py clean
+	rm -rf build dist *.egg-info
 
 
 FORCE: ;
