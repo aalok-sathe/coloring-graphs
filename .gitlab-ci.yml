@@ -13,6 +13,12 @@ build:
     before_script:
         - python3 -m pip install -U setuptools wheel twine
         - python3 -m pip install -U anybadge
+        - git clone https://github.com/swig/swig.git
+        - cd swig
+        - ./autogen.sh
+        - ./configure
+        - make
+        - make install
     script:
         - python3 setup.py sdist bdist_wheel
         - if twine upload dist/*.tar.gz --verbose && twine upload dist/*.whl --verbose; then echo "PASSED JOB" && anybadge --label=pipeline --value=passing --file=build.svg passing=green failing=red; else echo "FAILED JOB" && anybadge --label=pipeline --value=failing --file=build.svg passing=green failing=red; fi
@@ -30,4 +36,15 @@ build:
     environment:
         name: dev
 
-
+pages:
+    stage: status
+    dependencies:
+        - build
+    script:
+        - mkdir -p public
+    artifacts:
+        paths:
+            - public/
+    only:
+        changes:
+            - .pipeline.trigger
