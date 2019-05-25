@@ -8,7 +8,7 @@ stages:
     - status
 
 build:
-    image: ubuntu:16.04
+    image: python:3.6
     stage: deploy
     before_script:
         - yes | add-apt-repository universe
@@ -39,7 +39,7 @@ build:
     only:
         changes:
             - .pipeline.trigger
-
+    allow_failure: true
     environment:
         name: dev
 
