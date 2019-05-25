@@ -5,23 +5,17 @@ import setuptools
 from distutils.core import setup, Extension
 from distutils.command.build import build
 
-class CustomBuild(build):
-    def run(self):
-        self.run_command('build_ext')
-        build.run(self)
 
 
-with open("README.md", "r") as readme:
-    long_description = readme.read()
-
-colgraph_module = Extension('_libcolgraph',
+colgraph_module = Extension('libcolgraph.libcc._libcolgraph',
                             sources=['libcolgraph/libcc/libcolgraph.i'],
                             swig_opts=['-c++'],
                             extra_compile_args=['-std=gnu++11'])
-
+with open("README.md", "r") as readme:
+    long_description = readme.read()
 
 setup(name='libcolgraph',
-      cmdclass={'build': CustomBuild},
+      # cmdclass={'build': CustomBuild},
       ext_modules=[colgraph_module],
       py_modules=['libcolgraph'],
       packages=setuptools.find_packages(),
@@ -37,8 +31,10 @@ setup(name='libcolgraph',
       author='Coloring Graphs lab, Univeristy of Richmond',
       author_email='aalok.sathe@richmond.edu',
       license='GPL-3',
-      # packages=find_packages(),
-      # scripts=['coloring-graphs'],
+      install_requires = ['tqdm>=4.32.1',
+                          'networkx>=2.1',
+                          'matplotlib>=2.2.2',
+                          'typing>=3.6.6'],
       python_requires='>=3.5',
       classifiers=[
           'Intended Audience :: Education',

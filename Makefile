@@ -3,18 +3,12 @@
 
 default: build
 
-
 package: setup.py
 	python3 setup.py sdist bdist_wheel
 
-
-install: deps build
+install: deps package
 	echo "installing"
-	# echo '# Added by libcolgraph (https://github.com/aalok-sathe/coloring-graphs)'
-	# echo "export PYTHONPATH=$(PWD):$(PYTHONPATH)" >> ~/.bashrc
-	# echo "export PYTHONPATH=$(PWD):$(PYTHONPATH)" >> ~/.bash_profile
-	# source ~/.bashrc
-	# source ~/.bash_profile
+	python3 setup.py install
 
 deps:
 	python3 utils/install.py
@@ -23,17 +17,14 @@ deps:
 
 build: cpp py
 
-
 cpp:
 	$(MAKE) -C "./libcolgraph/libcc" "build"
 
-
 py:
-
 
 test: clean
 	echo "running tests"
-	PYTHONDONTWRITEBYTECODE=True python3 test/graphtest.py
+	python3 test/graphtest.py
 
 clean: FORCE
 	find . -name "*.pyc" -type f -delete

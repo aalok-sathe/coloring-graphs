@@ -15,3 +15,6 @@ tmp
 *.dll
 *.so
 *.so.*
+build
+dist
+*.egg-info
