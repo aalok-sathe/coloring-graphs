@@ -1,0 +1,33 @@
+variables:
+    TWINE_USERNAME: SECURE
+    TWINE_PASSWORD: SECURE
+    TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
+
+stages:
+    - deploy
+    - status
+
+build:
+    image: python:3.6
+    stage: deploy
+    before_script:
+        - python3 -m pip install -U setuptools wheel twine
+        - python3 -m pip install -U anybadge
+    script:
+        - python3 setup.py sdist bdist_wheel
+        - if twine upload dist/*.tar.gz --verbose && twine upload dist/*.whl --verbose; then echo "PASSED JOB" && anybadge --label=pipeline --value=passing --file=build.svg passing=green failing=red; else echo "FAILED JOB" && anybadge --label=pipeline --value=failing --file=build.svg passing=green failing=red; fi
+        - mkdir -p public; mv build.svg public/build.svg
+    artifacts:
+        paths:
+            - public/
+            - build/
+            - dist/
+            - cfd_reader.egg-info/
+    only:
+        changes:
+            - .pipeline.trigger
+
+    environment:
+        name: dev
+
+
