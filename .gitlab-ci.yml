@@ -11,19 +11,19 @@ build:
     image: python:3.6
     stage: deploy
     before_script:
-        - yes | apt update
-        - yes | apt upgrade
-        - yes | apt install bison flex # yacc
-        - yes | apt install python3-dev # Python
-        - python3 -m pip install -U setuptools wheel twine
-        - python3 -m pip install -U anybadge
+        - sudo apt -y -qq update
+        - sudo apt -y -qq upgrade
+        - sudo apt install -y -qq bison flex # yacc
+        - sudo apt install -y -qq python3-dev # Python
+        - sudo python3 -m pip install -U setuptools wheel twine
+        - sudo python3 -m pip install -U anybadge
         - git clone https://github.com/swig/swig.git
         - cd swig
         - git checkout rel-4.0.0
         - ./autogen.sh
         - ./configure
         - make
-        - make install
+        - sudo make install
     script:
         - python3 setup.py sdist bdist_wheel
         - if twine upload dist/*.tar.gz --verbose && twine upload dist/*.whl --verbose; then echo "PASSED JOB" && anybadge --label=pipeline --value=passing --file=build.svg passing=green failing=red; else echo "FAILED JOB" && anybadge --label=pipeline --value=failing --file=build.svg passing=green failing=red; fi
