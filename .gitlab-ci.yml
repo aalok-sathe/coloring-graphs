@@ -27,6 +27,7 @@ build:
         - ./configure
         - make
         - make install
+        - cd ..
     script:
         - python3 setup.py sdist bdist_wheel
         - if twine upload dist/*.tar.gz --verbose && twine upload dist/*.whl --verbose; then echo "PASSED JOB" && anybadge --label=pipeline --value=passing --file=build.svg passing=green failing=red; else echo "FAILED JOB" && anybadge --label=pipeline --value=failing --file=build.svg passing=green failing=red; fi
