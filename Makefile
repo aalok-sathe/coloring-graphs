@@ -26,6 +26,9 @@ test: clean
 	echo "running tests"
 	python3 test/graphtest.py
 
+trigger:
+	date | cat > .pipeline.trigger
+
 clean: FORCE
 	find . -name "*.pyc" -type f -delete
 	find . -name "__pycache__" -type f -delete
