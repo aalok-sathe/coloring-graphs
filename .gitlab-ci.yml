@@ -8,7 +8,7 @@ stages:
     - status
 
 build:
-    image: python:3.6
+    image: ubuntu:16.04
     stage: deploy
     before_script:
         - sudo apt -y -qq update
