@@ -11,7 +11,6 @@ build:
     image: python:3.6
     stage: deploy
     before_script:
-        - yes | add-apt-repository universe
         - yes | apt update
         - yes | apt upgrade
         - yes | apt install bison flex # yacc
