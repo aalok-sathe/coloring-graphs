@@ -1,5 +1,5 @@
 ## coloring-graphs
-[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=2226560990706518353)](https://gitlab.com/aalok-sathe/coloring-graphs/)
+[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=2077811657390505398)](https://gitlab.com/aalok-sathe/coloring-graphs/)
 
 a coloring graphs library written in C++ for speedy computation and wrapped in
 Python for ease of development and extension!
@@ -28,7 +28,7 @@ for questions, reach out.
 
             - currently a binary wheel is available only for `manylinux`
               enabled distributions
-              e.g. centOS, or for `linux-x86_64` tagged distributions
+              e.g. centOS
             - if your distribution is not one of these, then pip will want to
               compile locally using `setup.py`. in that case,
               make sure you have [swig](http://www.swig.org/download.html)
@@ -73,5 +73,3 @@ full documentation coming soon
 ### who
 
 Coloring Graphs lab, University of Richmond. Multiple contributors.
-
-
