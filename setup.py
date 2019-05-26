@@ -8,7 +8,9 @@ from distutils.command.build import build
 
 
 colgraph_module = Extension('libcolgraph.libcc._libcolgraph',
-                            sources=['libcolgraph/libcc/libcolgraph.i'],
+                            sources=['libcolgraph/libcc/libcolgraph.i',
+                                     'libcolgraph/libcc/*.cpp'],
+                            include_dirs = ['libcolgraph/libcc/*.h'],
                             swig_opts=['-c++'],
                             extra_compile_args=['-std=gnu++11'])
 with open("README.md", "r") as readme:
@@ -21,7 +23,7 @@ setup(name='libcolgraph',
       # packages=['libcolgraph', 'libcolgraph.libcc', 'libcolgraph.libpy',
       #           'libcolgraph.libcc._libcolgraph'],
       packages = setuptools.find_packages(),
-      version='0.0.1.post1',
+      version='0.0.1.post2',
       description='this library provides support to construct graphs and their '
                   'coloring graphs. a coloring graph is a metagraph '
                   'representing all the valid colorings of a graph. each '
