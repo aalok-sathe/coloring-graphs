@@ -16,13 +16,13 @@ with open("README.md", "r") as readme:
     long_description = readme.read()
 
 setup(name='libcolgraph',
-      # cmdclass={'build': CustomBuild},
       ext_modules=[colgraph_module],
       py_modules=['libcolgraph'],
-      # packages=['libcolgraph', 'libcolgraph.libcc', 'libcolgraph.libpy',
-      #           'libcolgraph.libcc._libcolgraph'],
+      package_data =
+        {'libcolgraph.libcc._libcolgraph': ['libcolgraph/libcc/*.h',
+                                            'libcolgraph/libcc/*.cpp']},
       packages = setuptools.find_packages(),
-      version='0.0.1.post3',
+      version='0.0.1.post4',
       description='this library provides support to construct graphs and their '
                   'coloring graphs. a coloring graph is a metagraph '
                   'representing all the valid colorings of a graph. each '

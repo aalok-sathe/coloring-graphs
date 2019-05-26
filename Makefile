@@ -8,7 +8,7 @@ package: setup.py
 
 install: deps package
 	echo "installing"
-	python3 setup.py install
+	python3 setup.py install --user
 
 deps:
 	python3 utils/install.py
