@@ -37,7 +37,7 @@ setup(name='libcolgraph',
                           'networkx>=2.1',
                           'matplotlib>=2.2.2',
                           'typing>=3.6.6'],
-      python_requires='>=3.5',
+      python_requires='>=3.4',
       classifiers=[
           'Intended Audience :: Education',
           'Intended Audience :: Science/Research',
