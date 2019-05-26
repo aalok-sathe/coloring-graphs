@@ -17,10 +17,9 @@ build:
         - yum -y -q --enablerepo=extras install epel-release
         - yum install -y -q bison flex git
         - yum install -y -q python34
-        - alias python3=python34
-        - yum install -y -q python34-devel
+        - yum install -y -q python34-devel wget
         - wget https://bootstrap.pypa.io/get-pip.py
-        - python3 get-pip.py install
+        - python3 get-pip.py
         # - yum install -y -q python34-pip
         - yum install -y -q automake autoconf pcre-devel
         - python3 -m pip install -U pip
