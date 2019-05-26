@@ -27,6 +27,7 @@ test: clean
 	python3 test/graphtest.py
 
 trigger:
+	python3 utils/insertversion.py
 	date | cat > .pipeline.trigger
 
 clean: FORCE
