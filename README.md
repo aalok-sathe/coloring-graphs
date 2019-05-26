@@ -23,8 +23,16 @@ for questions, reach out.
     - [pypi](https://pypi.org/project/libcolgraph/)
         
         `python3 -m pip install libcolgraph`
+        
+        issues:
+        
+            - currently a binary wheel is available only for `manylinux` enabled distributions
+              e.g. centOS.     
+            - if your distribution is not `manylinux` enabled, then pip will try to compile locally.
+              make sure you have swig installed, as it will be needed.
 
     - manual installation
+    
         clone the repository
         - ssh:
         `git clone git@github.com:aalok-sathe/coloring-graphs`
@@ -32,10 +40,11 @@ for questions, reach out.
         `git clone https://github.com/aalok-sathe/coloring-graphs`
 
         go into the repository
+        
         `cd coloring-graphs`
 
-        install the prerequisites
-        - using the make utility:
+        install
+        
         `make install`
     
     
