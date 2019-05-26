@@ -22,7 +22,7 @@ setup(name='libcolgraph',
       # packages=['libcolgraph', 'libcolgraph.libcc', 'libcolgraph.libpy',
       #           'libcolgraph.libcc._libcolgraph'],
       packages = setuptools.find_packages(),
-      version='0.0.1.post2',
+      version='0.0.1.post3',
       description='this library provides support to construct graphs and their '
                   'coloring graphs. a coloring graph is a metagraph '
                   'representing all the valid colorings of a graph. each '
