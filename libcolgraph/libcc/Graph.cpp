@@ -21,7 +21,7 @@ load_txt(char* path)
     file >> n;
 
     for (int i=0; i<n; i++)
-        vertices.insert(std::map<int, Vertex>::value_type(i, Vertex()));
+        add_vertex((long)i);
 
     int value;
     for (int i=0; i<n; i++)
@@ -44,9 +44,9 @@ size()
 
 void
 Graph::
-add_vertex(int name)
+add_vertex(long name)
 {
-    // TODO
+    vertices.insert(std::map<int, Vertex>::value_type(name, Vertex()));
 }
 
 

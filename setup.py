@@ -22,7 +22,7 @@ setup(name='libcolgraph',
         {'libcolgraph.libcc._libcolgraph': ['libcolgraph/libcc/*.h',
                                             'libcolgraph/libcc/*.cpp']},
       packages = setuptools.find_packages(),
-      version='0.0.1.post4',
+      version='0.0.1.post5',
       description='this library provides support to construct graphs and their '
                   'coloring graphs. a coloring graph is a metagraph '
                   'representing all the valid colorings of a graph. each '

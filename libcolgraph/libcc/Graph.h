@@ -26,7 +26,7 @@ class Graph
 
         long size();
 
-        void add_vertex(int name);
+        void add_vertex(long name);
 
         std::map<long, Vertex>::iterator get_vertices();
 
