@@ -12,7 +12,7 @@ build:
     stage: deploy
     before_script:
         - yum -y -q update
-        - yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        - yum install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
         - yum -y -q groupinstall "Development Tools"
         - yum install -y -q bison flex git
         - yum install -y -q python34-pip
