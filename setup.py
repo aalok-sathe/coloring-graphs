@@ -8,8 +8,7 @@ from distutils.command.build import build
 
 
 colgraph_module = Extension('libcolgraph.libcc._libcolgraph',
-                            sources=['libcolgraph/libcc/libcolgraph.i',
-                                     'libcolgraph/libcc/*.cpp'],
+                            sources=['libcolgraph/libcc/libcolgraph.i'],
                             include_dirs = ['libcolgraph/libcc/*.h'],
                             swig_opts=['-c++'],
                             extra_compile_args=['-std=gnu++11'])
