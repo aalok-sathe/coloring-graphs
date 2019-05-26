@@ -20,20 +20,6 @@ for questions, reach out.
 ### how
 1. installation:
 
-    - [pypi](https://pypi.org/project/libcolgraph/)
-
-        `python3 -m pip install libcolgraph`
-
-        issues:
-
-            - currently a binary wheel is available only for `manylinux`
-              enabled distributions
-              e.g. centOS
-            - if your distribution is not one of these, then pip will want to
-              compile locally using `setup.py`. in that case,
-              make sure you have [swig](http://www.swig.org/download.html)
-              installed, as it will be needed for compilation.
-
     - manual installation
 
         clone the repository
@@ -49,6 +35,20 @@ for questions, reach out.
         install
 
         `make install`
+        
+    
+    - [pypi](https://pypi.org/project/libcolgraph/) (under construction! NOT recommended)
+
+        `python3 -m pip install libcolgraph`
+
+        issues:
+        - currently a binary wheel is available only for `manylinux`
+          enabled distributions
+          e.g. centOS
+        - if your distribution is not one of these, then pip will want to
+          compile locally using `setup.py`. in that case,
+          make sure you have [swig](http://www.swig.org/download.html)
+          installed, as it will be needed for compilation.
 
 
 2. quickstart:
