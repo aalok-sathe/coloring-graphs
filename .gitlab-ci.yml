@@ -8,7 +8,7 @@ stages:
     - status
 
 build:
-    image: manylinux2010-pypy_x86_64
+    image: pypywheels/manylinux2010-pypy_x86_64
     stage: deploy
     before_script:
         - yum -y -qq update
