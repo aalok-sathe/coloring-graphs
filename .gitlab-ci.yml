@@ -15,7 +15,8 @@ build:
         - yum -y -q upgrade
         - yum -y -q groupinstall "Development Tools"
         - yum install -y -q bison flex git
-        - yum install -y -q python3-devel.x86_64 python3-pip
+        - yum install -y -q python3-devel
+        - yum install -y -q python36-pip
         - yum install -y -q automake autoconf pcre-devel
         - python3 -m pip install -U pip
         - python3 -m pip install -U setuptools wheel twine
