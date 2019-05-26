@@ -23,7 +23,7 @@ build:
         # - yum install -y -q python34-pip
         - yum install -y -q automake autoconf pcre-devel
         - python3 -m pip install -U pip
-        - python3 -m pip install -U setuptools wheel twine
+        - python3 -m pip install -U setuptools wheel twine auditwheel
         - python3 -m pip install -U anybadge
         - git clone https://github.com/swig/swig.git
         - cd swig
