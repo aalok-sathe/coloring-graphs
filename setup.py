@@ -4,6 +4,12 @@
 import setuptools
 from distutils.core import setup, Extension
 from distutils.command.build import build
+from setuptools.command.build_py import build_py as _build_py
+
+class build_py(_build_py):
+    def run(self):
+        self.run_command("build_ext")
+        return super().run()
 
 
 
@@ -12,12 +18,15 @@ colgraph_module = Extension('libcolgraph.libcc._libcolgraph',
                             include_dirs = ['libcolgraph/libcc/*.h'],
                             swig_opts=['-c++'],
                             extra_compile_args=['-std=gnu++11'])
+
 with open("README.md", "r") as readme:
     long_description = readme.read()
 
 setup(name='libcolgraph',
+      cmdclass = {'build_py': build_py},
       ext_modules=[colgraph_module],
-      py_modules=['libcolgraph'],
+      # py_modules=['libcolgraph', 'libcolgraph.libcc',
+      #             'libcolgraph.libcc.libcolgraph', 'libcolgraph.libpy'],
       package_data =
         {'libcolgraph.libcc._libcolgraph': ['libcolgraph/libcc/*.h',
                                             'libcolgraph/libcc/*.cpp']},

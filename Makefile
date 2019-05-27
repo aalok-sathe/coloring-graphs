@@ -22,9 +22,9 @@ cpp:
 
 py:
 
-test: clean
+test: build
 	echo "running tests"
-	python3 test/graphtest.py
+	python3 test.py #/graphtest.py
 
 trigger:
 	python3 utils/insertversion.py
