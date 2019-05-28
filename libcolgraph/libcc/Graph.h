@@ -2,7 +2,7 @@
 #define __GRAPH_H__
 
 #include <map>
-#include <string>
+// #include <string>
 #include <fstream>
 #include "Vertex.h"
 
@@ -28,7 +28,7 @@ class Graph
 
         void add_vertex(long name);
 
-        Vertex get_vertex(long name);
+        Vertex& get_vertex(long name);
 
         std::map<long, Vertex>::iterator get_vertices();
 

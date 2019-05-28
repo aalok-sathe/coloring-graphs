@@ -25,6 +25,7 @@ print()
 testinp = 'test/input/g1.in' # converts to cpp type char*
 print('INFO: loading graph from test input file %s' % testinp)
 try:
+    print(cppgraph.load_txt)
     cppgraph.load_txt(testinp)
 except Exception:
     raise

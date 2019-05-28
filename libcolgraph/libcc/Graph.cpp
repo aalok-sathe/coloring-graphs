@@ -50,12 +50,12 @@ add_vertex(long name)
 }
 
 
-Vertex
+Vertex&
 Graph::
 get_vertex(long name = NULL)
 {
     if (name == NULL)
-        for (auto item : vertices)
+        for (auto& item : vertices)
             return item.second;
 
     return vertices[name];
