@@ -2,6 +2,7 @@
 #define __VERTEX_H__
 
 #include <unordered_set>
+// #include "GraphUtils.h"
 
 enum V_ATTR
 {

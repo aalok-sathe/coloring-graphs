@@ -1,52 +1,100 @@
 #!/usr/bin/env python3
 
-print('INFO: trying to import compiled shared library object "libcolgraph"')
-try:
-    import libcolgraph
-except ImportError:
-    raise
-print()
+import coloredlogs, logging
 
 
-print('INFO: listing all members of this module')
-print(dir(libcolgraph))
-print()
+def vizsep(logger):
+    '''
+    '''
+    logger.info('='*80)
 
 
-print('INFO: trying to initialize the c++ Graph::Graph object in python!')
-try:
-    cppgraph = libcolgraph.Graph()
-    print(cppgraph)
-except Exception:
-    raise
-print()
+if __name__ == '__main__':
+    logger = logging.getLogger(__name__)
+    # By default the install() function installs a handler on the root logger,
+    # this means that log messages from your code and log messages from the
+    # libraries that you use will all show up on the terminal.
+    coloredlogs.install(level='DEBUG', logger=logger)
 
 
-testinp = 'test/input/g1.in' # converts to cpp type char*
-print('INFO: loading graph from test input file %s' % testinp)
-try:
-    print(cppgraph.load_txt)
-    cppgraph.load_txt(testinp)
-except Exception:
-    raise
-print()
+    '''
+    TEST Import
+    '''
+    vizsep(logger)
+    logger.info('IMPORT TEST')
+    logger.info('trying to import compiled shared library object')
+    try:
+        import libcolgraph
+    except ImportError as e:
+        logger.error(e)
+        raise e
+    logger.info('listing all members of this module')
+    logger.info(dir(libcolgraph))
 
 
-print('INFO: checking size of graph after loading %s' % testinp)
-try:
-    print(cppgraph.size())
-except Exception:
-    raise
-print()
+    '''
+    TEST construction
+    '''
+    vizsep(logger)
+    logger.info('CONSTRUCT TEST')
+    logger.info('trying to initialize the c++ Graph object in python!')
+    try:
+        cppgraph = libcolgraph.Graph()
+        logger.info(cppgraph)
+    except Exception as e:
+        logger.error(e)
+        raise e
 
 
-print('INFO: trying to inherit a pure python class from cpp Graph::Graph')
-class DummyGraph(libcolgraph.Graph):
-    def __init__(self):
-        super().__init__()
+    '''
+    TEST loading data
+    '''
+    vizsep(logger)
+    logger.info('LOAD TEST')
+    testinp = 'test/input/g1.in' # converts to cpp type char*
+    logger.info('loading graph from test input file %s' % testinp)
+    try:
+        cppgraph.load_txt(testinp)
+    except Exception as  e:
+        logger.error(e)
+        raise e
 
-dg = DummyGraph()
-print(dg)
-dg.load_txt(testinp)
-print('INFO: size=', dg.size())
-print()
+    logger.info('checking size of graph after loading %s' % testinp)
+    try:
+        logger.info('size of loaded graph: ' + str(len(cppgraph)))
+    except Exception as e:
+        logger.error(e)
+        raise e
+
+
+    '''
+    TEST get vertex
+    '''
+    vizsep(logger)
+    logger.info('GET_VERTEX TEST')
+    logger.info('trying to get_vertex an arbitrary vertex ')
+    vertex = cppgraph.get_vertex()
+    logger.info('ID of the vertex returned: %d' % vertex.get_name())
+
+    '''
+    TEST inherit
+    '''
+    vizsep(logger)
+    logger.info('INHERIT{A/E}NCE TEST')
+    logger.info('trying to inherit a pure python class from Graph')
+    class DummyGraph(libcolgraph.Graph):
+        def __init__(self):
+            super().__init__()
+
+    dg = DummyGraph()
+    logger.info(dg)
+    dg.load_txt(testinp)
+    logger.info('size after loading from file: %d' % dg.size())
+
+    '''
+    TEST iter vertices
+    '''
+
+    vizsep(logger)
+    logger.info('GET VERTICES TEST')
+    vs = cppgraph.get_vertices()
