@@ -7,7 +7,7 @@ Vertex::
 Vertex() {}
 
 Vertex::
-Vertex(long name_)
+Vertex(long name_ = NULL)
     : name(name_)
 {}
 

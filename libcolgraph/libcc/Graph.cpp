@@ -50,11 +50,23 @@ add_vertex(long name)
 }
 
 
+Vertex
+Graph::
+get_vertex(long name = NULL)
+{
+    if (name == NULL)
+        for (auto item : vertices)
+            return item.second;
+
+    return vertices[name];
+}
+
+
 std::map<long, Vertex>::iterator
 Graph::
 get_vertices()
 {
-
+    // TODO
 }
 
 
