@@ -44,15 +44,26 @@ size()
 
 void
 Graph::
-add_vertex(int name)
+add_vertex(long name)
 {
-    // TODO
+    Vertex v;
+    vertices.insert(std::pair<long,Vertex>(name,v));
 }
 
 
 std::map<long, Vertex>::iterator
 Graph::
 get_vertices()
+{
+
+}
+
+MetaGraph::MetaGraph()
+{
+
+}
+
+MetaGraph::~MetaGraph()
 {
 
 }

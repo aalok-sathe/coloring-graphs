@@ -26,9 +26,12 @@ class Graph
 
         long size();
 
-        void add_vertex(int name);
+        void add_vertex(long name);
 
         std::map<long, Vertex>::iterator get_vertices();
+
+
+
 
 };
 
@@ -43,14 +46,29 @@ class BaseGraph : Graph
 };
 
 
-class ColoringGraph
+class ColoringGraph : Graph
 {
     private:
-        Graph* base;
 
     protected:
+        Graph* base;
 
     public:
+};
+
+class MetaGraph
+{
+
+    private:
+
+    protected:
+        std::map<long, MetaVertex>;
+
+    public:
+
+        MetaGraph();
+        ~MetaGraph();
+    
 };
 
 

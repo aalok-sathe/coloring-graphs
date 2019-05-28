@@ -1,13 +1,9 @@
 #ifndef __VERTEX_H__
 #define __VERTEX_H__
 
+#include <map>
 #include <unordered_set>
 
-enum V_ATTR
-{
-    NAME,
-    COLOR
-};
 
 
 class Vertex
@@ -17,8 +13,12 @@ class Vertex
     private:
 
     protected:
-        long name;
         std::unordered_set<long> neighbors;
+        long name;
+        int depth;
+        int lowpoint;
+        Vertex* parent;
+        
 
     public:
         Vertex();
@@ -30,8 +30,9 @@ class Vertex
 
         void add_neighbor(Vertex& other);
 
-        std::unordered_set<long>::iterator get_neighbors();
+        Vertex get_next_neighbor();
 };
+
 
 
 class ColoringVertex : Vertex
@@ -39,8 +40,27 @@ class ColoringVertex : Vertex
     private:
 
     protected:
+        int nt;
 
     public:
+};
+
+class MetaVertex
+{
+    friend class MetaGraph;
+
+private:
+
+protected:
+    long name;
+    std::map<long, Vertex> base_vertices;
+    std::unordered_set<long> meta_neighbors;
+
+public:
+
+    MetaVertex();
+    ~MetaVertex();
+
 };
 
 #endif
