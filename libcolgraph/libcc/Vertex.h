@@ -3,8 +3,10 @@
 
 #include <map>
 #include <unordered_set>
+#include <list>
+#include "Graph.h"
 
-
+class Graph;
 
 class Vertex
 {
@@ -17,7 +19,7 @@ class Vertex
         long name;
         int depth;
         int lowpoint;
-        Vertex* parent;
+        std::list<Vertex>::iterator parent;
         
 
     public:
@@ -30,7 +32,11 @@ class Vertex
 
         void add_neighbor(Vertex& other);
 
-        Vertex get_next_neighbor();
+        Vertex* get_next_neighbor(Graph* g);
+
+        int lp(Graph* g);
+
+        bool check_for_cut();
 };
 
 

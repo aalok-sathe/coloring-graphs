@@ -3,6 +3,7 @@
 
 #include "Graph.h"
 #include <list>
+#include <map>
 
 
 Graph::
@@ -67,8 +68,9 @@ Graph::Tarjans()
     // Declare helper variables and structures
 
     MetaGraph metagraph; //to be returned eventually
-    std::list<Vertex>::iterator current;
-    Vertex root, child;
+    std::list<Vertex>::iterator current, temp;
+    Vertex root;
+    Vertex *child;
     std::list<Vertex> list;
 
 
@@ -92,11 +94,37 @@ Graph::Tarjans()
             current = list.begin();
         }
 
-        // do
-        // {
+        while(true)
+        {
+            child = current->get_next_neighbor(this);
+            if (child != NULL)
+            {
+                // if(list.end()-1 != current)
+                // {
+                //     list.push_back(*current);
+                // }
+                list.push_back(*child);
+                child->parent = current;
+                child->depth = current->depth + 1;
+                ++current;
+            }
 
-        // }
-        // while ();
+            else
+            {
+                current->lowpoint = current->lp(this);
+                if(current->check_for_cut())
+                {
+                    MetaVertex m;
+                    m.vertices.push_back(*(current->parent));
+                    temp = current->parent;
+                    m.vertices.splice(m.vertices.begin(), list, current, list.end());
+                    current = temp;
+
+                }
+                
+
+            }
+        }
     }
 }
 
