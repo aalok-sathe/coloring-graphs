@@ -13,9 +13,11 @@ class build_py(_build_py):
 
 
 
-colgraph_module = Extension('libcolgraph.libcc._libcolgraph',
-                            sources=['libcolgraph/libcc/libcolgraph.i'],
-                            include_dirs = ['libcolgraph/libcc/*.h'],
+colgraph_module = Extension('libcolgraph._libcolgraph',
+                            sources=['libcolgraph/libcolgraph.i',
+                                     'libcolgraph/Graph.cpp',
+                                     'libcolgraph/Vertex.cpp'],
+                            include_dirs = ['libcolgraph/*.h'],
                             swig_opts=['-c++'],
                             extra_compile_args=['-std=gnu++11'])
 
@@ -25,11 +27,10 @@ with open("README.md", "r") as readme:
 setup(name='libcolgraph',
       cmdclass = {'build_py': build_py},
       ext_modules=[colgraph_module],
-      # py_modules=['libcolgraph', 'libcolgraph.libcc',
-      #             'libcolgraph.libcc.libcolgraph', 'libcolgraph.libpy'],
-      package_data =
-        {'libcolgraph.libcc._libcolgraph': ['libcolgraph/libcc/*.h',
-                                            'libcolgraph/libcc/*.cpp']},
+      py_modules=['libcolgraph'],
+      #package_data =
+      #  {'libcolgraph._libcolgraph': ['libcolgraph/*.h',
+      #                                      'libcolgraph/*.cpp']},
       packages = setuptools.find_packages(),
       version='0.0.1.post7',
       description='this library provides support to construct graphs and their '

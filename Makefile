@@ -18,7 +18,8 @@ deps:
 build: cpp py
 
 cpp:
-	$(MAKE) -C "./libcolgraph/libcc" "build"
+	python3 setup.py build_ext --inplace
+	#$(MAKE) -C "./libcolgraph" "build"
 
 py:
 
@@ -33,7 +34,7 @@ trigger:
 clean: FORCE
 	find . -name "*.pyc" -type f -delete
 	find . -name "__pycache__" -type f -delete
-	$(MAKE) -C "./libcolgraph/libcc" "clean"
+	$(MAKE) -C "./libcolgraph" "clean"
 	python3 setup.py clean
 	rm -rf build dist *.egg-info
 

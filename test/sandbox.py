@@ -12,7 +12,7 @@ import networkx as nx
 # figure out the path of this module and import the library to work with
 import sys
 sys.path.append(str((Path(__file__).parent.resolve() / '..').resolve()))
-from libcolgraph import *
+from libcolgraph.libpy import *
 
 # set default test file or try to infer testfile from commandline args
 try:

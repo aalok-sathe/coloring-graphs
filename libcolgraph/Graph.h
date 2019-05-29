@@ -15,6 +15,7 @@ class Graph
     private:
 
     protected:
+    public:
         std::map<long, Vertex> vertices;
 
     public:
