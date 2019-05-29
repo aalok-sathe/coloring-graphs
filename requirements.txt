@@ -1,4 +1,6 @@
-tqdm>=4.32.1
-networkx>=2.1
-matplotlib>=2.2.2
+setuptools>=28.8.0
 typing>=3.6.6
+coloredlogs>=10.0
+matplotlib>=2.2.2
+networkx>=2.1
+tqdm>=4.32.1

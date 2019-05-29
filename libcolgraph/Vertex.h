@@ -1,8 +1,9 @@
 #ifndef __VERTEX_H__
 #define __VERTEX_H__
 
-#include <map>
-#include <unordered_set>
+#include <set>
+#include <cstddef>
+// #include "GraphUtils.h"
 
 
 
@@ -18,7 +19,7 @@ class Vertex
         int depth;
         int lowpoint;
         Vertex* parent;
-        
+
 
     public:
         Vertex();

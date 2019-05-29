@@ -12,7 +12,7 @@ import networkx as nx
 # figure out the path of this module and import the library to work with
 import sys
 sys.path.append(str((Path(__file__).parent.resolve() / '..').resolve()))
-from lib import *
+from libcolgraph.libpy import *
 
 # set default test file or try to infer testfile from commandline args
 try:
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     rel = Path(__file__).parent
 
     # construct a base graph
-    graph = Graph.BaseGraph()
+    graph = BaseGraph()
     graph.load_txt(rel / test_file)
 
     # construct a coloring graph from the base graph

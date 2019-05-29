@@ -2,7 +2,8 @@
 #define __GRAPH_H__
 
 #include <map>
-#include <string>
+#include <cstddef>
+// #include <string>
 #include <fstream>
 #include "Vertex.h"
 #include "MetaGraph.h"
@@ -16,6 +17,7 @@ class Graph
     private:
 
     protected:
+    public:
         std::map<long, Vertex> vertices;
 
     public:
@@ -28,6 +30,8 @@ class Graph
         long size();
 
         void add_vertex(long name);
+
+        Vertex& get_vertex(long name);
 
         std::map<long, Vertex>::iterator get_vertices();
 

@@ -16,13 +16,13 @@ void
 Graph::
 load_txt(char* path)
 {
-    std::string path_ = std::string(path);
-    std::ifstream file(path_);
+    // std::string path_ = std::string(path);
+    std::ifstream file(path);
     int n;
     file >> n;
 
     for (int i=0; i<n; i++)
-        vertices.insert(std::map<int, Vertex>::value_type(i, Vertex()));
+        add_vertex((long)i);
 
     int value;
     for (int i=0; i<n; i++)
@@ -47,8 +47,19 @@ void
 Graph::
 add_vertex(long name)
 {
-    Vertex v;
-    vertices.insert(std::pair<long,Vertex>(name,v));
+    vertices.insert(std::map<int, Vertex>::value_type(name, Vertex()));
+}
+
+
+Vertex&
+Graph::
+get_vertex(long name = NULL)
+{
+    if (name == NULL)
+        for (auto& item : vertices)
+            return item.second;
+
+    return vertices[name];
 }
 
 
@@ -56,7 +67,7 @@ std::map<long, Vertex>::iterator
 Graph::
 get_vertices()
 {
-
+    // TODO
 }
 
 MetaGraph
@@ -82,7 +93,7 @@ Graph::Tarjans()
     for (auto& [name, vertex] : this->vertices)
     {
         if(vertex.depth == -1)
-        {   
+        {
             // If vertex has not been
             // visited, set up that
             // vertex as a root for DFS
