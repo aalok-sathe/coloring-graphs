@@ -2,7 +2,7 @@ variables:
     TWINE_USERNAME: SECURE
     TWINE_PASSWORD: SECURE
     TWINE_REPOSITORY_URL: https://upload.pypi.org/legacy/
-    PYBIN: /opt/python/cp35-cp35mu/bin
+    PYBIN: /opt/python/cp35-cp35m/bin
 
 stages:
     - deploy
@@ -20,8 +20,8 @@ build:
         - yum install -y -q wget curl
         - yum install -y -q automake autoconf pcre-devel
         - yum -y -q update
-        - /opt/python/cp35-cp35mu/bin/pip install -U setuptools wheel twine auditwheel
-        - /opt/python/cp35-cp35mu/bin/pip install -U anybadge
+        - /opt/python/cp35-cp35m/bin/pip install -U setuptools wheel twine auditwheel
+        - /opt/python/cp35-cp35m/bin/pip install -U anybadge
         - git clone https://github.com/swig/swig.git
         - cd swig
         - git checkout rel-4.0.0
@@ -31,7 +31,7 @@ build:
         - make install
         - cd ..
     script:
-        - /opt/python/cp35-cp35mu/bin/python setup.py sdist bdist_wheel
+        - /opt/python/cp35-cp35m/bin/python setup.py sdist bdist_wheel
         - auditwheel repair dist/*.whl -w dist
         - if twine upload dist/*.tar.gz --verbose && twine upload dist/*manylinux*.whl --verbose; then echo "PASSED JOB" && anybadge --label=pipeline --value=passing --file=build.svg passing=green failing=red; else echo "FAILED JOB" && anybadge --label=pipeline --value=failing --file=build.svg passing=green failing=red; fi
         - mkdir -p public; mv build.svg public/build.svg
