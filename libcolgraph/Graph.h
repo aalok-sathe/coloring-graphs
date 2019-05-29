@@ -3,7 +3,7 @@
 
 #include <map>
 #include <cstddef>
-// #include <string>
+#include <stdexcept>
 #include <fstream>
 #include "Vertex.h"
 
@@ -17,7 +17,7 @@ class Graph
 
     protected:
     public:
-        std::map<long, Vertex> vertices;
+        std::unordered_map<long, Vertex> vertices;
 
     public:
 
@@ -32,22 +32,32 @@ class Graph
 
         Vertex& get_vertex(long name);
 
-        std::map<long, Vertex>::iterator get_vertices();
+        // std::map<long, Vertex>::iterator get_vertices();
 
 };
 
 
-class BaseGraph : Graph
+class BaseGraph : public Graph
 {
     private:
 
     protected:
 
     public:
+
+        // void load_txt(char* path);
+        //
+        // long size();
+        //
+        // void add_vertex(long name);
+        //
+        // Vertex& get_vertex(long name);
+
+        // std::map<long, Vertex>::iterator get_vertices();
 };
 
 
-class ColoringGraph
+class ColoringGraph : public Graph
 {
     private:
         Graph* base;
@@ -55,6 +65,16 @@ class ColoringGraph
     protected:
 
     public:
+
+        // void load_txt(char* path);
+        //
+        // long size();
+        //
+        // void add_vertex(long name);
+        //
+        // Vertex& get_vertex(long name);
+
+        // std::map<long, Vertex>::iterator get_vertices();
 };
 
 

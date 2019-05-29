@@ -46,7 +46,7 @@ void
 Graph::
 add_vertex(long name)
 {
-    vertices.insert(std::map<int, Vertex>::value_type(name, Vertex()));
+    vertices.insert(std::unordered_map<int, Vertex>::value_type(name, Vertex()));
 }
 
 
@@ -57,17 +57,18 @@ get_vertex(long name = NULL)
     if (name == NULL)
         for (auto& item : vertices)
             return item.second;
-
-    return vertices[name];
+    try
+        return vertices.at(name);
+    catch(const std::out_of_range& oor)
 }
 
 
-std::map<long, Vertex>::iterator
-Graph::
-get_vertices()
-{
-    // TODO
-}
+// std::map<long, Vertex>::iterator
+// Graph::
+// get_vertices()
+// {
+//     // TODO
+// }
 
 
 #endif

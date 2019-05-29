@@ -51,3 +51,14 @@
   }
 
 }
+
+Graph::Graph();
+Graph::~Graph();
+
+void Graph::load_txt(char* path);
+
+long Graph::size();
+
+void Graph::add_vertex(long name);
+
+Vertex& Graph::get_vertex(long name);

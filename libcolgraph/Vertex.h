@@ -36,7 +36,7 @@ class Vertex
 };
 
 
-class ColoringVertex : Vertex
+class ColoringVertex : public Vertex
 {
     private:
 
