@@ -1,7 +1,8 @@
 #ifndef __VERTEX_H__
 #define __VERTEX_H__
 
-#include <unordered_set>
+#include <set>
+#include <cstddef>
 // #include "GraphUtils.h"
 
 enum V_ATTR
@@ -19,7 +20,7 @@ class Vertex
 
     protected:
         long name;
-        std::unordered_set<long> neighbors;
+        std::set<long> neighbors;
 
     public:
         Vertex();
@@ -31,7 +32,7 @@ class Vertex
 
         void add_neighbor(Vertex& other);
 
-        std::unordered_set<long>::iterator get_neighbors();
+        std::set<long>::iterator get_neighbors();
 };
 
 
