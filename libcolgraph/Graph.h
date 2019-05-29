@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <fstream>
 #include "Vertex.h"
+#include "MetaGraph.h"
 
 
 /*
@@ -34,6 +35,9 @@ class Graph
 
         // std::map<long, Vertex>::iterator get_vertices();
 
+        MetaGraph Tarjans();
+
+
 };
 
 
@@ -60,9 +64,9 @@ class BaseGraph : public Graph
 class ColoringGraph : public Graph
 {
     private:
-        Graph* base;
 
     protected:
+        Graph* base;
 
     public:
 
@@ -76,6 +80,8 @@ class ColoringGraph : public Graph
 
         // std::map<long, Vertex>::iterator get_vertices();
 };
+
+
 
 
 #endif

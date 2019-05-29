@@ -4,11 +4,13 @@
 #include "Vertex.h"
 
 Vertex::
-Vertex() {}
+Vertex()
+	: depth(-1)
+{}
 
 Vertex::
-Vertex(long name_ = NULL)
-    : name(name_)
+Vertex(long name_)
+    : name(name_), depth(-1)
 {}
 
 Vertex::
@@ -22,6 +24,13 @@ get_name()
     return name;
 }
 
+Vertex
+Vertex::
+get_next_neighbor()
+{
+    // TODO
+}
+
 void
 Vertex::
 add_neighbor(Vertex& other)
@@ -29,11 +38,6 @@ add_neighbor(Vertex& other)
     neighbors.insert(other.get_name());
 }
 
-std::set<long>::iterator
-Vertex::
-get_neighbors()
-{
-    // TODO
-}
+
 
 #endif

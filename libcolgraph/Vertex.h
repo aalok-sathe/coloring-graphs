@@ -5,11 +5,6 @@
 #include <cstddef>
 // #include "GraphUtils.h"
 
-enum V_ATTR
-{
-    NAME,
-    COLOR
-};
 
 
 class Vertex
@@ -19,8 +14,12 @@ class Vertex
     private:
 
     protected:
+        std::unordered_set<long> neighbors;
         long name;
-        std::set<long> neighbors;
+        int depth;
+        int lowpoint;
+        Vertex* parent;
+
 
     public:
         Vertex();
@@ -32,7 +31,7 @@ class Vertex
 
         void add_neighbor(Vertex& other);
 
-        std::set<long>::iterator get_neighbors();
+        Vertex get_next_neighbor();
 };
 
 
@@ -41,8 +40,11 @@ class ColoringVertex : public Vertex
     private:
 
     protected:
+        int nt;
 
     public:
 };
+
+
 
 #endif
