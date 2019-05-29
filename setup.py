@@ -32,7 +32,7 @@ setup(name='libcolgraph',
       #  {'libcolgraph._libcolgraph': ['libcolgraph/*.h',
       #                                      'libcolgraph/*.cpp']},
       packages = setuptools.find_packages(),
-      version='0.0.1.post7',
+      version='0.0.1.post8',
       description='this library provides support to construct graphs and their '
                   'coloring graphs. a coloring graph is a metagraph '
                   'representing all the valid colorings of a graph. each '
@@ -47,7 +47,8 @@ setup(name='libcolgraph',
       install_requires = ['tqdm>=4.32.1',
                           'networkx>=2.1',
                           'matplotlib>=2.2.2',
-                          'typing>=3.6.6'],
+                          'typing>=3.6.6',
+                          'coloredlogs>=10.0'],
       python_requires='>=3.4',
       classifiers=[
           'Intended Audience :: Education',

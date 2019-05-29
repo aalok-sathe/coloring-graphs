@@ -1,5 +1,5 @@
 ## coloring-graphs
-[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=3965593111571346127)](https://gitlab.com/aalok-sathe/coloring-graphs/)
+[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=3352315354503005117)](https://gitlab.com/aalok-sathe/coloring-graphs/)
 
 a coloring graphs library written in C++ for speedy computation and wrapped in
 Python for ease of development and extension!
@@ -13,7 +13,7 @@ in this project, we represent a coloring as an integer, which, when converted to
 base k (for a k-coloring), represents the vertex-wise colors [0,k).
 
 the library is under development being written using Python and C/C++.
-for documentation, feel free to take a look inside `lib/` and read the docstrings.
+for documentation, feel free to take a look inside `libcolgraph/` and read the docstrings.
 for examples, see the files in `test/`.
 for questions, reach out.
 
@@ -37,9 +37,9 @@ for questions, reach out.
         `make install`
         
     
-    - [pypi](https://pypi.org/project/libcolgraph/) (under construction! NOT recommended)
+    - [pypi](https://pypi.org/project/libcolgraph/) 
 
-        `python3 -m pip install libcolgraph`
+        `python3 -m pip install libcolgraph [--user]`
 
         issues:
         - currently a binary wheel is available only for `manylinux`
@@ -55,12 +55,16 @@ for questions, reach out.
 
     - usage:
 
-    `import libcolgraph`
+    ```python
+    import libcolgraph
+    g = libcolgraph.Graph()
+    g.load_txt('./test/input/g1.in')
+    ```
 
     - run a test suite!
     `make test`
 
-    - try the sandbox file (`test/sandbox.py`) to see how plotting works (python-only)
+    - try the sandbox file (`test/sandbox.py`) to see how plotting works (currently pure python-only)
         - `python3 test/sandbox.py 3`
         - `python3 test/sandbox.py 3 test/input/g1.in`
 
@@ -73,5 +77,6 @@ full documentation coming soon
 ### who
 
 Coloring Graphs lab, University of Richmond. Multiple contributors.
+
 
 
