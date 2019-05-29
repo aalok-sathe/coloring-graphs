@@ -1,18 +1,19 @@
 #ifndef __METAVERTEX_H__
 #define __METAVERTEX_H__
 #include "Vertex.h"
-// #include <map>
-// #include <unordered_set>
+
+class Vertex;
 
 class MetaVertex
 {
     friend class MetaGraph;
+    friend class Graph;
 
 private:
 
 protected:
     long name;
-    std::map<long, Vertex> base_vertices;
+    std::list<Vertex> vertices;
     std::unordered_set<long> meta_neighbors;
 
 public:
