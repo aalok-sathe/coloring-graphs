@@ -8,7 +8,7 @@
 #include "Vertex.h"
 #include "MetaGraph.h"
 
-
+class Vertex;
 /*
  *  the OG graph class
  */
