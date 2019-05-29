@@ -23,7 +23,7 @@
 %inline %{
   struct GraphVertexIterator {
     std::map<long, Vertex>::iterator it;
-    size_t len;
+    long len;
   };
 %}
 
