@@ -8,7 +8,7 @@ stages:
     - status
 
 build:
-    image: pagmo2/manylinux1_x86_64_with_deps #pypywheels/manylinux2010-pypy_x86_64
+    image: quay.io/pypa/manylinux1_x86_64 #pagmo2/manylinux1_x86_64_with_deps #pypywheels/manylinux2010-pypy_x86_64
     stage: deploy
     before_script:
         - yum -y -q update
@@ -20,14 +20,15 @@ build:
         - yum install rh-python36
         - yum install -y -q automake autoconf pcre-devel
         - yum -y -q update
-        - scl enable rh-python36 bash
+        #- scl enable rh-python36 bash
         - python --version
+        - python3 --version
         - curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
         #- wget --no-check-certificate http://bootstrap.pypa.io/get-pip.py
-        - python get-pip.py
-        - python -m pip install -U pip
-        - python -m pip install -U setuptools wheel twine auditwheel
-        - python -m pip install -U anybadge
+        - python3 get-pip.py
+        - python3 -m pip install -U pip
+        - python3 -m pip install -U setuptools wheel twine auditwheel
+        - python3 -m pip install -U anybadge
         - git clone https://github.com/swig/swig.git
         - cd swig
         - git checkout rel-4.0.0
@@ -37,7 +38,7 @@ build:
         - make install
         - cd ..
     script:
-        - python setup.py sdist bdist_wheel
+        - python3 setup.py sdist bdist_wheel
         - auditwheel repair dist/*.whl -w dist
         - if twine upload dist/*.tar.gz --verbose && twine upload dist/*manylinux*.whl --verbose; then echo "PASSED JOB" && anybadge --label=pipeline --value=passing --file=build.svg passing=green failing=red; else echo "FAILED JOB" && anybadge --label=pipeline --value=failing --file=build.svg passing=green failing=red; fi
         - mkdir -p public; mv build.svg public/build.svg
