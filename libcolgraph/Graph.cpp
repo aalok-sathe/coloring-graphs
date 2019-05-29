@@ -15,8 +15,8 @@ void
 Graph::
 load_txt(char* path)
 {
-    std::string path_ = std::string(path);
-    std::ifstream file(path_);
+    // std::string path_ = std::string(path);
+    std::ifstream file(path);
     int n;
     file >> n;
 
