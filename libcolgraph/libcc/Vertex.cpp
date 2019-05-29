@@ -4,11 +4,13 @@
 #include "Vertex.h"
 
 Vertex::
-Vertex() {}
+Vertex()
+	: depth(-1)
+{}
 
 Vertex::
 Vertex(long name_)
-    : name(name_)
+    : name(name_), depth(-1)
 {}
 
 Vertex::

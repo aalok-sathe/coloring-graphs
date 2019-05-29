@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include "Vertex.h"
+#include "MetaGraph.h"
 
 
 /*
@@ -30,7 +31,7 @@ class Graph
 
         std::map<long, Vertex>::iterator get_vertices();
 
-
+        MetaGraph Tarjans();
 
 
 };
@@ -56,20 +57,7 @@ class ColoringGraph : Graph
     public:
 };
 
-class MetaGraph
-{
 
-    private:
-
-    protected:
-        std::map<long, MetaVertex>;
-
-    public:
-
-        MetaGraph();
-        ~MetaGraph();
-    
-};
 
 
 #endif

@@ -45,22 +45,6 @@ class ColoringVertex : Vertex
     public:
 };
 
-class MetaVertex
-{
-    friend class MetaGraph;
 
-private:
-
-protected:
-    long name;
-    std::map<long, Vertex> base_vertices;
-    std::unordered_set<long> meta_neighbors;
-
-public:
-
-    MetaVertex();
-    ~MetaVertex();
-
-};
 
 #endif

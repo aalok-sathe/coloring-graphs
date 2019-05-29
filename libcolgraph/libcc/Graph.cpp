@@ -2,6 +2,7 @@
 #define __GRAPH_CPP__
 
 #include "Graph.h"
+#include <list>
 
 
 Graph::
@@ -58,14 +59,45 @@ get_vertices()
 
 }
 
-MetaGraph::MetaGraph()
+MetaGraph
+Graph::Tarjans()
 {
 
-}
+    //*****************************
+    // Declare helper variables and structures
 
-MetaGraph::~MetaGraph()
-{
+    MetaGraph metagraph; //to be returned eventually
+    std::list<Vertex>::iterator current;
+    Vertex root, child;
+    std::list<Vertex> list;
 
+
+    //*****************************
+    // Main body of the method
+
+
+    // For loop ensures all vertices
+    // will be processed in case the
+    // graph is disconnected
+    for (auto& [name, vertex] : this->vertices)
+    {
+        if(vertex.depth == -1)
+        {   
+            // If vertex has not been
+            // visited, set up that
+            // vertex as a root for DFS
+            root = vertex;
+            vertex.depth = 0;
+            list.push_back(vertex);
+            current = list.begin();
+        }
+
+        // do
+        // {
+
+        // }
+        // while ();
+    }
 }
 
 
