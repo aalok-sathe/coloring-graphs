@@ -109,6 +109,7 @@ Graph::Tarjans()
         while(true)
         {
             child = current->get_next_neighbor(this);
+            if (child == NULL && current->name == root.name) {break;}
             if (child != NULL)
             {
                 // if(list.end()-1 != current)
