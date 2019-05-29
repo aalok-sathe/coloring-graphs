@@ -1,14 +1,14 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
-#include <map>
+#include <unordered_map>
 #include <cstddef>
 #include <stdexcept>
 #include <fstream>
 #include "Vertex.h"
 #include "MetaGraph.h"
 
-class Vertex;
+
 /*
  *  the OG graph class
  */
