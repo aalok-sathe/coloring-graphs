@@ -14,12 +14,18 @@ private:
 protected:
     long name;
     std::list<Vertex> vertices;
-    std::unordered_set<long> meta_neighbors;
+    std::unordered_set<MetaVertex> meta_neighbors;
 
 public:
 
     MetaVertex();
     ~MetaVertex();
+
+    // // adds v to neighbor list
+    // void add_neighbor(MetaVertex v);
+
+    // // add to each other's neighbor list
+    // void connect(MetaVertex v);
 
 };
 

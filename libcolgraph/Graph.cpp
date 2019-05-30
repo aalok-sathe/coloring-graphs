@@ -4,6 +4,7 @@
 #include "Graph.h"
 #include <list>
 #include <map>
+#include <stack>
 
 
 Graph::
@@ -84,6 +85,7 @@ Graph::Tarjans()
     Vertex root;
     Vertex *child;
     std::list<Vertex> list;
+    std::stack<Vertex> stack;
 
     //*****************************
     // Main body of the method
@@ -95,6 +97,7 @@ Graph::Tarjans()
     for (auto& [name, vertex] : this->vertices)
     {
         list.clear();
+        while(!stack.empty()){stack.pop();}
 
         if(vertex.depth == -1)
         {
@@ -139,11 +142,12 @@ Graph::Tarjans()
                     // Also, if the parent is a cut vertex,
                     // everything in the list after current
                     // is a biconnected component
-                    MetaVertex m;
-                    m.vertices.push_back(*(current->parent));
+                    MetaVertex main;
+                    MetaVertex cut;
+                    main.vertices.push_back(*(current->parent));
                     temp = current->parent;
-                    m.vertices.splice(m.vertices.begin(), list, current, list.end());
-                    metagraph.add_vertex(m);
+                    main.vertices.splice(main.vertices.begin(), list, current, list.end());
+                    metagraph.add_vertex(main);
                     current = temp;
                 }
                 else {current = current->parent;}

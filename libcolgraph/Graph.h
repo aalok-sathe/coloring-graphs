@@ -17,10 +17,9 @@ class Graph
     private:
 
     protected:
-    public:
-        std::unordered_map<long, Vertex> vertices;
 
     public:
+        std::unordered_map<long, Vertex> vertices;
 
         Graph();
         ~Graph();
