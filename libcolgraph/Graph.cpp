@@ -75,7 +75,7 @@ struct GraphVertexIterator
 Graph::
 __iter__()
 {
-    struct GraphVertexIterator ret = { vertices.begin(), size(), 0 };
+    struct GraphVertexIterator ret = { vertices.begin(), size() };
     return ret;
 }
 

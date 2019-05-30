@@ -3,6 +3,7 @@
 
 #include <set>
 #include <cstddef>
+#include <stdexcept>
 // #define StopIteration 1
 // #include "GraphUtils.h"
 
@@ -20,12 +21,16 @@ struct VertexNeighborIterator
 
     ~VertexNeighborIterator() {};
 
-    long __next__()
+    long next()
     {
         if (this->len--)
             return *(this->it++);
 
-        throw(1);
+        throw std::out_of_range("");
+    }
+    long __next__()
+    {
+        return next();
     }
 
     struct VertexNeighborIterator* __iter__()

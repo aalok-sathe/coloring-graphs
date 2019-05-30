@@ -3,6 +3,7 @@
 
 #include <map>
 #include <cstddef>
+#include <stdexcept>
 // #include <string>
 #include <fstream>
 #include "Vertex.h"
@@ -13,16 +14,19 @@ struct GraphVertexIterator
 {
     std::map<long, Vertex>::iterator it;
     long len;
-    int stop_iter;
 
     ~GraphVertexIterator() {};
 
-    Vertex __next__()
+    Vertex next()
     {
         if (this->len--)
             return (*this->it++).second;
 
         throw std::out_of_range("");
+    }
+    Vertex __next__()
+    {
+        return next();
     }
 
     struct GraphVertexIterator* __iter__()

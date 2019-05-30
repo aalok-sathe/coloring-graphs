@@ -4,35 +4,53 @@
 %include "exception.i"
 
 %{
+    #include <Python.h>
     #include <assert.h>
     #include "Graph.h"
+    #include <iostream>
     #include "Vertex.h"
     #include <stdexcept>
 %}
 
-%exception GraphVertexIterator::next
+/* %except(python)
+{
+    try
+    {
+        $function
+    }
+    catch (...)
+    {
+        PyErr_SetString(PyExc_StopIteration, "end of iteration");
+        return NULL;
+    }
+} */
+
+%exception next
 {
     try
     {
         $action
     }
-    catch(1)
+    catch(...)
     {
+        /* std::cout << 'NEXT EXCEPT 1' << std::endl; */
         PyErr_SetString(PyExc_StopIteration, "End of iterator");
-        return NULL;
+        /* std::cout << 'NEXT EXCEPT 2' << std::endl; */
+        SWIG_fail;
     }
 }
 
-%exception Graph::get_vertex
+%exception GraphVertexIterator::__next__
 {
     try
     {
+        /* std::cout << "$name $decl" << std::endl; */
         $action
     }
-    catch(std::out_of_range)
+    catch(std::out_of_range& e)
     {
-        PyErr_SetString(PyExc_KeyError, "Key not found");
-        return NULL;
+        PyErr_SetString(PyExc_StopIteration, "iterator exhausted");
+        SWIG_fail;
     }
 }
 

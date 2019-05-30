@@ -48,8 +48,9 @@ struct VertexNeighborIterator
 Vertex::
 __iter__()
 {
-    struct VertexNeighborIterator ret = { neighbors.begin(), neighbors.size(), 0 };
+    struct VertexNeighborIterator ret = { neighbors.begin(), neighbors.size() };
     return ret;
 }
+
 
 #endif
