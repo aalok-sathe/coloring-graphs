@@ -1,4 +1,8 @@
-### installation instructions
+## install via pip
+
+    python3 -m pip install libcolgraph
+
+## manual installation instructions
 
 1. install [`swig`](http://swig.org/)
 
@@ -9,9 +13,7 @@
   - `cd coloring-graphs`
 
 4. make
-  - `make`
-  
-5. use within the directory (or use by adding directory to `PYTHONPATH`)
+  - `make` and use within the directory (or use by adding directory to `PYTHONPATH`)
     ```bash
     $ python3
     >>> import libcolgraph
@@ -22,3 +24,5 @@
     $ python3 test.py
     ```
     
+  OR
+  - `make install` to install system-wide for your user
