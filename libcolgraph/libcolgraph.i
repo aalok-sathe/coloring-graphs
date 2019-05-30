@@ -7,30 +7,48 @@
     #include <assert.h>
     #include "Graph.h"
     #include "Vertex.h"
-    static int myErr = 0;
+    #include <stdexcept>
 %}
 
-%exception Graph::next {
-  assert(!myErr);
-  $action
-  if (myErr) {
-    myErr = 0; // clear flag for next time
-    PyErr_SetString(PyExc_StopIteration, "End of iterator");
-    return NULL;
-  }
+%exception GraphVertexIterator::next
+{
+    try
+    {
+        $action
+    }
+    catch(1)
+    {
+        PyErr_SetString(PyExc_StopIteration, "End of iterator");
+        return NULL;
+    }
 }
 
-%inline %{
+%exception Graph::get_vertex
+{
+    try
+    {
+        $action
+    }
+    catch(std::out_of_range)
+    {
+        PyErr_SetString(PyExc_KeyError, "Key not found");
+        return NULL;
+    }
+}
+
+
+/*%inline %{
   struct GraphVertexIterator {
     std::map<long, Vertex>::iterator it;
     long len;
+    ~GraphVertexIterator() {};
   };
-%}
+%}*/
 
 %include "Graph.h"
 %include "Vertex.h"
 
-%extend GraphVertexIterator {
+/*%extend GraphVertexIterator {
   struct GraphVertexIterator* __iter__() {
     return $self;
   }
@@ -39,15 +57,14 @@
     if ($self->len--) {
       return (*$self->it++).second;
     }
-    myErr = 1;
+    stop_iter = 1;
     return 0;
   }
-}
+}*/
 
-%extend Graph {
-  struct GraphVertexIterator __iter__() {
-    struct GraphVertexIterator ret = { $self->vertices.begin(), $self->size() };
-    return ret;
+/*%extend Graph {
+  struct GraphVertexIterator get_vertices() {
+    return $self->__iter__();
   }
 
-}
+}*/

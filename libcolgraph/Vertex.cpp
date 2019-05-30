@@ -7,7 +7,7 @@ Vertex::
 Vertex() {}
 
 Vertex::
-Vertex(long name_ = NULL)
+Vertex(long name_)
     : name(name_)
 {}
 
@@ -15,9 +15,16 @@ Vertex::
 ~Vertex()
 {}
 
+bool
+Vertex::
+operator==(const Vertex& other)
+{
+    return name == other.get_name();
+}
+
 long
 Vertex::
-get_name()
+get_name() const
 {
     return name;
 }
@@ -29,11 +36,20 @@ add_neighbor(Vertex& other)
     neighbors.insert(other.get_name());
 }
 
-std::set<long>::iterator
+struct VertexNeighborIterator
 Vertex::
 get_neighbors()
 {
-    // TODO
+    return __iter__();
+}
+
+
+struct VertexNeighborIterator
+Vertex::
+__iter__()
+{
+    struct VertexNeighborIterator ret = { neighbors.begin(), neighbors.size(), 0 };
+    return ret;
 }
 
 #endif

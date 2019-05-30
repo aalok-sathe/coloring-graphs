@@ -8,18 +8,36 @@
 #include "Vertex.h"
 
 
+
+struct GraphVertexIterator
+{
+    std::map<long, Vertex>::iterator it;
+    long len;
+    int stop_iter;
+
+    ~GraphVertexIterator() {};
+
+    Vertex __next__()
+    {
+        if (this->len--)
+            return (*this->it++).second;
+
+        throw std::out_of_range("");
+    }
+
+    struct GraphVertexIterator* __iter__()
+    {
+        return this;
+    }
+};
+
 /*
  *  the OG graph class
  */
 class Graph
 {
-    private:
-
-    protected:
     public:
         std::map<long, Vertex> vertices;
-
-    public:
 
         Graph();
         ~Graph();
@@ -27,34 +45,31 @@ class Graph
         void load_txt(char* path);
 
         long size();
+        long __len__() { return size(); };
 
         void add_vertex(long name);
 
         Vertex& get_vertex(long name);
 
-        std::map<long, Vertex>::iterator get_vertices();
+        struct GraphVertexIterator __iter__();
+        struct GraphVertexIterator get_vertices();
 
 };
 
 
-class BaseGraph : Graph
+class BaseGraph : public Graph
 {
-    private:
-
-    protected:
-
     public:
+
 };
 
 
-class ColoringGraph
+class ColoringGraph : public Graph
 {
-    private:
+    public:
         Graph* base;
 
-    protected:
 
-    public:
 };
 
 

@@ -46,28 +46,39 @@ void
 Graph::
 add_vertex(long name)
 {
-    vertices.insert(std::map<int, Vertex>::value_type(name, Vertex()));
+    Vertex v(name);
+    vertices.insert(std::map<long, Vertex>::value_type(name, v));
 }
 
 
 Vertex&
 Graph::
-get_vertex(long name = NULL)
+get_vertex(long name)
 {
-    if (name == NULL)
-        for (auto& item : vertices)
-            return item.second;
+    // if (name == NULL)
+    //     for (auto& item : vertices)
+    //         return item.second;
 
-    return vertices[name];
+    return vertices.at(name);
 }
 
 
-std::map<long, Vertex>::iterator
+struct GraphVertexIterator
 Graph::
 get_vertices()
 {
-    // TODO
+    return __iter__();
 }
+
+
+struct GraphVertexIterator
+Graph::
+__iter__()
+{
+    struct GraphVertexIterator ret = { vertices.begin(), size(), 0 };
+    return ret;
+}
+
 
 
 #endif
