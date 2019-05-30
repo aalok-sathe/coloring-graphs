@@ -63,6 +63,10 @@ for questions, reach out.
         - `python3 test/sandbox.py 3 test/input/g1.in`
 
 
+### contribute
+
+see [contributing guide](CONTRIBUTING.md)
+
 ### help
 
 full documentation coming soon
