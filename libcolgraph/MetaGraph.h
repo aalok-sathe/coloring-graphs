@@ -9,12 +9,14 @@ class MetaGraph
     private:
 
     protected:
-        std::map<long, MetaVertex> vertices;
+        std::list<MetaVertex> vertices;
 
     public:
 
         MetaGraph();
         ~MetaGraph();
+
+        void add_vertex(MetaVertex m){};
     
 };
 

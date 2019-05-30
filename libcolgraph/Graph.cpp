@@ -59,9 +59,9 @@ get_vertex(long name = NULL)
     if (name == NULL)
         for (auto& item : vertices)
             return item.second;
-    try
+    // try
         return vertices.at(name);
-    catch(const std::out_of_range& oor)
+    // catch(const std::out_of_range& oor)
 }
 
 
@@ -84,7 +84,7 @@ Graph::Tarjans()
     Vertex root;
     Vertex *child;
     std::list<Vertex> list;
-
+    int numCuts;
 
     //*****************************
     // Main body of the method
@@ -95,6 +95,10 @@ Graph::Tarjans()
     // graph is disconnected
     for (auto& [name, vertex] : this->vertices)
     {
+
+        numCuts = 0;
+        list.clear();
+
         if(vertex.depth == -1)
         {
             // If vertex has not been
@@ -109,37 +113,76 @@ Graph::Tarjans()
         while(true)
         {
             child = current->get_next_neighbor(this);
-            if (child == NULL && current->name == root.name) {break;}
+
             if (child != NULL)
-            {
-                // if(list.end()-1 != current)
-                // {
-                //     list.push_back(*current);
-                // }
+            {   
+                // if the DFS found another child,
+                // go down that path
                 list.push_back(*child);
                 child->parent = current;
                 child->depth = current->depth + 1;
                 ++current;
             }
 
-            else
+            else //if (child == NULL)
             {
+                // Break if the root has no more children
+                if (current->name == root.name) {break;}
+
+                // Compute lowpoint and return
                 current->lowpoint = current->lp(this);
-                if(current->check_for_cut())
+                
+                if (current->parent->name == root.name)
                 {
+                    // If DFS ever gets back
+                    // to the root, everything
+                    // left in the list is 
+                    // a biconnected component
                     MetaVertex m;
                     m.vertices.push_back(*(current->parent));
                     temp = current->parent;
                     m.vertices.splice(m.vertices.begin(), list, current, list.end());
+                    metagraph.add_vertex(m);
+                    numCuts++;
                     current = temp;
-
                 }
-                
 
-            }
+                else if (current->lowpoint >= current->parent->depth)
+                {
+                    // If the parent is a cut vertex,
+                    // create a metavertex object
+                    // and add the vertices in the
+                    // biconnected component to
+                    // the metavertex.
+                    MetaVertex m;
+                    m.vertices.push_back(*(current->parent));
+                    temp = current->parent;
+                    m.vertices.splice(m.vertices.begin(), list, current, list.end());
+                    metagraph.add_vertex(m);
+                    numCuts++;
+                    current = temp;
+                }
+            
+
+            } //end of main if-else
+        
+
+        } // end of while loop
+
+        if (numCuts == 0)
+        {
+            // If no cut vertices were found,
+            // then the entire list is a
+            // biconnected component
+            MetaVertex m;
+            m.vertices.splice(m.vertices.begin(), list, list.begin(), list.end());
+            metagraph.add_vertex(m);
         }
-    }
+    
+
+    } // end of main for loop
 }
+
 
 
 #endif

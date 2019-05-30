@@ -37,6 +37,8 @@ class Vertex
         int lp(Graph* g);
 
         bool check_for_cut();
+
+
 };
 
 

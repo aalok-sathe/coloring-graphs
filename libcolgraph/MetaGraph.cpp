@@ -14,4 +14,11 @@ MetaGraph::~MetaGraph()
 
 }
 
+void
+MetaGraph::
+add_vertex(MetaVertex m)
+{
+	vertices.push_back(m);
+}
+
 #endif
