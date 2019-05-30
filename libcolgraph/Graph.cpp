@@ -79,12 +79,11 @@ Graph::Tarjans()
     //*****************************
     // Declare helper variables and structures
 
-    MetaGraph metagraph; //to be returned eventually
+    MetaGraph metagraph;
     std::list<Vertex>::iterator current, temp;
     Vertex root;
     Vertex *child;
     std::list<Vertex> list;
-    int numCuts;
 
     //*****************************
     // Main body of the method
@@ -95,8 +94,6 @@ Graph::Tarjans()
     // graph is disconnected
     for (auto& [name, vertex] : this->vertices)
     {
-
-        numCuts = 0;
         list.clear();
 
         if(vertex.depth == -1)
@@ -129,56 +126,31 @@ Graph::Tarjans()
                 // Break if the root has no more children
                 if (current->name == root.name) {break;}
 
-                // Compute lowpoint and return
+                // Compute lowpoint
                 current->lowpoint = current->lp(this);
                 
-                if (current->parent->name == root.name)
+                if (current->parent->name == root.name ||
+                    current->lowpoint >= current->parent->depth)
                 {
-                    // If DFS ever gets back
-                    // to the root, everything
-                    // left in the list is 
-                    // a biconnected component
-                    MetaVertex m;
-                    m.vertices.push_back(*(current->parent));
-                    temp = current->parent;
-                    m.vertices.splice(m.vertices.begin(), list, current, list.end());
-                    metagraph.add_vertex(m);
-                    numCuts++;
-                    current = temp;
-                }
+                    // If DFS ever gets back to the
+                    // root, everything left in the list
+                    // is a biconnected component
 
-                else if (current->lowpoint >= current->parent->depth)
-                {
-                    // If the parent is a cut vertex,
-                    // create a metavertex object
-                    // and add the vertices in the
-                    // biconnected component to
-                    // the metavertex.
+                    // Also, if the parent is a cut vertex,
+                    // everything in the list after current
+                    // is a biconnected component
                     MetaVertex m;
                     m.vertices.push_back(*(current->parent));
                     temp = current->parent;
                     m.vertices.splice(m.vertices.begin(), list, current, list.end());
                     metagraph.add_vertex(m);
-                    numCuts++;
                     current = temp;
                 }
-            
+                else {current = current->parent;}
 
             } //end of main if-else
         
-
         } // end of while loop
-
-        if (numCuts == 0)
-        {
-            // If no cut vertices were found,
-            // then the entire list is a
-            // biconnected component
-            MetaVertex m;
-            m.vertices.splice(m.vertices.begin(), list, list.begin(), list.end());
-            metagraph.add_vertex(m);
-        }
-    
 
     } // end of main for loop
 }
