@@ -22,33 +22,23 @@ for questions, reach out.
 
     - manual installation
 
-        clone the repository
-        - ssh:
-        `git clone git@github.com:aalok-sathe/coloring-graphs`
-        - https:
-        `git clone https://github.com/aalok-sathe/coloring-graphs`
-
-        go into the repository
-
-        `cd coloring-graphs`
-
-        install
-
-        `make install`
+        refer to [detailed install instructions](INSTALL.md)
         
     
     - [pypi](https://pypi.org/project/libcolgraph/) 
 
-        `python3 -m pip install libcolgraph [--user]`
+        ```bash
+        python3 -m pip install libcolgraph [--user]
+        ```
 
         issues:
         - currently a binary wheel is available only for `manylinux`
-          enabled distributions
-          e.g. centOS
-        - if your distribution is not one of these, then pip will want to
-          compile locally using `setup.py`. in that case,
-          make sure you have [swig](http://www.swig.org/download.html)
-          installed, as it will be needed for compilation.
+          enabled distributions e.g. centOS
+        - if your distribution is not `manylinux`-supported, then pip
+          will want to compile locally using `swig` and `setup.py`.
+          in that case, make sure you have `setuptools` and
+          [swig](http://www.swig.org/download.html) installed, as they
+          will be needed for compilation.
 
 
 2. quickstart:
@@ -59,6 +49,10 @@ for questions, reach out.
     import libcolgraph
     g = libcolgraph.Graph()
     g.load_txt('./test/input/g1.in')
+    
+    g.add_vertex(314)
+    
+    print(g.size())
     ```
 
     - run a test suite!
