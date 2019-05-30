@@ -42,7 +42,7 @@ workflow is split between
     `git tag <name_of_tag>`
     
     the tag you apply must be the tag you intend for the package deployment
-    to PyPI. as such, the tag must be [PEP-friendly](https://www.python.org/dev/peps/pep-0425/)
+    to PyPI. as such, the tag must be [PEP-friendly](https://www.python.org/dev/peps/pep-0440/)
     otherwise deployment will **fail**
   
   - update the package version in `setup.py` with the **same version tag**
