@@ -43,6 +43,8 @@ build:
             - libcolgraph.egg-info/
             - setup.py
     only:
+        refs:
+            - master
         changes:
             - .pipeline.trigger
     allow_failure: true
@@ -59,6 +61,8 @@ pages:
         paths:
             - public/
     only:
+        refs:
+            - master
         changes:
             - .pipeline.trigger
 
