@@ -31,14 +31,17 @@ for questions, reach out.
         python3 -m pip install libcolgraph [--user]
         ```
 
-        issues:
-        - currently a binary wheel is available only for `manylinux`
-          enabled distributions e.g. centOS
+        things to note:
+        - currently a binary wheel is available only for [`manylinux`](https://www.python.org/dev/peps/pep-0513/)
+          distributions e.g. centOS, Debian family, RedHat family, etc.
         - if your distribution is not `manylinux`-supported, then pip
-          will want to compile locally using `swig` and `setup.py`.
+          will need to compile locally using `swig` and `setuptools`.
           in that case, make sure you have `setuptools` and
           [swig](http://www.swig.org/download.html) installed, as they
           will be needed for compilation.
+        - in the future we will release wheels for MacOS as well. these
+          might not be as frequently maintained, however, so your best
+          bet would be to compile locally using `swig`.
 
 
 2. quickstart:
