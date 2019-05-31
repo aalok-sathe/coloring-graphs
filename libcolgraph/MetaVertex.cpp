@@ -21,8 +21,8 @@ static void
 MetaVertex::
 connect(MetaVertex v1, MetaVertex v2)
 {
-	v1.meta_neighbors.insert(v2);
-	v2.meta_neighbors.insert(v1);
+	v1.meta_neighbors.push_back(v2);
+	v2.meta_neighbors.push_back(v1);
 }
 
 #endif

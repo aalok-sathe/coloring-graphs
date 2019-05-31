@@ -14,7 +14,7 @@ public:
 
     long name;
     std::list<Vertex> vertices;
-    std::set<MetaVertex> meta_neighbors;
+    std::list<MetaVertex> meta_neighbors;
     int depth;
 
     MetaVertex();
