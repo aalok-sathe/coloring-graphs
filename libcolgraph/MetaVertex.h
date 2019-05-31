@@ -25,7 +25,7 @@ public:
     ~MetaVertex();
 
     // add to each other's neighbor list
-    static void connect(MetaVertex v);
+    static void connect(MetaVertex v1, MetaVertex v2);
 
 };
 

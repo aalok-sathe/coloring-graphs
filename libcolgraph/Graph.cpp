@@ -73,6 +73,8 @@ get_vertex(long name = NULL)
 //     // TODO
 // }
 
+
+
 MetaGraph
 Graph::Tarjans()
 {
@@ -132,6 +134,7 @@ Graph::Tarjans()
                 // Compute lowpoint
                 current->lowpoint = current->lp(this);
                 
+
                 if (current->parent->name == root.name ||
                     current->lowpoint >= current->parent->depth)
                 {
@@ -161,12 +164,12 @@ Graph::Tarjans()
                     // This if statement creates a MetaVertex
                     // object for the cut vertex if one
                     // does not already exist.
-                    if (cut_vertex_stack.top().name != *(found_cut_vertex->name))
+                    if (cut_vertex_stack.top().name != found_cut_vertex->name)
                     {
-                        MetaVertex cut(found_cut_vertex);
-                        connect(main, cut);}
+                        MetaVertex cut(*found_cut_vertex);
+                        MetaVertex::connect(main, cut);}
 
-                    else { connect(main, cut_vertex_stack.top()); }
+                    else { MetaVertex::connect(main, cut_vertex_stack.top()); }
 
 
                     // Splice the vertices from the DFS list
@@ -183,7 +186,7 @@ Graph::Tarjans()
                     // So we connect them to the component.
                     while (cut_vertex_stack.top().depth > found_cut_vertex->depth)
                     {
-                        connect(main, cut_vertex_stack.top());
+                        MetaVertex::connect(main, cut_vertex_stack.top());
                         cut_vertex_stack.pop();
                     }
                     
@@ -203,7 +206,7 @@ Graph::Tarjans()
 
     } // end of main for-loop
 
-    return metagraph
+    return metagraph;
 }
 
 
