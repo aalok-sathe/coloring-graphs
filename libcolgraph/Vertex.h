@@ -1,8 +1,7 @@
 #ifndef __VERTEX_H__
 #define __VERTEX_H__
 
-#include <map>
-#include <set>
+
 #include <list>
 #include "Graph.h"
 
@@ -12,25 +11,17 @@ class Vertex
 {
     friend class Graph;
 
-    private:
-
-    protected:
-        std::set<long> neighbors;
+    public:
+        
         long name;
         int depth;
         int lowpoint;
         std::list<Vertex>::iterator parent;
 
-
-    public:
         Vertex();
         Vertex(long name_);
 
         ~Vertex();
-
-        long get_name();
-
-        void add_neighbor(Vertex& other);
 
         Vertex* get_next_neighbor(Graph* g);
 
@@ -42,14 +33,18 @@ class Vertex
 };
 
 
+class BaseVertex : public Vertex
+{
+    public:
+        std::list<long> neighbors;
+        std:list<long>::iterator next_neighbor;
+        void add_neighbor(Vertex& other);
+}
+
 class ColoringVertex : public Vertex
 {
-    private:
-
-    protected:
-        int nt;
-
     public:
+        int nt;
 };
 
 

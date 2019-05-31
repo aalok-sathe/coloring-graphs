@@ -13,29 +13,40 @@ Vertex(long name_)
     : name(name_), depth(-1)
 {}
 
+BaseVertex::
+BaseVertex()
+	: depth(-1), next_neighbor(neighbors.begin())
+{}
+
+BaseVertex::
+BaseVertex(long name_)
+	: name(_name), depth(-1), next_neighbor(neighbors.begin())
+{}
+
 Vertex::
 ~Vertex()
 {}
 
-long
-Vertex::
-get_name()
-{
-    return name;
-}
 
 void
 Vertex::
 add_neighbor(Vertex& other)
 {
-    neighbors.insert(other.get_name());
+    neighbors.push_back(other.get_name());
 }
 
 Vertex*
-Vertex::
+BaseVertex::
 get_next_neighbor(Graph* g)
 {
-    // TODO
+    return next_neighbor++;
+}
+
+Vertex*
+ColoringVertex::
+get_next_neighbor(Graph* g)
+{
+
 }
 
 int
