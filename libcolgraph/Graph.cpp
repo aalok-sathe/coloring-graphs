@@ -63,7 +63,7 @@ get_vertex(long name)
 }
 
 
-struct GraphVertexIterator
+const struct GraphVertexIterator*
 Graph::
 get_vertices()
 {
@@ -71,11 +71,12 @@ get_vertices()
 }
 
 
-struct GraphVertexIterator
+const struct GraphVertexIterator*
 Graph::
 __iter__()
 {
-    struct GraphVertexIterator ret = { vertices.begin(), size() };
+    struct GraphVertexIterator* ret;
+    ret = new struct GraphVertexIterator({ vertices.begin(), size() });
     return ret;
 }
 

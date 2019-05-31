@@ -19,8 +19,8 @@ struct GraphVertexIterator
 
     Vertex next()
     {
-        if (this->len--)
-            return (*this->it++).second;
+        if (this->len-- > 0)
+            return this->it++->second;
 
         throw std::out_of_range("");
     }
@@ -55,8 +55,8 @@ class Graph
 
         Vertex& get_vertex(long name);
 
-        struct GraphVertexIterator __iter__();
-        struct GraphVertexIterator get_vertices();
+        const struct GraphVertexIterator* __iter__();
+        const struct GraphVertexIterator* get_vertices();
 
 };
 
