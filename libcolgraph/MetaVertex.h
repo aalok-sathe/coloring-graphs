@@ -19,13 +19,11 @@ protected:
 public:
 
     MetaVertex();
+
     ~MetaVertex();
 
-    // // adds v to neighbor list
-    // void add_neighbor(MetaVertex v);
-
-    // // add to each other's neighbor list
-    // void connect(MetaVertex v);
+    // add to each other's neighbor list
+    static void connect(MetaVertex v);
 
 };
 

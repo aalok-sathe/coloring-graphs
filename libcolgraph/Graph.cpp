@@ -85,7 +85,7 @@ Graph::Tarjans()
     Vertex root;
     Vertex *child;
     std::list<Vertex> list;
-    std::stack<Vertex> stack;
+    std::stack< Vertex> cut_vertex_stack;
 
     //*****************************
     // Main body of the method
@@ -97,7 +97,7 @@ Graph::Tarjans()
     for (auto& [name, vertex] : this->vertices)
     {
         list.clear();
-        while(!stack.empty()){stack.pop();}
+        while(!cut_vertex_stack.empty()){cut_vertex_stack.pop();}
 
         if(vertex.depth == -1)
         {
@@ -137,14 +137,20 @@ Graph::Tarjans()
                 {
                     // If DFS ever gets back to the
                     // root, everything left in the list
-                    // is a biconnected component
-
-                    // Also, if the parent is a cut vertex,
+                    // is a biconnected component.
+                    // OR
+                    // If the parent is a cut vertex,
                     // everything in the list after current
-                    // is a biconnected component
+                    // is a biconnected component.
+
+
                     MetaVertex main;
                     MetaVertex cut;
+                    connect(main, cut);
+
                     main.vertices.push_back(*(current->parent));
+                    cut.vertices.push_back(*(current->parent));
+
                     temp = current->parent;
                     main.vertices.splice(main.vertices.begin(), list, current, list.end());
                     metagraph.add_vertex(main);

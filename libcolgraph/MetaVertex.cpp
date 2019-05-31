@@ -7,21 +7,20 @@ MetaVertex::
 MetaVertex() {}
 
 MetaVertex::
+MetaVertex(Vertex v)
+{
+	vertices.push_back(v);
+}
+
+MetaVertex::
 ~MetaVertex(){}
 
-// void
-// MetaVertex::
-// add_neighbor(MetaVertex v)
-// {
-// 	meta_neighbors.insert(v);
-// }
-
-// void
-// MetaVertex::
-// connect(MetaVertex v)
-// {
-// 	meta_neighbors.insert(v);
-// 	v.meta_neighbors.insert(this);
-// }
+static void
+MetaVertex::
+connect(MetaVertex v1, MetaVertex v2)
+{
+	v1.meta_neighbors.insert(v2);
+	v2.meta_neighbors.insert(v1);
+}
 
 #endif
