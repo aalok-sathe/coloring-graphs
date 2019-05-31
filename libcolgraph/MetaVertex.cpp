@@ -10,6 +10,7 @@ MetaVertex::
 MetaVertex(Vertex v)
 {
 	this.name = v.name;
+	this.depth = v.depth;
 	vertices.push_back(v);
 }
 

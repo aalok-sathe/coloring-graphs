@@ -2,7 +2,7 @@
 #define __VERTEX_H__
 
 #include <map>
-#include <unordered_set>
+#include <set>
 #include <list>
 #include "Graph.h"
 
@@ -15,7 +15,7 @@ class Vertex
     private:
 
     protected:
-        std::unordered_set<long> neighbors;
+        std::set<long> neighbors;
         long name;
         int depth;
         int lowpoint;

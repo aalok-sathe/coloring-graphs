@@ -49,7 +49,7 @@ void
 Graph::
 add_vertex(long name)
 {
-    vertices.insert(std::unordered_map<int, Vertex>::value_type(name, Vertex()));
+    vertices.insert(std::map<int, Vertex>::value_type(name, Vertex()));
 }
 
 
@@ -189,6 +189,9 @@ Graph::Tarjans()
                         MetaVertex::connect(main, cut_vertex_stack.top());
                         cut_vertex_stack.pop();
                     }
+
+                    // Add the cut vertex to the stack
+                    cut_vertex_stack.push(*found_cut_vertex);
                     
                     // Add the new component to the MetaGraph
                     metagraph.add_vertex(main);

@@ -1,7 +1,7 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
-#include <unordered_map>
+#include <map>
 #include <cstddef>
 #include <stdexcept>
 #include <fstream>
@@ -19,7 +19,7 @@ class Graph
     protected:
 
     public:
-        std::unordered_map<long, Vertex> vertices;
+        std::map<long, Vertex> vertices;
 
         Graph();
         ~Graph();

@@ -8,15 +8,14 @@ class MetaVertex
 {
     friend class MetaGraph;
     friend class Graph;
-
-private:
-
-protected:
-    long name;
-    std::list<Vertex> vertices;
-    std::unordered_set<MetaVertex> meta_neighbors;
+  
 
 public:
+
+    long name;
+    std::list<Vertex> vertices;
+    std::set<MetaVertex> meta_neighbors;
+    int depth;
 
     MetaVertex();
 
@@ -26,6 +25,8 @@ public:
 
     // add to each other's neighbor list
     static void connect(MetaVertex v1, MetaVertex v2);
+
+
 
 };
 
