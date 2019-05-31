@@ -9,6 +9,7 @@ MetaVertex() {}
 MetaVertex::
 MetaVertex(Vertex v)
 {
+	this.name = v.name;
 	vertices.push_back(v);
 }
 

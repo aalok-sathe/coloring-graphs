@@ -20,6 +20,8 @@ public:
 
     MetaVertex();
 
+    MetaVertex(Vertex v);
+
     ~MetaVertex();
 
     // add to each other's neighbor list

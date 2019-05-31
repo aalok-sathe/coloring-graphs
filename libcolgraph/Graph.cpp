@@ -81,11 +81,11 @@ Graph::Tarjans()
     // Declare helper variables and structures
 
     MetaGraph metagraph;
-    std::list<Vertex>::iterator current, temp;
+    std::list<Vertex>::iterator current, found_cut_vertex;
     Vertex root;
     Vertex *child;
     std::list<Vertex> list;
-    std::stack< Vertex> cut_vertex_stack;
+    std::stack<Vertex> cut_vertex_stack;
 
     //*****************************
     // Main body of the method
@@ -99,7 +99,7 @@ Graph::Tarjans()
         list.clear();
         while(!cut_vertex_stack.empty()){cut_vertex_stack.pop();}
 
-        if(vertex.depth == -1)
+        if (vertex.depth == -1)
         {
             // If vertex has not been
             // visited, set up that
@@ -110,7 +110,7 @@ Graph::Tarjans()
             current = list.begin();
         }
 
-        while(true)
+        while (true)
         {
             child = current->get_next_neighbor(this);
 
@@ -144,25 +144,66 @@ Graph::Tarjans()
                     // is a biconnected component.
 
 
+
+
+                    //**********************************************
+                    // Create biconnected component
+
+
+                    // Store this since we'll be using it a lot
+                    found_cut_vertex = current->parent;
+
+                    // This MetaVertex will store all vertices
+                    // in the biconnected component
                     MetaVertex main;
-                    MetaVertex cut;
-                    connect(main, cut);
 
-                    main.vertices.push_back(*(current->parent));
-                    cut.vertices.push_back(*(current->parent));
 
-                    temp = current->parent;
+                    // This if statement creates a MetaVertex
+                    // object for the cut vertex if one
+                    // does not already exist.
+                    if (cut_vertex_stack.top().name != *(found_cut_vertex->name))
+                    {
+                        MetaVertex cut(found_cut_vertex);
+                        connect(main, cut);}
+
+                    else { connect(main, cut_vertex_stack.top()); }
+
+
+                    // Splice the vertices from the DFS list
+                    // into the component
                     main.vertices.splice(main.vertices.begin(), list, current, list.end());
+                    // Also add the cut vertex itself
+                    main.vertices.push_back(*(found_cut_vertex));
+
+
+                    // Any vertices on the stack with greater
+                    // depth than the cut vertex in question
+                    // were found after that cut vertex.
+                    // Thus, they are part of the component.
+                    // So we connect them to the component.
+                    while (cut_vertex_stack.top().depth > found_cut_vertex->depth)
+                    {
+                        connect(main, cut_vertex_stack.top());
+                        cut_vertex_stack.pop();
+                    }
+                    
+                    // Add the new component to the MetaGraph
                     metagraph.add_vertex(main);
-                    current = temp;
+
+                    // The cut vertex is the parent,
+                    // so we return the DFS to it
+                    current = found_cut_vertex;
                 }
+                
                 else {current = current->parent;}
 
-            } //end of main if-else
+            }
         
-        } // end of while loop
+        } // end of while-loop
 
-    } // end of main for loop
+    } // end of main for-loop
+
+    return metagraph
 }
 
 
