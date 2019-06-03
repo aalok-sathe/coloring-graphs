@@ -160,6 +160,28 @@ Graph::Tarjans()
                     // in the biconnected component
                     MetaVertex main;
 
+                    // Splice the vertices from the DFS list
+                    // into the component
+                    main.vertices.splice(main.vertices.begin(), list, current, list.end());
+                    // Also add the cut vertex itself
+                    main.vertices.push_back(*(found_cut_vertex));
+
+
+
+                    //**********************************************
+                    // Connect component to cut vertices
+
+                    // Any vertices on the stack with greater
+                    // depth than the cut vertex in question
+                    // were found after that cut vertex.
+                    // Thus, they are part of the component.
+                    // So we connect them to the component.
+                    while (cut_vertex_stack.top().depth > found_cut_vertex->depth)
+                    {
+                        MetaVertex::connect(main, cut_vertex_stack.top());
+                        cut_vertex_stack.pop();
+                    }
+
 
                     // This if statement creates a MetaVertex
                     // object for the cut vertex if one
@@ -172,23 +194,7 @@ Graph::Tarjans()
                     else { MetaVertex::connect(main, cut_vertex_stack.top()); }
 
 
-                    // Splice the vertices from the DFS list
-                    // into the component
-                    main.vertices.splice(main.vertices.begin(), list, current, list.end());
-                    // Also add the cut vertex itself
-                    main.vertices.push_back(*(found_cut_vertex));
 
-
-                    // Any vertices on the stack with greater
-                    // depth than the cut vertex in question
-                    // were found after that cut vertex.
-                    // Thus, they are part of the component.
-                    // So we connect them to the component.
-                    while (cut_vertex_stack.top().depth > found_cut_vertex->depth)
-                    {
-                        MetaVertex::connect(main, cut_vertex_stack.top());
-                        cut_vertex_stack.pop();
-                    }
 
                     // Add the cut vertex to the stack
                     cut_vertex_stack.push(*found_cut_vertex);
