@@ -55,10 +55,6 @@ Vertex&
 Graph::
 get_vertex(long name)
 {
-    // if (name == NULL)
-    //     for (auto& item : vertices)
-    //         return item.second;
-
     return vertices.at(name);
 }
 
@@ -75,11 +71,51 @@ const struct GraphVertexIterator*
 Graph::
 __iter__()
 {
-    struct GraphVertexIterator* ret;
-    ret = new struct GraphVertexIterator({ vertices.begin(), size() });
-    return ret;
+    // struct GraphVertexIterator* ret;
+    return new struct GraphVertexIterator({ vertices.begin(), size() });
+    // return ret;
 }
 
+
+ColoringGraph::
+ColoringGraph(int k)
+    : colors(k)
+{}
+
+
+Vertex
+GraphVertexIterator::
+next()
+{
+    if (this->len--)
+        return this->it++->second;
+
+    throw std::out_of_range("");
+}
+
+
+Vertex
+GraphVertexIterator::
+__next__()
+{
+    return next();
+}
+
+
+bool
+GraphVertexIterator::
+hasnext()
+{
+    return (this->len > 0);
+}
+
+
+struct GraphVertexIterator*
+GraphVertexIterator::
+__iter__()
+{
+    return this;
+}
 
 
 #endif

@@ -9,6 +9,12 @@
 #include "Vertex.h"
 
 
+class Vertex;
+class ColoringVertex;
+class Graph;
+class BaseGraph;
+class ColoringGraph;
+
 
 struct GraphVertexIterator
 {
@@ -17,22 +23,13 @@ struct GraphVertexIterator
 
     ~GraphVertexIterator() {};
 
-    Vertex next()
-    {
-        if (this->len-- > 0)
-            return this->it++->second;
+    Vertex next();
+    Vertex __next__();
 
-        throw std::out_of_range("");
-    }
-    Vertex __next__()
-    {
-        return next();
-    }
+    bool hasnext();
 
-    struct GraphVertexIterator* __iter__()
-    {
-        return this;
-    }
+    struct GraphVertexIterator* __iter__();
+
 };
 
 /*
@@ -58,6 +55,8 @@ class Graph
         const struct GraphVertexIterator* __iter__();
         const struct GraphVertexIterator* get_vertices();
 
+        ColoringGraph* build_coloring_graph(int k) {};
+
 };
 
 
@@ -72,7 +71,9 @@ class ColoringGraph : public Graph
 {
     public:
         Graph* base;
+        int colors;
 
+        ColoringGraph(int k);
 
 };
 

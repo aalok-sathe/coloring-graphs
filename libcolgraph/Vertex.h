@@ -4,52 +4,63 @@
 #include <set>
 #include <cstddef>
 #include <stdexcept>
-// #define StopIteration 1
-// #include "GraphUtils.h"
+#include <math.h>
 
-// enum V_ATTR
-// {
-//     NAME,
-//     COLOR
-// };
+#include "Graph.h"
+
+class Vertex;
+class ColoringVertex;
+class Graph;
+class BaseGraph;
+class ColoringGraph;
+
 
 struct VertexNeighborIterator
 {
     std::set<long>::iterator it;
     long len;
-    int stop_iter;
 
     ~VertexNeighborIterator() {};
 
-    long next()
-    {
-        if (this->len--)
-            return *(this->it++);
+    long next();
+    long __next__();
 
-        throw std::out_of_range("");
-    }
-    long __next__()
-    {
-        return next();
-    }
+    bool hasnext();
 
-    struct VertexNeighborIterator* __iter__()
-    {
-        return this;
-    }
+    struct VertexNeighborIterator* __iter__();
+};
+
+struct ColoringVertexNeighborIterator : public VertexNeighborIterator
+{
+    long name;
+    ColoringGraph* graph;
+    int colors;
+
+    long remaining;
+    int positionctr;
+    int colorctr;
+
+    ColoringVertexNeighborIterator() {};
+    ColoringVertexNeighborIterator(long name_, ColoringGraph* graph_, int colors_);
+
+    ~ColoringVertexNeighborIterator() {};
+
+    long next();
+
+    bool hasnext();
+
 };
 
 class Vertex
 {
     friend class Graph;
 
-    private:
+    public:
 
-    protected:
         long name;
         std::set<long> neighbors;
+        struct VertexNeighborIterator* nt;
 
-    public:
         Vertex();
         Vertex(long name_);
 
@@ -61,18 +72,19 @@ class Vertex
 
         void add_neighbor(Vertex& other);
 
-        struct VertexNeighborIterator __iter__();
-        struct VertexNeighborIterator get_neighbors();
+        long get_next_neighbor();
+
+        struct VertexNeighborIterator* __iter__();
+        struct VertexNeighborIterator* get_neighbors();
 };
 
 
 class ColoringVertex : public Vertex
 {
-    private:
-
-    protected:
-
     public:
+
+        long name;
+        struct ColoringVertexNeighborIterator* nt;
 };
 
 #endif
