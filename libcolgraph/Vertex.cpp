@@ -105,6 +105,7 @@ ColoringVertexNeighborIterator(long name_, ColoringGraph* graph_, int colors_)
     remaining = graph->size() * colors;
 }
 
+
 long
 ColoringVertexNeighborIterator::
 next()
@@ -129,17 +130,20 @@ next()
     else
         throw std::out_of_range("");
 
-    long divisor = pow(colors, (graph->size()-positionctr-1));
+    // long divisor = pow(colors, (graph->size()-positionctr-1));
+    long divisor = graph->precompexp[positionctr][1];
 
     int curcol = (name / divisor) % colors;
     if (curcol == colorctr)
         goto loopanchor; // `continue`
 
-    long newcoloring = name / divisor;
-    newcoloring -= newcoloring % colors;
-    newcoloring += colorctr;
-    newcoloring *= divisor;
-    newcoloring += name % divisor;
+    // long newcoloring = name / divisor;
+    long newcoloring = name;
+    newcoloring -= graph->precompexp[positionctr][curcol];
+    // newcoloring -= newcoloring % colors;
+    newcoloring += graph->precompexp[positionctr][colorctr]; // colorctr;
+    // newcoloring *= divisor;
+    // newcoloring += name % divisor;
 
     return newcoloring;
 }
