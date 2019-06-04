@@ -15,7 +15,7 @@ Graph::
 
 
 void
-Graph::
+BaseGraph::
 load_txt(char* path)
 {
     // std::string path_ = std::string(path);
@@ -50,6 +50,13 @@ Graph::
 add_vertex(long name)
 {
     vertices.insert(std::map<int, Vertex>::value_type(name, Vertex()));
+}
+
+void
+BaseGraph::
+add_vertex(long name)
+{
+    vertices.insert(std::map<int, Vertex>::value_type(name, BaseVertex()));
 }
 
 

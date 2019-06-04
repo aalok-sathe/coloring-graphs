@@ -24,7 +24,7 @@ class Graph
         Graph();
         ~Graph();
 
-        void load_txt(char* path);
+        
 
         long size();
 
@@ -47,6 +47,10 @@ class BaseGraph : public Graph
     protected:
 
     public:
+        void load_txt(char* path);
+
+        void add_vertex(long name);
+
 
         // void load_txt(char* path);
         //
