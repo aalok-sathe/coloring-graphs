@@ -14,9 +14,6 @@
  */
 class Graph
 {
-    private:
-
-    protected:
 
     public:
         std::map<long, Vertex> vertices;
@@ -24,7 +21,7 @@ class Graph
         Graph();
         ~Graph();
 
-        void load_txt(char* path);
+        
 
         long size();
 
@@ -48,8 +45,8 @@ class BaseGraph : public Graph
 
     public:
 
-        // void load_txt(char* path);
-        //
+        void load_txt(char* path);
+        
         // long size();
         //
         // void add_vertex(long name);

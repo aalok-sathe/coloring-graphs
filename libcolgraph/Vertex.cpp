@@ -15,12 +15,12 @@ Vertex(long name_)
 
 BaseVertex::
 BaseVertex()
-	: depth(-1), next_neighbor(neighbors.begin())
+	: next_neighbor(neighbors.begin())
 {}
 
 BaseVertex::
 BaseVertex(long name_)
-	: name(_name), depth(-1), next_neighbor(neighbors.begin())
+	: next_neighbor(neighbors.begin())
 {}
 
 Vertex::
@@ -29,20 +29,20 @@ Vertex::
 
 
 void
-Vertex::
+BaseVertex::
 add_neighbor(Vertex& other)
 {
-    neighbors.push_back(other.get_name());
+    neighbors.push_back(other.name);
 }
 
-Vertex*
+long
 BaseVertex::
 get_next_neighbor(Graph* g)
 {
-    return next_neighbor++;
+    return *next_neighbor++;
 }
 
-Vertex*
+long
 ColoringVertex::
 get_next_neighbor(Graph* g)
 {

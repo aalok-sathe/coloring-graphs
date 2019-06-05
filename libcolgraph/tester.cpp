@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
     char* testpath = "../../test/input/g1.in";
 
-    Graph g;
+    BaseGraph g;
 
     cout << "loading graph from " << testpath << endl;
     g.load_txt(testpath);

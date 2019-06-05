@@ -9,7 +9,6 @@ class Graph;
 
 class Vertex
 {
-    friend class Graph;
 
     public:
         
@@ -23,7 +22,9 @@ class Vertex
 
         ~Vertex();
 
-        Vertex* get_next_neighbor(Graph* g);
+        void add_neighbor(Vertex& other);
+
+        long get_next_neighbor(Graph* g);
 
         int lp(Graph* g);
 
@@ -36,15 +37,22 @@ class Vertex
 class BaseVertex : public Vertex
 {
     public:
+
+        BaseVertex();
+        BaseVertex(long name_);
+
         std::list<long> neighbors;
-        std:list<long>::iterator next_neighbor;
+        std::list<long>::iterator next_neighbor;
         void add_neighbor(Vertex& other);
-}
+        long get_next_neighbor(Graph* g);
+
+};
 
 class ColoringVertex : public Vertex
 {
     public:
         int nt;
+        long get_next_neighbor(Graph* g);
 };
 
 

@@ -15,7 +15,7 @@ Graph::
 
 
 void
-Graph::
+BaseGraph::
 load_txt(char* path)
 {
     // std::string path_ = std::string(path);
@@ -84,8 +84,7 @@ Graph::Tarjans()
 
     MetaGraph metagraph;
     std::list<Vertex>::iterator current, found_cut_vertex;
-    Vertex root;
-    Vertex *child;
+    Vertex root, child;
     std::list<Vertex> list;
     std::stack<Vertex> cut_vertex_stack;
 
@@ -114,19 +113,20 @@ Graph::Tarjans()
 
         while (true)
         {
-            child = current->get_next_neighbor(this);
 
-            if (child != NULL)
+            child = vertices.find(current->get_next_neighbor(this))->second;
+
+            if (child.depth == -1)
             {   
                 // if the DFS found another child,
                 // go down that path
-                list.push_back(*child);
-                child->parent = current;
-                child->depth = current->depth + 1;
+                list.push_back(child);
+                child.parent = current;
+                child.depth = current->depth + 1;
                 ++current;
             }
 
-            else //if (child == NULL)
+            else
             {
                 // Break if the root has no more children
                 if (current->name == root.name) {break;}
