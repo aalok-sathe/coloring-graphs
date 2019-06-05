@@ -25,7 +25,30 @@
         SWIG_fail;
     }
 }
-
+%exception VertexNeighborIterator::__next__
+{
+    try
+    {
+        $action
+    }
+    catch(std::out_of_range& e)
+    {
+        PyErr_SetString(PyExc_StopIteration, "end of iterator reached");
+        SWIG_fail;
+    }
+}
+%exception ColoringVertexNeighborIterator::__next__
+{
+    try
+    {
+        $action
+    }
+    catch(std::out_of_range& e)
+    {
+        PyErr_SetString(PyExc_StopIteration, "end of iterator reached");
+        SWIG_fail;
+    }
+}
 %exception Graph::get_vertex
 {
     try
@@ -38,6 +61,10 @@
         SWIG_fail;
     }
 }
+
+/*%template(Graph) Graph<Vertex>;
+%template(BaseGraph) BaseGraph<Vertex>;
+%template(ColoringGraph) ColoringGraph<ColoringVertex>;*/
 
 /* %pythonprepend GraphVertexIterator::GraphVertexIterator %{
     print('thisown was: %d' % self.thisown)

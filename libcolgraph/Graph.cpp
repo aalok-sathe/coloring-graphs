@@ -4,14 +4,18 @@
 #include "Graph.h"
 
 
+/*******************************************************************************
+***************************** GRAPH ********************************************
+*******************************************************************************/
+
 Graph::
 Graph() {}
 
-Graph::
-Graph(char* path)
-{
-    load_txt(path);
-}
+// Graph::
+// Graph(char* path)
+// {
+//     load_txt(path);
+// }
 
 Graph::
 ~Graph() {}
@@ -53,7 +57,7 @@ Graph::
 add_vertex(long name)
 {
     Vertex v(name);
-    vertices.insert(std::map<long, Vertex>::value_type(name, v));
+    vertices.insert(std::pair<long, Vertex>(name, v));
 }
 
 
@@ -94,45 +98,49 @@ Graph::
 get_some_vertex()
 {
     for (auto& pair : vertices)
-        return pair.second;
+            return pair.second;
 }
 
 
-
-const struct GraphVertexIterator*
-Graph::
+template<typename V>
+const struct GraphVertexIterator<V>*
+Graph<V>::
 get_vertices()
 {
     return __iter__();
 }
 
 
-const struct GraphVertexIterator*
-Graph::
+template<typename V>
+const struct GraphVertexIterator<V>*
+Graph<V>::
 __iter__()
 {
     // struct GraphVertexIterator* ret;
-    return new struct GraphVertexIterator({ vertices.begin(), size() });
+    return new struct GraphVertexIterator<Vertex>({ vertices.begin(), size() });
     // return ret;
 }
 
-
-BaseGraph::
-BaseGraph(char* path)
-{
-    load_txt(path);
-}
+/*******************************************************************************
+***************************** BASEGRAPH ****************************************
+*******************************************************************************/
 
 
+// BaseGraph::
+// BaseGraph(char* path)
+// {
+//     load_txt(path);
+// }
 
-ColoringGraph*
+
+ColoringGraph<ColoringVertex>*
 BaseGraph::
 build_coloring_graph(int k)
 {
-    ColoringGraph* cg = new ColoringGraph(k, this);
+    ColoringGraph<ColoringVertex>* cg = new ColoringGraph<ColoringVertex>(k, this);
     for (long coloring=0; coloring<pow(k, size()); coloring++)
         if (is_valid_coloring(coloring, k))
-            cg->add_vertex(coloring);
+            cg->add_vertex(coloring, k);
         else
             continue;
 
@@ -168,6 +176,28 @@ is_valid_coloring(long coloring, int k)
     return true;
 }
 
+
+/*******************************************************************************
+***************************** COLORINGGRAPH ************************************
+*******************************************************************************/
+
+const struct GraphVertexIterator<ColoringVertex>*
+ColoringGraph::
+get_vertices()
+{
+    return __iter__();
+}
+
+const struct GraphVertexIterator<ColoringVertex>*
+ColoringGraph::
+__iter__()
+{
+    // struct GraphVertexIterator* ret;
+    return new struct GraphVertexIterator<ColoringVertex>({ vertices.begin(), size() });
+    // return ret;
+}
+
+
 ColoringGraph::
 ColoringGraph(int k, Graph* g)
     : colors(k), base(g)
@@ -176,9 +206,10 @@ ColoringGraph(int k, Graph* g)
 
 void
 ColoringGraph::
-add_vertex(long name)
+add_vertex(long name, int k)
 {
-    Graph::add_vertex(name);
+    ColoringVertex vertex(name, k, this);
+    vertices.insert(std::pair<long, ColoringVertex>(name, vertex));
 
     std::vector<long> v;
     for (int i=0; i<colors; v.push_back(i++*pow(colors, precompexp.size())));
@@ -186,8 +217,14 @@ add_vertex(long name)
 }
 
 
-Vertex
-GraphVertexIterator::
+/*******************************************************************************
+***************************** GraphVertexIterator*******************************
+*******************************************************************************/
+
+
+template <class V>
+V
+GraphVertexIterator<V>::
 next()
 {
     if (this->len--)
@@ -197,28 +234,59 @@ next()
 }
 
 
-Vertex
-GraphVertexIterator::
+template <class V>
+V
+GraphVertexIterator<V>::
 __next__()
 {
     return next();
 }
 
 
+template <class V>
 bool
-GraphVertexIterator::
+GraphVertexIterator<V>::
 hasnext()
 {
     return (this->len > 0);
 }
 
 
-struct GraphVertexIterator*
-GraphVertexIterator::
+template <class V>
+struct GraphVertexIterator<V>*
+GraphVertexIterator<V>::
 __iter__()
 {
     return this;
 }
+
+/*******************************************************************************
+**************************** ColoringGraphVertexIterator ***********************
+*******************************************************************************/
+
+// Vertex
+// ColoringGraphVertexIterator::
+// next()
+// {
+//     if (this->len--)
+//         return this->it++->second;
+//
+//     throw std::out_of_range("");
+// }
+//
+// Vertex
+// ColoringGraphVertexIterator::
+// __next__()
+// {
+//     return next();
+// }
+//
+// struct ColoringGraphVertexIterator*
+// ColoringGraphVertexIterator::
+// __iter__()
+// {
+//     return this;
+// }
 
 
 #endif

@@ -17,37 +17,39 @@ class ColoringGraph;
 
 struct VertexNeighborIterator
 {
-    std::set<long>::iterator it;
-    long len;
+    public:
+        std::set<long>::iterator it;
+        long len;
 
-    ~VertexNeighborIterator() {};
+        ~VertexNeighborIterator() {};
 
-    long next();
-    long __next__();
+        long next();
+        long __next__();
 
-    bool hasnext();
+        bool hasnext();
 
-    struct VertexNeighborIterator* __iter__();
+        struct VertexNeighborIterator* __iter__();
 };
 
 struct ColoringVertexNeighborIterator : public VertexNeighborIterator
 {
-    long name;
-    ColoringGraph* graph;
-    int colors;
+    public:
+        long name;
+        ColoringGraph* graph;
+        int colors;
 
-    long remaining;
-    int positionctr;
-    int colorctr;
+        long remaining;
+        int positionctr;
+        int colorctr;
 
-    ColoringVertexNeighborIterator() {};
-    ColoringVertexNeighborIterator(long name_, ColoringGraph* graph_, int colors_);
+        // ColoringVertexNeighborIterator() {};
+        ColoringVertexNeighborIterator(long name_, ColoringGraph* graph_, int colors_);
 
-    ~ColoringVertexNeighborIterator() {};
+        // ~ColoringVertexNeighborIterator() {};
 
-    long next();
+        long next();
 
-    bool hasnext();
+        bool hasnext();
 
 };
 
@@ -56,7 +58,6 @@ class Vertex
     friend class Graph;
 
     public:
-
         long name;
         std::set<long> neighbors;
         struct VertexNeighborIterator* nt;
@@ -82,9 +83,14 @@ class Vertex
 class ColoringVertex : public Vertex
 {
     public:
+        int colors;
+        ColoringGraph* graph;
+        // struct ColoringVertexNeighborIterator* nt;
 
-        long name;
-        struct ColoringVertexNeighborIterator* nt;
+        ColoringVertex(long name_, int k, ColoringGraph* graph_);
+
+        struct ColoringVertexNeighborIterator* __iter__();
+        struct ColoringVertexNeighborIterator* get_neighbors();
 };
 
 #endif

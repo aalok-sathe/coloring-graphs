@@ -3,6 +3,11 @@
 
 #include "Vertex.h"
 
+
+/*******************************************************************************
+***************************** VERTEX *******************************************
+*******************************************************************************/
+
 Vertex::
 Vertex() {}
 
@@ -26,6 +31,7 @@ long
 Vertex::
 get_name() const
 {
+    // std::cout << 'get_name' << name << std::endl;
     return name;
 }
 
@@ -63,6 +69,38 @@ __iter__()
 }
 
 
+/*******************************************************************************
+***************************** ColoringVertex ***********************************
+*******************************************************************************/
+
+
+ColoringVertex::
+ColoringVertex(long name_, int k, ColoringGraph* graph_)
+    : Vertex(name_), colors(k), graph(graph_)
+{}
+
+
+struct ColoringVertexNeighborIterator*
+ColoringVertex::
+get_neighbors()
+{
+    std::cout << "iterator initialized" << std::endl;
+
+    return __iter__();
+}
+
+
+struct ColoringVertexNeighborIterator*
+ColoringVertex::
+__iter__()
+{
+    return new struct ColoringVertexNeighborIterator({ name, graph, colors });
+}
+
+
+/*******************************************************************************
+***************************** VertexNeighborIterator ***************************
+*******************************************************************************/
 
 long
 VertexNeighborIterator::
@@ -96,13 +134,17 @@ __iter__()
 }
 
 
+/*******************************************************************************
+********************** ColoringVertexNeighborIterator **************************
+*******************************************************************************/
+
 ColoringVertexNeighborIterator::
 ColoringVertexNeighborIterator(long name_, ColoringGraph* graph_, int colors_)
 : name(name_), graph(graph_), colors(colors_)
 {
     positionctr = 0;
     colorctr = 0;
-    remaining = graph->size() * colors;
+    remaining = graph->base->size() * colors;
 }
 
 
@@ -112,20 +154,24 @@ next()
 {
     if (not remaining--)
     {
+        std::cout << "iterator exhausted" << std::endl;
+
         positionctr = 0;
         colorctr = 0;
         remaining = graph->size() * colors;
         throw std::out_of_range("");
     }
 
+    std::cout << "beginning loopity loop" << std::endl;
+
     // operate the nested for-loop manually
     loopanchor:
-    if (positionctr+1 < graph->size() and colorctr >= colors)
+    if (positionctr+1 < graph->base->size() and colorctr >= colors)
     {
         positionctr++;
         colorctr = 0;
     }
-    else if (positionctr < graph->size() and colorctr+1 < colors)
+    else if (positionctr < graph->base->size() and colorctr+1 < colors)
         colorctr++;
     else
         throw std::out_of_range("");
@@ -148,10 +194,13 @@ next()
     return newcoloring;
 }
 
+
 bool
 ColoringVertexNeighborIterator::
 hasnext()
 {
+    if (true)
+        throw std::logic_error("not implemented");
     return (this->remaining > 0);
 }
 
