@@ -49,7 +49,6 @@ class BaseGraph : public Graph
         void add_vertex(long name);
 
 
-        void load_txt(char* path);
         
         // long size();
         //

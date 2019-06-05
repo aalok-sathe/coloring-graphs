@@ -22,16 +22,10 @@ class Vertex
 
         ~Vertex();
 
-<<<<<<< HEAD
+
         void add_neighbor(Vertex& other);
 
         long get_next_neighbor(Graph* g);
-=======
-        
-        std::list<long>::iterator next_neighbor;
-
-        Vertex* get_next_neighbor(Graph* g);
->>>>>>> b17108357b0899ed1393deceda9536e5ec8e7878
 
         int lp(Graph* g);
 
@@ -43,7 +37,7 @@ class Vertex
 class BaseVertex : public Vertex
 {
     public:
-<<<<<<< HEAD
+
 
         BaseVertex();
         BaseVertex(long name_);
@@ -54,23 +48,12 @@ class BaseVertex : public Vertex
         long get_next_neighbor(Graph* g);
 
 };
-=======
-     std::list<long> neighbors;
-     void add_neighbor(Vertex& other);
-};
-
->>>>>>> b17108357b0899ed1393deceda9536e5ec8e7878
 
 class ColoringVertex : public Vertex
 {
     public:
         int nt;
-<<<<<<< HEAD
         long get_next_neighbor(Graph* g);
-=======
-
-        Vertex* get_next_neighbor(Graph* g);
->>>>>>> b17108357b0899ed1393deceda9536e5ec8e7878
 };
 
 

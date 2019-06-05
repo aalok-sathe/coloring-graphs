@@ -13,7 +13,7 @@ Vertex(long name_)
     : name(name_), depth(-1)
 {}
 
-<<<<<<< HEAD
+
 BaseVertex::
 BaseVertex()
 	: next_neighbor(neighbors.begin())
@@ -23,9 +23,7 @@ BaseVertex::
 BaseVertex(long name_)
 	: next_neighbor(neighbors.begin())
 {}
-=======
 
->>>>>>> b17108357b0899ed1393deceda9536e5ec8e7878
 
 Vertex::
 ~Vertex()
@@ -38,16 +36,12 @@ add_neighbor(Vertex& other)
     neighbors.push_back(other.name);
 }
 
-<<<<<<< HEAD
 long
 BaseVertex::
 get_next_neighbor(Graph* g)
 {
     return *next_neighbor++;
 }
-=======
-
->>>>>>> b17108357b0899ed1393deceda9536e5ec8e7878
 
 long
 ColoringVertex::
