@@ -52,6 +52,13 @@ add_vertex(long name)
     vertices.insert(std::map<int, Vertex>::value_type(name, Vertex()));
 }
 
+void
+BaseGraph::
+add_vertex(long name)
+{
+    vertices.insert(std::map<int, Vertex>::value_type(name, BaseVertex()));
+}
+
 
 Vertex&
 Graph::
@@ -189,6 +196,7 @@ Graph::Tarjans()
                     if (cut_vertex_stack.top().name != found_cut_vertex->name)
                     {
                         MetaVertex cut(*found_cut_vertex);
+                        metagraph.add_vertex(cut);
                         MetaVertex::connect(main, cut);}
 
                     else { MetaVertex::connect(main, cut_vertex_stack.top()); }
@@ -212,6 +220,15 @@ Graph::Tarjans()
             }
         
         } // end of while-loop
+
+        ////////////////////////
+        // Reset root nt (current will be the root)
+        // while root has next neighbor
+        //  count++
+        // if count < 2
+        //  remove from metagraph and disconnect from all neighbors
+        //  (root metavertex will be on top of the cut vertex stack)
+        ////////////////////////
 
     } // end of main for-loop
 
