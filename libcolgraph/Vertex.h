@@ -75,8 +75,8 @@ class Vertex
 
         long get_next_neighbor();
 
-        struct VertexNeighborIterator* __iter__();
-        struct VertexNeighborIterator* get_neighbors();
+        virtual struct VertexNeighborIterator* __iter__();
+        virtual struct VertexNeighborIterator* get_neighbors();
 };
 
 

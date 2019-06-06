@@ -17,14 +17,14 @@ class BaseGraph;
 class ColoringGraph;
 
 
-template <typename V>
+template <typename V, typename V_iter = Vertex>
 struct GraphVertexIterator
 {
     public:
-        typename std::map<long, V>::iterator it;
+        typename std::map<long, V_iter>::iterator it;
         long len;
 
-        GraphVertexIterator<V>(typename std::map<long, V>::iterator it_, long len_)
+        GraphVertexIterator<V, V_iter>(typename std::map<long, V_iter>::iterator it_, long len_)
             : it(it_), len(len_) {};
         ~GraphVertexIterator() {};
 
@@ -33,7 +33,7 @@ struct GraphVertexIterator
 
         bool hasnext();
 
-        struct GraphVertexIterator<V>* __iter__();
+        struct GraphVertexIterator<V, V_iter>* __iter__();
 
 };
 
@@ -45,11 +45,11 @@ struct GraphVertexIterator
 /*
  *  the OG graph class
  */
-template <typename V = Vertex>
+// template <typename V = Vertex>
 class Graph
 {
     public:
-        typename std::map<long, V> vertices;
+        std::map<long, Vertex> vertices;
 
         Graph();
         // Graph(char* path);
@@ -57,23 +57,23 @@ class Graph
 
         void load_txt(char* path);
 
-        long size();
-        long __len__() { return size(); };
+        virtual long size();
+        virtual long __len__() { return size(); };
 
-        void add_vertex(long name);
+        virtual void add_vertex(long name);
         void make_edge(long a, long b);
 
-        V& get_vertex(long name);
-        V& get_some_vertex();
+        Vertex& get_vertex(long name);
+        Vertex& get_some_vertex();
 
-        const struct GraphVertexIterator<V>* __iter__();
-        const struct GraphVertexIterator<V>* get_vertices();
+        virtual const struct GraphVertexIterator<Vertex>* __iter__();
+        virtual const struct GraphVertexIterator<Vertex>* get_vertices();
 
 
 };
 
-template <typename V = Vertex>
-class BaseGraph : public Graph<V>
+// template <typename V = Vertex>
+class BaseGraph : public Graph
 {
     public:
         // BaseGraph(char* path);
@@ -82,27 +82,30 @@ class BaseGraph : public Graph<V>
 
         int get_vertex_color(long coloring, long name, int k);
 
-        ColoringGraph<ColoringVertex>* build_coloring_graph(int k);
+        ColoringGraph* build_coloring_graph(int k);
 
 };
 
 
-template <typename V = ColoringVertex>
-class ColoringGraph : public Graph<V>
+// template <typename V = ColoringVertex>
+class ColoringGraph : public Graph
 {
     public:
         int colors;
         Graph* base;
-        typename std::map<long, V> vertices;
+        // std::map<long, ColoringVertex> vertices;
         // precompexp[p][c] --> c * (COLORS ** p)
         std::vector<std::vector<long> > precompexp;
 
         ColoringGraph(int k, Graph* g);
 
-        void add_vertex(long name, int k);
+        void add_vertex(long name);
 
-        const struct GraphVertexIterator<V>* __iter__();
-        const struct GraphVertexIterator<V>* get_vertices();
+        // ColoringVertex& get_vertex(long name);
+        // ColoringVertex& get_some_vertex();
+        //
+        // const struct GraphVertexIterator<ColoringVertex>* __iter__();
+        // const struct GraphVertexIterator<ColoringVertex>* get_vertices();
 
 };
 
