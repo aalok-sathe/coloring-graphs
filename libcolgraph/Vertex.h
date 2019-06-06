@@ -48,6 +48,8 @@ class BaseVertex : public Vertex
         void add_neighbor(Vertex& v);
         void remove_neighbor(Vertex& other);
         long get_next_neighbor(Graph* g);
+        
+        int lp(Graph* g);
 
 };
 
@@ -56,6 +58,8 @@ class ColoringVertex : public Vertex
     public:
         int nt;
         long get_next_neighbor(Graph* g);
+
+        int lp(Graph* g);
 };
 
 

@@ -16,9 +16,9 @@ int main(int argc, char *argv[])
     cout << "loading graph from " << testpath << endl;
     g.load_txt(testpath);
 
+    g.tarjans();
+
     cout << "graph size: " << g.size() << endl;
-
-
 
     cout << "reached EOF tester" << endl;
 

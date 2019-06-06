@@ -5,12 +5,12 @@
 
 Vertex::
 Vertex()
-	: depth(-1)
+	: depth(-1), lowpoint(INT_MAX)
 {}
 
 Vertex::
 Vertex(long name_)
-    : name(name_), depth(-1)
+    : name(name_), depth(-1), lowpoint(INT_MAX)
 {}
 
 
@@ -58,14 +58,20 @@ get_next_neighbor(Graph* g)
 }
 
 int
-Vertex::lp(Graph* g)
+BaseVertex::
+lp(Graph* g)
 {
-
+	int min = depth;
+	for (auto& neighbor : neighbors)
+	{
+		min = std::min(min, g->vertices.find(neighbor)->second.depth);
+	}
+	return min;
 }
 
-bool
-Vertex::
-check_for_cut()
+int
+ColoringVertex::
+lp(Graph* g)
 {
 
 }
