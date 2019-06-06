@@ -31,9 +31,16 @@ Vertex::
 
 void
 BaseVertex::
-add_neighbor(Vertex& other)
+add_neighbor(Vertex& v)
 {
-    neighbors.push_back(other.name);
+    neighbors.push_back(v.name);
+}
+
+void
+BaseVertex::
+remove_neighbor(Vertex& v)
+{
+    neighbors.remove(v.name);
 }
 
 long

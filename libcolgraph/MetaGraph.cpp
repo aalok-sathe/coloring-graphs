@@ -21,4 +21,16 @@ add_vertex(MetaVertex m)
 	vertices.push_back(m);
 }
 
+void
+MetaGraph::
+remove_vertex(MetaVertex m)
+{
+	for (auto& n : m.meta_neighbors)
+	{
+		MetaVertex::disconnect(m, n);
+	}
+	
+	vertices.remove(m);
+}
+
 #endif

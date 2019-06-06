@@ -17,6 +17,7 @@ class MetaGraph
         ~MetaGraph();
 
         void add_vertex(MetaVertex m){};
+        void remove_vertex(MetaVertex m){};
     
 };
 

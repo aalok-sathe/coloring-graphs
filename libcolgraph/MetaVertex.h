@@ -6,8 +6,7 @@ class Vertex;
 
 class MetaVertex
 {
-    friend class MetaGraph;
-    friend class Graph;
+
   
 
 public:
@@ -25,6 +24,8 @@ public:
 
     // add to each other's neighbor list
     static void connect(MetaVertex v1, MetaVertex v2);
+    static void disconnect(MetaVertex v1, MetaVertex v2);
+
 
 
 

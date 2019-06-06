@@ -23,7 +23,8 @@ class Vertex
         ~Vertex();
 
 
-        void add_neighbor(Vertex& other);
+        void add_neighbor(Vertex& v);
+        void remove_neighbor(Vertex& v);
 
         long get_next_neighbor(Graph* g);
 
@@ -44,7 +45,8 @@ class BaseVertex : public Vertex
 
         std::list<long> neighbors;
         std::list<long>::iterator next_neighbor;
-        void add_neighbor(Vertex& other);
+        void add_neighbor(Vertex& v);
+        void remove_neighbor(Vertex& other);
         long get_next_neighbor(Graph* g);
 
 };

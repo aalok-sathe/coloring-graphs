@@ -25,4 +25,14 @@ connect(MetaVertex v1, MetaVertex v2)
 	v2.meta_neighbors.push_back(v1);
 }
 
+static void
+MetaVertex::
+disconnect(MetaVertex v1, MetaVertex v2)
+{
+	v1.meta_neighbors.remove(v2);
+	v2.meta_neighbors.remove(v1);
+}
+
+
+
 #endif
