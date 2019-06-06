@@ -48,6 +48,8 @@ class BaseGraph : public Graph
 
         void add_vertex(long name);
 
+        MetaGraph Tarjans();
+
 
         
         // long size();
@@ -62,12 +64,11 @@ class BaseGraph : public Graph
 
 class ColoringGraph : public Graph
 {
-    private:
-
-    protected:
-        Graph* base;
+        
 
     public:
+        Graph* base;
+        MetaGraph Tarjans();
 
         // void load_txt(char* path);
         //
