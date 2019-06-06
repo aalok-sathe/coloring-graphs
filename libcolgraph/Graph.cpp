@@ -102,7 +102,7 @@ get_some_vertex()
 }
 
 
-const struct GraphVertexIterator<Vertex>*
+const GraphVertexIterator<Vertex>*
 Graph::
 get_vertices()
 {
@@ -110,12 +110,12 @@ get_vertices()
 }
 
 
-const struct GraphVertexIterator<Vertex>*
+const GraphVertexIterator<Vertex>*
 Graph::
 __iter__()
 {
     // struct GraphVertexIterator* ret;
-    return new struct GraphVertexIterator<Vertex>({ vertices.begin(), size() });
+    return new GraphVertexIterator<Vertex>({ vertices.begin(), size() });
     // return ret;
 }
 
@@ -268,7 +268,7 @@ hasnext()
 
 
 template <typename V, typename V_iter>
-struct GraphVertexIterator<V, V_iter>*
+GraphVertexIterator<V, V_iter>*
 GraphVertexIterator<V, V_iter>::
 __iter__()
 {

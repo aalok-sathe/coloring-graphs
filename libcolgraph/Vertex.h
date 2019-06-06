@@ -14,7 +14,7 @@ class Graph;
 class BaseGraph;
 class ColoringGraph;
 
-
+// TODO: make it a class
 struct VertexNeighborIterator
 {
     public:
@@ -28,7 +28,7 @@ struct VertexNeighborIterator
 
         bool hasnext();
 
-        struct VertexNeighborIterator* __iter__();
+        VertexNeighborIterator* __iter__();
 };
 
 struct ColoringVertexNeighborIterator : public VertexNeighborIterator
@@ -60,7 +60,7 @@ class Vertex
     public:
         long name;
         std::set<long> neighbors;
-        struct VertexNeighborIterator* nt;
+        VertexNeighborIterator* nt;
 
         Vertex();
         Vertex(long name_);
@@ -75,8 +75,8 @@ class Vertex
 
         long get_next_neighbor();
 
-        virtual struct VertexNeighborIterator* __iter__();
-        virtual struct VertexNeighborIterator* get_neighbors();
+        virtual VertexNeighborIterator* __iter__();
+        virtual VertexNeighborIterator* get_neighbors();
 };
 
 
@@ -89,8 +89,8 @@ class ColoringVertex : public Vertex
 
         ColoringVertex(long name_, int k, ColoringGraph* graph_);
 
-        struct ColoringVertexNeighborIterator* __iter__();
-        struct ColoringVertexNeighborIterator* get_neighbors();
+        VertexNeighborIterator* __iter__() override;
+        VertexNeighborIterator* get_neighbors() override;
 };
 
 #endif

@@ -13,7 +13,7 @@ Vertex() {}
 
 Vertex::
 Vertex(long name_)
-    : name(name_), nt(new struct VertexNeighborIterator())
+    : name(name_), nt(new VertexNeighborIterator())
 {}
 
 Vertex::
@@ -52,19 +52,22 @@ get_next_neighbor()
     return nt->next();
 }
 
-struct VertexNeighborIterator*
+VertexNeighborIterator*
 Vertex::
 get_neighbors()
 {
-    return __iter__();
+    std::cout << "Invoking get_neighbors" << std::endl;
+    return this->__iter__();
 }
 
 
-struct VertexNeighborIterator*
+VertexNeighborIterator*
 Vertex::
 __iter__()
 {
-    return new struct VertexNeighborIterator({ neighbors.begin(),
+    std::cout << "Invoking incorrect method" << std::endl;
+    std::exit(1);
+    return new VertexNeighborIterator({ neighbors.begin(),
                                                neighbors.size() });
 }
 
@@ -80,7 +83,7 @@ ColoringVertex(long name_, int k, ColoringGraph* graph_)
 {}
 
 
-struct ColoringVertexNeighborIterator*
+VertexNeighborIterator*
 ColoringVertex::
 get_neighbors()
 {
@@ -90,11 +93,11 @@ get_neighbors()
 }
 
 
-struct ColoringVertexNeighborIterator*
+VertexNeighborIterator*
 ColoringVertex::
 __iter__()
 {
-    return new struct ColoringVertexNeighborIterator({ name, graph, colors });
+    return new ColoringVertexNeighborIterator({ name, graph, colors });
 }
 
 
@@ -126,7 +129,7 @@ hasnext()
     return (this->len > 0);
 }
 
-struct VertexNeighborIterator*
+VertexNeighborIterator*
 VertexNeighborIterator::
 __iter__()
 {

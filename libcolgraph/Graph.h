@@ -66,8 +66,8 @@ class Graph
         Vertex& get_vertex(long name);
         Vertex& get_some_vertex();
 
-        virtual const struct GraphVertexIterator<Vertex>* __iter__();
-        virtual const struct GraphVertexIterator<Vertex>* get_vertices();
+        virtual const GraphVertexIterator<Vertex>* __iter__();
+        virtual const GraphVertexIterator<Vertex>* get_vertices();
 
 
 };
