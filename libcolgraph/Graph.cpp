@@ -8,30 +8,118 @@
 ***************************** GRAPH ********************************************
 *******************************************************************************/
 
-Graph::
+template <typename V>
+Graph<V>::
 Graph() {}
 
-// Graph::
-// Graph(char* path)
-// {
-//     load_txt(path);
-// }
 
-Graph::
+template <typename V>
+Graph<V>::
 ~Graph() {}
 
 
+template <typename V>
+long
+Graph<V>::
+size()
+{
+    return vertices.size();
+}
+
+
+template <typename V>
 void
-Graph::
+Graph<V>::
+make_edge(long a, long b)
+{
+    typename std::map<long, V>::iterator it;
+    V * va, * vb;
+
+    it = vertices.find(a);
+    if (it != vertices.end())
+        va = &it->second;
+    else
+        throw std::out_of_range("");
+
+    it = vertices.find(b);
+    if (it != vertices.end())
+        vb = &it->second;
+    else
+        throw std::out_of_range("");
+
+    vb->add_neighbor(*va);
+    va->add_neighbor(*vb);
+}
+
+
+template <typename V>
+V&
+Graph<V>::
+get_vertex(long name)
+{
+    return vertices.at(name);
+}
+
+
+template <typename V>
+V&
+Graph<V>::
+get_some_vertex()
+{
+    for (auto& pair : vertices)
+            return pair.second;
+}
+
+
+template <typename V>
+const GraphVertexIterator<V>*
+Graph<V>::
+get_vertices()
+{
+    return __iter__();
+}
+
+
+template <typename V>
+const GraphVertexIterator<V>*
+Graph<V>::
+__iter__()
+{
+    // struct GraphVertexIterator* ret;
+    return new GraphVertexIterator<V>({ vertices.begin(), size() });
+    // return ret;
+}
+
+/*******************************************************************************
+***************************** BASEGRAPH ****************************************
+*******************************************************************************/
+
+
+BaseGraph::
+BaseGraph()
+    : Graph<Vertex>()
+{}
+
+
+void
+BaseGraph::
+add_vertex(long name)
+{
+    Vertex v(name);
+    this->vertices.insert(std::pair<long, Vertex>(name, v));
+}
+
+
+void
+BaseGraph::
 load_txt(char* path)
 {
-    // std::string path_ = std::string(path);
     std::ifstream file(path);
     int n;
     file >> n;
 
     for (int i=0; i<n; i++)
-        add_vertex((long)i);
+        this->add_vertex((long)i);
 
     int value;
     for (int i=0; i<n; i++)
@@ -44,97 +132,11 @@ load_txt(char* path)
 }
 
 
-long
-Graph::
-size()
-{
-    return vertices.size();
-}
-
-
-void
-Graph::
-add_vertex(long name)
-{
-    Vertex v(name);
-    this->vertices.insert(std::pair<long, Vertex>(name, v));
-}
-
-
-void
-Graph::
-make_edge(long a, long b)
-{
-    std::map<long, Vertex>::iterator it;
-    Vertex va, vb;
-
-    it = vertices.find(a);
-    if (it != vertices.end())
-        va = it->second;
-    else
-        throw std::out_of_range("");
-
-    it = vertices.find(b);
-    if (it != vertices.end())
-        vb = it->second;
-    else
-        throw std::out_of_range("");
-
-    va.add_neighbor(vb);
-    vb.add_neighbor(va);
-}
-
-
-Vertex&
-Graph::
-get_vertex(long name)
-{
-    return vertices.at(name);
-}
-
-
-Vertex&
-Graph::
-get_some_vertex()
-{
-    for (auto& pair : vertices)
-            return pair.second;
-}
-
-
-const GraphVertexIterator<Vertex>*
-Graph::
-get_vertices()
-{
-    return __iter__();
-}
-
-
-const GraphVertexIterator<Vertex>*
-Graph::
-__iter__()
-{
-    // struct GraphVertexIterator* ret;
-    return new GraphVertexIterator<Vertex>({ vertices.begin(), size() });
-    // return ret;
-}
-
-/*******************************************************************************
-***************************** BASEGRAPH ****************************************
-*******************************************************************************/
-
-
-// BaseGraph::
-// BaseGraph(char* path)
-// {
-//     load_txt(path);
-// }
-
-
 ColoringGraph*
 BaseGraph::
 build_coloring_graph(int k)
 {
+    // TODO: make recursive backtracking based search
     ColoringGraph* cg = new ColoringGraph(k, this);
     for (long coloring=0; coloring<pow(k, size()); coloring++)
         if (is_valid_coloring(coloring, k))
@@ -143,7 +145,6 @@ build_coloring_graph(int k)
             continue;
 
     return cg;
-
 }
 
 
@@ -197,8 +198,8 @@ is_valid_coloring(long coloring, int k)
 
 
 ColoringGraph::
-ColoringGraph(int k, Graph* g)
-    : colors(k), base(g)
+ColoringGraph(int k, BaseGraph* bg)
+    : colors(k), base(bg)
 {}
 
 
@@ -237,39 +238,39 @@ add_vertex(long name)
 *******************************************************************************/
 
 
-template <typename V, typename V_iter>
+template <typename V>
 V
-GraphVertexIterator<V, V_iter>::
+GraphVertexIterator<V>::
 next()
 {
     if (this->len--)
-        return (V) this->it++->second;
+        return this->it++->second;
 
     throw std::out_of_range("");
 }
 
 
-template <typename V, typename V_iter>
+template <typename V>
 V
-GraphVertexIterator<V, V_iter>::
+GraphVertexIterator<V>::
 __next__()
 {
-    return (V) next();
+    return next();
 }
 
 
-template <typename V, typename V_iter>
+template <typename V>
 bool
-GraphVertexIterator<V, V_iter>::
+GraphVertexIterator<V>::
 hasnext()
 {
     return (this->len > 0);
 }
 
 
-template <typename V, typename V_iter>
-GraphVertexIterator<V, V_iter>*
-GraphVertexIterator<V, V_iter>::
+template <typename V>
+GraphVertexIterator<V>*
+GraphVertexIterator<V>::
 __iter__()
 {
     return this;

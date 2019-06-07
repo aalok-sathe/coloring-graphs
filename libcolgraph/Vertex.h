@@ -10,7 +10,7 @@
 
 class Vertex;
 class ColoringVertex;
-class Graph;
+template <typename V> class Graph;
 class BaseGraph;
 class ColoringGraph;
 
@@ -55,8 +55,6 @@ struct ColoringVertexNeighborIterator : public VertexNeighborIterator
 
 class Vertex
 {
-    friend class Graph;
-
     public:
         long name;
         std::set<long> neighbors;
@@ -85,7 +83,7 @@ class ColoringVertex : public Vertex
     public:
         int colors;
         ColoringGraph* graph;
-        // struct ColoringVertexNeighborIterator* nt;
+        ColoringVertexNeighborIterator* nt;
 
         ColoringVertex(long name_, int k, ColoringGraph* graph_);
 

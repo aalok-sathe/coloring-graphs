@@ -49,7 +49,19 @@
         SWIG_fail;
     }
 }
-%exception Graph::get_vertex
+%exception BaseGraph::get_vertex
+{
+    try
+    {
+        $action
+    }
+    catch(std::out_of_range& e)
+    {
+        PyErr_SetString(PyExc_KeyError, "queried key not found in lookup");
+        SWIG_fail;
+    }
+}
+%exception ColoringGraph::get_vertex
 {
     try
     {
@@ -62,9 +74,8 @@
     }
 }
 
-/*%template(Graph) Graph<Vertex>;
-%template(BaseGraph) BaseGraph<Vertex>;
-%template(ColoringGraph) ColoringGraph<ColoringVertex>;*/
+/* %template(BaseGraph) BaseGraph<Vertex>;
+%template(ColoringGraph) ColoringGraph<ColoringVertex>; */
 
 /* %pythonprepend GraphVertexIterator::GraphVertexIterator %{
     print('thisown was: %d' % self.thisown)
@@ -72,3 +83,5 @@
 
 %include "Graph.h"
 %include "Vertex.h"
+
+/* %template(Graph) Graph<Vertex>; */
