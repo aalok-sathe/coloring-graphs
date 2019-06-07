@@ -6,11 +6,13 @@
 %{
     #include <Python.h>
     #include <assert.h>
+    #include "GraphTemplates.h"
     #include "Graph.h"
     #include <iostream>
     #include "Vertex.h"
     #include <stdexcept>
 %}
+
 
 
 %exception GraphVertexIterator::__next__
@@ -49,7 +51,7 @@
         SWIG_fail;
     }
 }
-%exception BaseGraph::get_vertex
+%exception Graph::get_vertex
 {
     try
     {
@@ -61,7 +63,7 @@
         SWIG_fail;
     }
 }
-%exception ColoringGraph::get_vertex
+/* %exception ColoringGraph::get_vertex
 {
     try
     {
@@ -72,7 +74,7 @@
         PyErr_SetString(PyExc_KeyError, "queried key not found in lookup");
         SWIG_fail;
     }
-}
+} */
 
 /* %template(BaseGraph) BaseGraph<Vertex>;
 %template(ColoringGraph) ColoringGraph<ColoringVertex>; */
@@ -81,7 +83,13 @@
     print('thisown was: %d' % self.thisown)
 %} */
 
+%import "GraphTemplates.h"
+
+/* %template(GVIT) GraphVertexIterator<Vertex>;
+%template(GCVIT) GraphVertexIterator<ColoringVertex>; */
+%template(GraphV) Graph<Vertex>;
+%template(GraphCV) Graph<ColoringVertex>;
+
+%include "GraphTemplates.h"
 %include "Graph.h"
 %include "Vertex.h"
-
-/* %template(Graph) Graph<Vertex>; */

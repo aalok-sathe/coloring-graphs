@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "GraphTemplates.h"
 #include "Vertex.h"
 
 
@@ -16,55 +17,6 @@ template <typename V> class Graph;
 class BaseGraph;
 class ColoringGraph;
 
-
-template <typename V>
-class GraphVertexIterator
-{
-    public:
-        typename std::map<long, V>::iterator it;
-        long len;
-
-        GraphVertexIterator<V>(typename std::map<long, V>::iterator it_, long len_)
-            : it(it_), len(len_) {};
-        ~GraphVertexIterator() {};
-
-        V next();
-        V __next__();
-
-        bool hasnext();
-
-        class GraphVertexIterator<V>* __iter__();
-};
-
-/*
- *  the OG graph class
- */
-template <typename V>
-class Graph
-{
-    public:
-        std::map<long, V> vertices;
-
-        Graph();
-        virtual ~Graph();
-
-        virtual void load_txt(char* path) {};
-
-        virtual long size();
-        virtual long __len__() { return size(); };
-
-        virtual void add_vertex(long name) = 0;
-
-        virtual void make_edge(long a, long b);
-
-        virtual V& get_vertex(long name);
-        virtual V& get_some_vertex();
-
-        virtual const GraphVertexIterator<V>* __iter__();
-        virtual const GraphVertexIterator<V>* get_vertices();
-
-
-};
 
 // template <typename V = Vertex>
 class BaseGraph : public Graph<Vertex>

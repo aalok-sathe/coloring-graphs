@@ -1,6 +1,7 @@
 #ifndef __GRAPH_CPP__
 #define __GRAPH_CPP__
 
+// #include "GraphTemplates.h"
 #include "Graph.h"
 
 
@@ -25,6 +26,16 @@ size()
 {
     return vertices.size();
 }
+
+
+// template <>
+// void
+// Graph<Vertex>::
+// add_vertex(long name)
+// {
+//     Vertex v(name);
+//     this->vertices.insert(std::pair<long, Vertex>(name, v));
+// }
 
 
 template <typename V>
@@ -67,7 +78,8 @@ Graph<V>::
 get_some_vertex()
 {
     for (auto& pair : vertices)
-            return pair.second;
+        return pair.second;
+    throw std::out_of_range("graph is empty");
 }
 
 
@@ -85,9 +97,7 @@ const GraphVertexIterator<V>*
 Graph<V>::
 __iter__()
 {
-    // struct GraphVertexIterator* ret;
     return new GraphVertexIterator<V>({ vertices.begin(), size() });
-    // return ret;
 }
 
 /*******************************************************************************
@@ -255,7 +265,7 @@ V
 GraphVertexIterator<V>::
 __next__()
 {
-    return next();
+    return this->next();
 }
 
 
