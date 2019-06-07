@@ -36,6 +36,35 @@ load_txt(char* path)
         }
 }
 
+void
+BaseGraph::
+save_txt(char* path)
+{
+    // std::string path_ = std::string(path);
+    std::ofstream file(path);
+    file << size() << std::endl;
+
+    std::map<long, long> adjacent = new map<long, long>();
+    for (auto& [name1, v1] : vertices)
+        for (auto& [name2, v2] : vertices)
+        {
+            
+        }
+
+
+    for (int i=0; i<n; i++)
+        add_vertex((long)i);
+
+    int value;
+    for (int i=0; i<n; i++)
+        for (int j=0; j<n; j++)
+        {
+            file >> value;
+            if (value)
+                vertices[i].add_neighbor(vertices[j]);
+        }
+}
+
 
 long
 Graph::
@@ -124,7 +153,7 @@ Graph::Tarjans()
             child = vertices.find(current->get_next_neighbor(this))->second;
 
             if (child.depth == -1)
-            {   
+            {
                 // if the DFS found another child,
                 // go down that path
                 list.push_back(child);
@@ -140,7 +169,7 @@ Graph::Tarjans()
 
                 // Compute lowpoint
                 current->lowpoint = current->lp(this);
-                
+
 
                 if (current->parent->name == root.name ||
                     current->lowpoint >= current->parent->depth)
@@ -206,7 +235,7 @@ Graph::Tarjans()
 
                     // Add the cut vertex to the stack
                     cut_vertex_stack.push(*found_cut_vertex);
-                    
+
                     // Add the new component to the MetaGraph
                     metagraph.add_vertex(main);
 
@@ -214,11 +243,11 @@ Graph::Tarjans()
                     // so we return the DFS to it
                     current = found_cut_vertex;
                 }
-                
+
                 else {current = current->parent;}
 
             }
-        
+
         } // end of while-loop
 
         ////////////////////////
