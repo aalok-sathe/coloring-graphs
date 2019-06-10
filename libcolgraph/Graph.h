@@ -12,6 +12,7 @@
 
 
 class Vertex;
+class BaseVertex;
 class ColoringVertex;
 template <typename V> class Graph;
 class BaseGraph;
@@ -19,7 +20,7 @@ class ColoringGraph;
 
 
 // template <typename V = Vertex>
-class BaseGraph : public Graph<Vertex>
+class BaseGraph : public Graph<BaseVertex>
 {
     public:
         BaseGraph();

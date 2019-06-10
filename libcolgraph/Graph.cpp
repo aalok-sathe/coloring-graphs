@@ -107,7 +107,7 @@ __iter__()
 
 BaseGraph::
 BaseGraph()
-    : Graph<Vertex>()
+    : Graph<BaseVertex>()
 {}
 
 
@@ -115,8 +115,8 @@ void
 BaseGraph::
 add_vertex(long name)
 {
-    Vertex v(name);
-    this->vertices.insert(std::pair<long, Vertex>(name, v));
+    BaseVertex v(name);
+    this->vertices.insert(std::pair<long, BaseVertex>(name, v));
 }
 
 
@@ -173,7 +173,7 @@ is_valid_coloring(long coloring, int k)
     for (auto& pair : vertices)
     {
         long vname = pair.first;
-        Vertex v = pair.second;
+        BaseVertex v = pair.second;
         int vcol = get_vertex_color(coloring, vname, k);
 
         std::set<long>::iterator it;

@@ -7,74 +7,86 @@
 #include <math.h>
 
 #include "Graph.h"
+#include "GraphTemplates.h"
 
 class Vertex;
+class BaseVertex;
 class ColoringVertex;
 template <typename V> class Graph;
 class BaseGraph;
 class ColoringGraph;
 
-// TODO: make it a class
-struct VertexNeighborIterator
+
+class BaseVertexNeighborIterator : public VertexNeighborIterator<BaseVertex>
 {
     public:
         std::set<long>::iterator it;
         long len;
 
-        ~VertexNeighborIterator() {};
+        BaseVertexNeighborIterator() {};
+        BaseVertexNeighborIterator(std::set<long>::iterator it_, long len_);
 
-        long next();
-        long __next__();
+        long next() override;
 
-        bool hasnext();
-
-        VertexNeighborIterator* __iter__();
+        bool hasnext() override;
 };
 
-struct ColoringVertexNeighborIterator : public VertexNeighborIterator
+class ColoringVertexNeighborIterator : public VertexNeighborIterator<ColoringVertex>
 {
     public:
         long name;
-        ColoringGraph* graph;
         int colors;
+        ColoringGraph* graph;
 
         long remaining;
         int positionctr;
         int colorctr;
 
-        // ColoringVertexNeighborIterator() {};
-        ColoringVertexNeighborIterator(long name_, ColoringGraph* graph_, int colors_);
+        ColoringVertexNeighborIterator() {};
+        ColoringVertexNeighborIterator(long name_, int colors_, ColoringGraph* graph_);
 
         // ~ColoringVertexNeighborIterator() {};
 
-        long next();
+        long next() override;
 
-        bool hasnext();
+        bool hasnext() override;
 
 };
+
 
 class Vertex
 {
     public:
         long name;
-        std::set<long> neighbors;
-        VertexNeighborIterator* nt;
 
-        Vertex();
+        Vertex() {};
         Vertex(long name_);
 
-        ~Vertex();
+        virtual ~Vertex();
+
+        virtual void add_neighbor(Vertex& other) {};
 
         bool operator==(const Vertex& other);
 
-        long get_name() const;
+        virtual long get_name() const;
+};
+
+
+class BaseVertex : public Vertex
+{
+    public:
+        BaseVertexNeighborIterator* nt;
+        std::set<long> neighbors;
+
+        BaseVertex() {};
+        BaseVertex(long name_);
 
         void add_neighbor(Vertex& other);
 
-        long get_next_neighbor();
+        virtual long get_next_neighbor();
 
-        virtual VertexNeighborIterator* __iter__();
-        virtual VertexNeighborIterator* get_neighbors();
+        BaseVertexNeighborIterator* __iter__();
+        BaseVertexNeighborIterator* get_neighbors();
 };
 
 
@@ -87,8 +99,8 @@ class ColoringVertex : public Vertex
 
         ColoringVertex(long name_, int k, ColoringGraph* graph_);
 
-        VertexNeighborIterator* __iter__() override;
-        VertexNeighborIterator* get_neighbors() override;
+        ColoringVertexNeighborIterator* __iter__();
+        ColoringVertexNeighborIterator* get_neighbors();
 };
 
 #endif

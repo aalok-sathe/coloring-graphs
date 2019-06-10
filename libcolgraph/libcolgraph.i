@@ -14,7 +14,6 @@
 %}
 
 
-
 %exception GraphVertexIterator::__next__
 {
     try
@@ -28,18 +27,6 @@
     }
 }
 %exception VertexNeighborIterator::__next__
-{
-    try
-    {
-        $action
-    }
-    catch(std::out_of_range& e)
-    {
-        PyErr_SetString(PyExc_StopIteration, "end of iterator reached");
-        SWIG_fail;
-    }
-}
-%exception ColoringVertexNeighborIterator::__next__
 {
     try
     {
@@ -76,20 +63,16 @@
     }
 } */
 
-/* %template(BaseGraph) BaseGraph<Vertex>;
-%template(ColoringGraph) ColoringGraph<ColoringVertex>; */
-
-/* %pythonprepend GraphVertexIterator::GraphVertexIterator %{
-    print('thisown was: %d' % self.thisown)
-%} */
-
-%import "GraphTemplates.h"
-
-/* %template(GVIT) GraphVertexIterator<Vertex>;
-%template(GCVIT) GraphVertexIterator<ColoringVertex>; */
-%template(GraphV) Graph<Vertex>;
-%template(GraphCV) Graph<ColoringVertex>;
 
 %include "GraphTemplates.h"
+
+/* %template(GBVIt) GraphVertexIterator<BaseVertex>; */
+/* %template(GCVIt) GraphVertexIterator<ColoringVertex>; */
+%template(BVNIt) VertexNeighborIterator<BaseVertex>;
+%template(CVNIt) VertexNeighborIterator<ColoringVertex>;
+%template(BGraph) Graph<BaseVertex>;
+%template(CGraph) Graph<ColoringVertex>;
+
+/* %include "GraphTemplates.h" */
 %include "Graph.h"
 %include "Vertex.h"

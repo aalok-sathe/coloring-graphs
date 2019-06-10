@@ -30,9 +30,9 @@ TESTER: tester.o Graph.o Vertex.o
 	echo -e "WARNING: require GNU/Linux. Might not work on MacOS"
 	g++ -o TESTER tester.o Graph.o Vertex.o
 
-Graph.o: Graph.h Vertex.h
+Graph.o: Graph.h Vertex.h GraphTemplates.h
 
-Vertex.o: Vertex.h
+Vertex.o: Vertex.h GraphTemplates.h
 
 ## SWIG
 

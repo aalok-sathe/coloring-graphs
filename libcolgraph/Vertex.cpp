@@ -8,17 +8,16 @@
 ***************************** VERTEX *******************************************
 *******************************************************************************/
 
-Vertex::
-Vertex() {}
 
 Vertex::
 Vertex(long name_)
-    : name(name_), nt(new VertexNeighborIterator())
+    : name(name_) //, nt(new VertexNeighborIterator<Vertex>())
 {}
 
 Vertex::
 ~Vertex()
 {}
+
 
 bool
 Vertex::
@@ -27,48 +26,57 @@ operator==(const Vertex& other)
     return name == other.get_name();
 }
 
+
 long
 Vertex::
 get_name() const
 {
-    // std::cout << 'get_name' << name << std::endl;
     return name;
 }
 
+
+/*******************************************************************************
+****************************** BASEVERTEX **************************************
+*******************************************************************************/
+
+BaseVertex::
+BaseVertex(long name_)
+    : Vertex(name_), nt(new BaseVertexNeighborIterator())
+{}
+
+
 void
-Vertex::
+BaseVertex::
 add_neighbor(Vertex& other)
 {
     neighbors.insert(other.get_name());
     delete nt;
-    nt = new VertexNeighborIterator({ neighbors.begin(),
-                                      neighbors.size() });
+    nt = new BaseVertexNeighborIterator(neighbors.begin(),
+                                        (long)neighbors.size());
 }
 
 long
-Vertex::
+BaseVertex::
 get_next_neighbor()
 {
     return nt->next();
 }
 
-VertexNeighborIterator*
-Vertex::
+
+BaseVertexNeighborIterator*
+BaseVertex::
 get_neighbors()
 {
-    std::cout << "Invoking get_neighbors" << std::endl;
     return this->__iter__();
 }
 
 
-VertexNeighborIterator*
-Vertex::
+BaseVertexNeighborIterator*
+BaseVertex::
 __iter__()
 {
-    std::cout << "Invoking incorrect method" << std::endl;
-    std::exit(1);
-    return new VertexNeighborIterator({ neighbors.begin(),
-                                               neighbors.size() });
+    return new BaseVertexNeighborIterator(neighbors.begin(),
+                                          (long)neighbors.size());
 }
 
 
@@ -80,24 +88,24 @@ __iter__()
 ColoringVertex::
 ColoringVertex(long name_, int k, ColoringGraph* graph_)
     : Vertex(name_), colors(k), graph(graph_)
-{}
+{
+    nt = new ColoringVertexNeighborIterator(name_, k, graph_);
+}
 
 
-VertexNeighborIterator*
+ColoringVertexNeighborIterator*
 ColoringVertex::
 get_neighbors()
 {
-    std::cout << "iterator initialized" << std::endl;
-
     return __iter__();
 }
 
 
-VertexNeighborIterator*
+ColoringVertexNeighborIterator*
 ColoringVertex::
 __iter__()
 {
-    return new ColoringVertexNeighborIterator({ name, graph, colors });
+    return new ColoringVertexNeighborIterator(name, colors, graph);
 }
 
 
@@ -105,8 +113,37 @@ __iter__()
 ***************************** VertexNeighborIterator ***************************
 *******************************************************************************/
 
+template <typename V>
 long
-VertexNeighborIterator::
+VertexNeighborIterator<V>::
+__next__()
+{
+    return next();
+}
+
+
+template <typename V>
+VertexNeighborIterator<V>*
+VertexNeighborIterator<V>::
+__iter__()
+{
+    return this;
+}
+
+
+/*******************************************************************************
+*************************** BaseVertexNeighborIterator *************************
+*******************************************************************************/
+
+
+BaseVertexNeighborIterator::
+BaseVertexNeighborIterator(std::set<long>::iterator it_, long len_)
+    : it(it_), len(len_)
+{}
+
+
+long
+BaseVertexNeighborIterator::
 next()
 {
     if (this->len--)
@@ -115,25 +152,12 @@ next()
     throw std::out_of_range("");
 }
 
-long
-VertexNeighborIterator::
-__next__()
-{
-    return next();
-}
 
 bool
-VertexNeighborIterator::
+BaseVertexNeighborIterator::
 hasnext()
 {
     return (this->len > 0);
-}
-
-VertexNeighborIterator*
-VertexNeighborIterator::
-__iter__()
-{
-    return this;
 }
 
 
@@ -141,9 +165,10 @@ __iter__()
 ********************** ColoringVertexNeighborIterator **************************
 *******************************************************************************/
 
+
 ColoringVertexNeighborIterator::
-ColoringVertexNeighborIterator(long name_, ColoringGraph* graph_, int colors_)
-: name(name_), graph(graph_), colors(colors_)
+ColoringVertexNeighborIterator(long name_, int k, ColoringGraph* graph_)
+    : name(name_), colors(k), graph(graph_)
 {
     positionctr = 0;
     colorctr = 0;
@@ -165,7 +190,7 @@ next()
         throw std::out_of_range("");
     }
 
-    std::cout << "beginning loopity loop" << std::endl;
+    std::cout << "ColVertexNbrIter::next beginning loopity loop" << std::endl;
 
     // operate the nested for-loop manually
     loopanchor:
