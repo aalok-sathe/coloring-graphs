@@ -49,6 +49,7 @@ save_txt()
 		{
 			if 
 		}
+	outfile << endl;
 	}
 }
 
