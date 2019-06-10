@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     cout << "loading graph from " << testpath << endl;
     g.load_txt(testpath);
 
-    g.Tarjans();
+    MetaGraph meta = g.Tarjans();
 
     cout << "graph size: " << g.size() << endl;
 

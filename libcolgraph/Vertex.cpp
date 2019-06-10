@@ -2,6 +2,7 @@
 #define __VERTEX_CPP__
 
 #include "Vertex.h"
+#include <limits.h>
 
 Vertex::
 Vertex()

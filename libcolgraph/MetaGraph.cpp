@@ -36,21 +36,21 @@ remove_vertex(MetaVertex m)
 	vertices.remove(m);
 }
 
-void
-MetaGraph::
-save_txt()
-{
-	ofstream outfile;
-	outfile.open("graph.txt", ios::out);
+// void
+// MetaGraph::
+// save_txt()
+// {
+// 	ofstream outfile;
+// 	outfile.open("graph.txt", ios::out);
 
-	for (auto& metavertex : vertices)
-	{
-		for (auto& metavertex : vertices)
-		{
-			if 
-		}
-	outfile << endl;
-	}
-}
+// 	for (auto& metavertex : vertices)
+// 	{
+// 		for (auto& metavertex : vertices)
+// 		{
+// 			if 
+// 		}
+// 	outfile << endl;
+// 	}
+// }
 
 #endif

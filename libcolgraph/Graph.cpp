@@ -120,7 +120,7 @@ Graph::Tarjans()
 
     MetaGraph metagraph;
     std::list<Vertex>::iterator current, found_cut_vertex;
-    Vertex root, child;
+    Vertex next, root, child;
     std::list<Vertex> list;
     std::stack<Vertex> cut_vertex_stack;
 
@@ -131,19 +131,20 @@ Graph::Tarjans()
     // For loop ensures all vertices
     // will be processed in case the
     // graph is disconnected
-    for (auto& [name, vertex] : this->vertices)
+    for (auto& v : this->vertices)
     {
+        next = v.second;
         list.clear();
         while(!cut_vertex_stack.empty()){cut_vertex_stack.pop();}
 
-        if (vertex.depth == -1)
+        if (next.depth == -1)
         {
             // If vertex has not been
             // visited, set up that
             // vertex as a root for DFS
-            root = vertex;
-            vertex.depth = 0;
-            list.push_back(vertex);
+            root = next;
+            next.depth = 0;
+            list.push_back(next);
             current = list.begin();
         }
 
