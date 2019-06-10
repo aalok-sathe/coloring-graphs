@@ -89,17 +89,17 @@ add_vertex(long name)
 }
 
 
-Vertex&
-Graph::
-get_vertex(long name = NULL)
-{
-    if (name == NULL)
-        for (auto& item : vertices)
-            return item.second;
-    // try
-        return vertices.at(name);
-    // catch(const std::out_of_range& oor)
-}
+// Vertex&
+// Graph::
+// get_vertex(long name = NULL)
+// {
+//     if (name == NULL)
+//         for (auto& item : vertices)
+//             return item.second;
+//     // try
+//         return vertices.at(name);
+//     // catch(const std::out_of_range& oor)
+// }
 
 
 // std::map<long, Vertex>::iterator

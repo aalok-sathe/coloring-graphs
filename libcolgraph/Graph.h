@@ -9,6 +9,9 @@
 #include "MetaGraph.h"
 
 
+
+class Vertex;
+class MetaGraph;
 /*
  *  the OG graph class
  */
