@@ -231,56 +231,57 @@ next()
 {
     if (not remaining--)
     {
-        std::cout << "iterator exhausted" << std::endl;
-
         positionctr = 0;
         colorctr = 0;
         remaining = graph->size() * colors;
         throw std::out_of_range("");
     }
 
+    long newcoloring;
+    std::map<long, ColoringVertex>::iterator it;
+
     // std::cout << "CVNIt::next beginning loopity loop" << std::endl;
 
     // operate the nested for-loop manually
     loopanchor:
-    if (positionctr+1 < graph->base->size() and colorctr >= colors)
-    {
-        positionctr++;
-        colorctr = 0;
-    }
-    else if (positionctr < graph->base->size() and colorctr+1 < colors)
-        colorctr++;
-    else
-        throw std::out_of_range("");
+        // long divisor = pow(colors, (graph->size()-positionctr-1));
+        long divisor = graph->precompexp[positionctr][1];
 
-    // long divisor = pow(colors, (graph->size()-positionctr-1));
-    long divisor = graph->precompexp[positionctr][1];
+        int curcol = (name / divisor) % colors;
+        if (curcol == colorctr)
+            goto loopcontrol; // `continue`
 
-    int curcol = (name / divisor) % colors;
-    if (curcol == colorctr)
-    {
-        std::cout << "INFO skipped because curcol " << curcol << " == colorctr "
-                  << colorctr << std::endl;
-        goto loopanchor; // `continue`
-    }
+        newcoloring = name;
+        // long newcoloring = name / divisor;
+        newcoloring -= graph->precompexp[positionctr][curcol];
+        // newcoloring -= newcoloring % colors;
+        newcoloring += graph->precompexp[positionctr][colorctr]; // colorctr;
+        // newcoloring *= divisor;
+        // newcoloring += name % divisor;
 
-    // long newcoloring = name / divisor;
-    long newcoloring = name;
-    newcoloring -= graph->precompexp[positionctr][curcol];
-    // newcoloring -= newcoloring % colors;
-    newcoloring += graph->precompexp[positionctr][colorctr]; // colorctr;
-    // newcoloring *= divisor;
-    // newcoloring += name % divisor;
-    std::map<long, ColoringVertex>::iterator it;
-    it = graph->vertices.find(newcoloring);
-    if (it == graph->vertices.end())
-    {
-        std::cout << "INFO skipped " << newcoloring << " because not valid"
-                  << std::endl;
-        goto loopanchor; // `continue`
-    }
+        it = graph->vertices.find(newcoloring);
+        if (it == graph->vertices.end())
+            goto loopcontrol; // `continue`
+        else
+            goto after;
 
-    return newcoloring;
+    loopcontrol:
+        if (positionctr+1 < graph->base->size() and colorctr >= colors)
+        {
+            positionctr++;
+            colorctr = 0;
+        }
+        else if (positionctr < graph->base->size() and colorctr+1 < colors)
+            colorctr++;
+        else
+            throw std::out_of_range("");
+
+        goto loopanchor;
+
+    after:
+        std::cerr << name << " " << newcoloring << std::endl;
+        std::cerr << "DEBUG found match! " << newcoloring << std::endl;
+        return newcoloring;
 }
 
 

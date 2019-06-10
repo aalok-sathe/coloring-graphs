@@ -68,11 +68,10 @@
         def __str__(self):
             '''
             '''
-            reprstr = ''
-            reprstr += '<Vertex [{}] of {} >'.format(self.get_name(),
-                                                    type(self))
-            return reprstr
+            return '<Vertex [{}] of {} >'.format(self.get_name(), type(self))
 
+        def __repr__(self):
+            return self.__str__()
     %}
 };
 %extend Graph {
@@ -80,10 +79,10 @@
         def __str__(self):
             '''
             '''
-            reprstr = ''
-            reprstr += '<Graph (size={}) of {} >'.format(len(self), type(self))
-            return reprstr
+            return '<Graph (size={}) of {} >'.format(len(self), type(self))
 
+        def __repr__(self):
+            return self.__str__()
     %}
 };
 
