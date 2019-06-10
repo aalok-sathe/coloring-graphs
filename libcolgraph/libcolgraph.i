@@ -38,6 +38,18 @@
         SWIG_fail;
     }
 }
+%exception Vertex::get_next_neighbor
+{
+    try
+    {
+        $action
+    }
+    catch(std::out_of_range& e)
+    {
+        PyErr_SetString(PyExc_StopIteration, "end of iterator reached");
+        SWIG_fail;
+    }
+}
 %exception Graph::get_vertex
 {
     try
@@ -50,19 +62,30 @@
         SWIG_fail;
     }
 }
-/* %exception ColoringGraph::get_vertex
-{
-    try
-    {
-        $action
-    }
-    catch(std::out_of_range& e)
-    {
-        PyErr_SetString(PyExc_KeyError, "queried key not found in lookup");
-        SWIG_fail;
-    }
-} */
 
+%extend Vertex {
+    %pythoncode %{
+        def __str__(self):
+            '''
+            '''
+            reprstr = ''
+            reprstr += '<Vertex [{}] of {} >'.format(self.get_name(),
+                                                    type(self))
+            return reprstr
+
+    %}
+};
+%extend Graph {
+    %pythoncode %{
+        def __str__(self):
+            '''
+            '''
+            reprstr = ''
+            reprstr += '<Graph (size={}) of {} >'.format(len(self), type(self))
+            return reprstr
+
+    %}
+};
 
 %include "GraphTemplates.h"
 

@@ -64,26 +64,34 @@ class Vertex
 
         virtual ~Vertex();
 
-        virtual void add_neighbor(Vertex& other) {};
+        // virtual const char* __repr__();
+        // virtual const char* __str__();
 
         bool operator==(const Vertex& other);
 
+        virtual long get_next_neighbor() = 0;
+        virtual void reset_neighbor_track() = 0;
+
         virtual long get_name() const;
+
+        // virtual VertexNeighborIterator<Vertex>* __iter__() = 0;
+        // virtual VertexNeighborIterator<Vertex>* get_neighbors() = 0;
 };
 
 
 class BaseVertex : public Vertex
 {
     public:
-        BaseVertexNeighborIterator* nt;
         std::set<long> neighbors;
+        BaseVertexNeighborIterator* nt;
 
         BaseVertex() {};
         BaseVertex(long name_);
 
         void add_neighbor(Vertex& other);
 
-        virtual long get_next_neighbor();
+        long get_next_neighbor() override;
+        void reset_neighbor_track() override;
 
         BaseVertexNeighborIterator* __iter__();
         BaseVertexNeighborIterator* get_neighbors();
@@ -98,6 +106,9 @@ class ColoringVertex : public Vertex
         ColoringVertexNeighborIterator* nt;
 
         ColoringVertex(long name_, int k, ColoringGraph* graph_);
+
+        long get_next_neighbor() override;
+        void reset_neighbor_track() override;
 
         ColoringVertexNeighborIterator* __iter__();
         ColoringVertexNeighborIterator* get_neighbors();

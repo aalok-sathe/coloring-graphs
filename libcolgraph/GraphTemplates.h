@@ -68,9 +68,9 @@ class Graph
         virtual long size();
         virtual long __len__() { return size(); };
 
-        virtual void add_vertex(long name) = 0;
+        // virtual char* __repr__() {};
 
-        virtual void make_edge(long a, long b);
+        virtual void add_vertex(long name) = 0;
 
         virtual V& get_vertex(long name);
         virtual V& get_some_vertex();

@@ -7,10 +7,11 @@ from libcolgraph import *
 print('attempting to instantiate basegraph')
 bg = BaseGraph()
 print('attempting to load in a graph')
-bg.load_txt('./test/input/bipartite_test_graph0.in')
+# bg.load_txt('./test/input/bipartite_test_graph0.in')
+bg.load_txt('./test/input/g1.in')
 
 v = bg.get_some_vertex()
-print('some vertex of g: ', v, v.get_name())
+print('some vertex of g: ', (v), v.get_name())
 print('trying to get its neighbors using', v.get_neighbors())
 l = [*v.get_neighbors()]
 print('its neighbors: ', l)
@@ -25,7 +26,16 @@ print('some vertex of cg: ', v, v.get_name(), v.get_neighbors())
 # v = cg.get_vertex(364)
 # print('some vertex of cg: ', v.get_name())
 
+for i in range(5):
+    try:
+        print('{} next neighbor '.format(i), v.get_next_neighbor())
+    except StopIteration:
+        pass
+        # v.reset_neighbor_track()
+        # print('{} next neighbor '.format(i), v.get_next_neighbor())
 
+
+raise SystemExit
 l = [*v.get_neighbors()]
 print('its neighbors: ', l)
 

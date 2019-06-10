@@ -39,31 +39,6 @@ size()
 
 
 template <typename V>
-void
-Graph<V>::
-make_edge(long a, long b)
-{
-    typename std::map<long, V>::iterator it;
-    V * va, * vb;
-
-    it = vertices.find(a);
-    if (it != vertices.end())
-        va = &it->second;
-    else
-        throw std::out_of_range("");
-
-    it = vertices.find(b);
-    if (it != vertices.end())
-        vb = &it->second;
-    else
-        throw std::out_of_range("");
-
-    vb->add_neighbor(*va);
-    va->add_neighbor(*vb);
-}
-
-
-template <typename V>
 V&
 Graph<V>::
 get_vertex(long name)
@@ -121,6 +96,30 @@ add_vertex(long name)
 {
     BaseVertex v(name);
     this->vertices.insert(std::pair<long, BaseVertex>(name, v));
+}
+
+
+void
+BaseGraph::
+make_edge(long a, long b)
+{
+    typename std::map<long, BaseVertex>::iterator it;
+    BaseVertex * va, * vb;
+
+    it = vertices.find(a);
+    if (it != vertices.end())
+        va = &it->second;
+    else
+        throw std::out_of_range("");
+
+    it = vertices.find(b);
+    if (it != vertices.end())
+        vb = &it->second;
+    else
+        throw std::out_of_range("");
+
+    vb->add_neighbor(*va);
+    va->add_neighbor(*vb);
 }
 
 

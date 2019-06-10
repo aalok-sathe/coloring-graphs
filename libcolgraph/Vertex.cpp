@@ -1,6 +1,8 @@
 #ifndef __VERTEX_CPP__
 #define __VERTEX_CPP__
 
+#include <string>
+#include <sstream>
 #include "Vertex.h"
 
 
@@ -18,6 +20,27 @@ Vertex::
 ~Vertex()
 {}
 
+// const char*
+// Vertex::
+// __repr__()
+// {
+//     std::stringstream repr;
+//     repr << "object of base class Vertex; ";
+//     repr << "with name: " << name << "; ";
+//     std::string reprstr = repr.str();
+//     return reprstr.c_str();
+// }
+//
+//
+// const char*
+// Vertex::
+// __str__()
+// {
+//     std::stringstream repr;
+//     repr << name;
+//     std::string reprstr = repr.str();
+//     return reprstr.c_str();
+// }
 
 bool
 Vertex::
@@ -62,6 +85,15 @@ get_next_neighbor()
     return nt->next();
 }
 
+void
+BaseVertex::
+reset_neighbor_track()
+{
+    delete nt;
+    nt = new BaseVertexNeighborIterator(neighbors.begin(),
+                                        (long)neighbors.size());
+}
+
 
 BaseVertexNeighborIterator*
 BaseVertex::
@@ -90,6 +122,23 @@ ColoringVertex(long name_, int k, ColoringGraph* graph_)
     : Vertex(name_), colors(k), graph(graph_)
 {
     nt = new ColoringVertexNeighborIterator(name_, k, graph_);
+}
+
+
+long
+ColoringVertex::
+get_next_neighbor()
+{
+    return nt->next();
+}
+
+
+void
+ColoringVertex::
+reset_neighbor_track()
+{
+    delete nt;
+    nt = new ColoringVertexNeighborIterator(name, colors, graph);
 }
 
 
@@ -209,7 +258,11 @@ next()
 
     int curcol = (name / divisor) % colors;
     if (curcol == colorctr)
+    {
+        std::cout << "INFO skipped because curcol " << curcol << " == colorctr "
+                  << colorctr << std::endl;
         goto loopanchor; // `continue`
+    }
 
     // long newcoloring = name / divisor;
     long newcoloring = name;
@@ -218,6 +271,14 @@ next()
     newcoloring += graph->precompexp[positionctr][colorctr]; // colorctr;
     // newcoloring *= divisor;
     // newcoloring += name % divisor;
+    std::map<long, ColoringVertex>::iterator it;
+    it = graph->vertices.find(newcoloring);
+    if (it == graph->vertices.end())
+    {
+        std::cout << "INFO skipped " << newcoloring << " because not valid"
+                  << std::endl;
+        goto loopanchor; // `continue`
+    }
 
     return newcoloring;
 }

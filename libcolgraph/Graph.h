@@ -51,7 +51,7 @@ class BaseGraph : public Graph<BaseVertex>
         void load_txt(char* path);
 
         void add_vertex(long name) override;
-        // void make_edge(long a, long b);
+        void make_edge(long a, long b);
 
         bool is_valid_coloring(long coloring, int k);
 
