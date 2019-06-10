@@ -190,7 +190,7 @@ next()
         throw std::out_of_range("");
     }
 
-    std::cout << "ColVertexNbrIter::next beginning loopity loop" << std::endl;
+    // std::cout << "CVNIt::next beginning loopity loop" << std::endl;
 
     // operate the nested for-loop manually
     loopanchor:

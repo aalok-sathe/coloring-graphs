@@ -88,6 +88,8 @@ const GraphVertexIterator<V>*
 Graph<V>::
 get_vertices()
 {
+    if (true)
+        throw std::logic_error("not implemented");
     return __iter__();
 }
 
@@ -97,6 +99,8 @@ const GraphVertexIterator<V>*
 Graph<V>::
 __iter__()
 {
+    if (true)
+        throw std::logic_error("not implemented");
     return new GraphVertexIterator<V>({ vertices.begin(), size() });
 }
 
@@ -186,6 +190,22 @@ is_valid_coloring(long coloring, int k)
 }
 
 
+const BaseGraphVertexIterator*
+BaseGraph::
+get_vertices()
+{
+    return __iter__();
+}
+
+
+const BaseGraphVertexIterator*
+BaseGraph::
+__iter__()
+{
+    return new BaseGraphVertexIterator(vertices.begin(), size());
+}
+
+
 /*******************************************************************************
 ***************************** COLORINGGRAPH ************************************
 *******************************************************************************/
@@ -241,6 +261,22 @@ add_vertex(long name)
 //     for (auto& pair : vertices)
 //             return pair.second;
 // }
+
+
+const ColoringGraphVertexIterator*
+ColoringGraph::
+get_vertices()
+{
+    return __iter__();
+}
+
+
+const ColoringGraphVertexIterator*
+ColoringGraph::
+__iter__()
+{
+    return new ColoringGraphVertexIterator(vertices.begin(), size());
+}
 
 
 /*******************************************************************************

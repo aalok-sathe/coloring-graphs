@@ -43,15 +43,16 @@ class GraphVertexIterator
         GraphVertexIterator<V>(typename std::map<long, V>::iterator it_,
                                long len_)
             : it(it_), len(len_) {};
-        ~GraphVertexIterator() {};
+        virtual ~GraphVertexIterator() {};
 
-        V next();
-        V __next__();
+        virtual V next();
+        virtual V __next__();
 
-        bool hasnext();
+        virtual bool hasnext();
 
-        GraphVertexIterator<V>* __iter__();
+        virtual GraphVertexIterator<V>* __iter__();
 };
+
 
 template <typename V>
 class Graph
@@ -74,8 +75,8 @@ class Graph
         virtual V& get_vertex(long name);
         virtual V& get_some_vertex();
 
-        virtual const GraphVertexIterator<V>* __iter__();
-        virtual const GraphVertexIterator<V>* get_vertices();
+        virtual const GraphVertexIterator<V>* __iter__() = 0;
+        virtual const GraphVertexIterator<V>* get_vertices() = 0;
 
 
 };

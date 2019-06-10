@@ -19,6 +19,29 @@ class BaseGraph;
 class ColoringGraph;
 
 
+
+class BaseGraphVertexIterator : public GraphVertexIterator<BaseVertex>
+{
+    public:
+        BaseGraphVertexIterator() {};
+        BaseGraphVertexIterator(typename std::map<long, BaseVertex>::iterator it_, long len_)
+            : GraphVertexIterator<BaseVertex>(it_, len_) {};
+
+        // BaseGraphVertexIterator* __iter__();
+};
+
+
+class ColoringGraphVertexIterator : public GraphVertexIterator<ColoringVertex>
+{
+    public:
+        ColoringGraphVertexIterator() {};
+        ColoringGraphVertexIterator(typename std::map<long, ColoringVertex>::iterator it_, long len_)
+            : GraphVertexIterator<ColoringVertex>(it_, len_) {};
+
+        // ColoringGraphVertexIterator* __iter__();
+};
+
+
 // template <typename V = Vertex>
 class BaseGraph : public Graph<BaseVertex>
 {
@@ -36,6 +59,8 @@ class BaseGraph : public Graph<BaseVertex>
 
         ColoringGraph* build_coloring_graph(int k);
 
+        const BaseGraphVertexIterator* __iter__() override;
+        const BaseGraphVertexIterator* get_vertices() override;
 };
 
 
@@ -55,9 +80,9 @@ class ColoringGraph : public Graph<ColoringVertex>
 
         // ColoringVertex& get_vertex(long name);
         // ColoringVertex& get_some_vertex();
-        //
-        // const struct GraphVertexIterator<ColoringVertex>* __iter__();
-        // const struct GraphVertexIterator<ColoringVertex>* get_vertices();
+
+        const ColoringGraphVertexIterator* __iter__() override;
+        const ColoringGraphVertexIterator* get_vertices() override;
 
 };
 

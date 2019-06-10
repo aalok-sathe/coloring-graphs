@@ -66,8 +66,8 @@
 
 %include "GraphTemplates.h"
 
-/* %template(GBVIt) GraphVertexIterator<BaseVertex>; */
-/* %template(GCVIt) GraphVertexIterator<ColoringVertex>; */
+%template(GBVIt) GraphVertexIterator<BaseVertex>;
+%template(GCVIt) GraphVertexIterator<ColoringVertex>;
 %template(BVNIt) VertexNeighborIterator<BaseVertex>;
 %template(CVNIt) VertexNeighborIterator<ColoringVertex>;
 %template(BGraph) Graph<BaseVertex>;
