@@ -23,10 +23,13 @@ public:
     ~MetaVertex();
 
     // add to each other's neighbor list
-    static void connect(MetaVertex v1, MetaVertex v2);
-    static void disconnect(MetaVertex v1, MetaVertex v2);
+    void connect(MetaVertex v);
+    void disconnect(MetaVertex v);
 
-
+    bool operator==(const MetaVertex v) const
+    {
+        return this->name == v.name;
+    }
 
 
 };

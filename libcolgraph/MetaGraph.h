@@ -3,6 +3,9 @@
 
 #include "MetaVertex.h"
 
+
+class MetaVertex;
+
 class MetaGraph
 {
 

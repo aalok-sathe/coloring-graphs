@@ -215,7 +215,7 @@ Graph::Tarjans()
                     // So we connect them to the component.
                     while (cut_vertex_stack.top().depth > found_cut_vertex->depth)
                     {
-                        MetaVertex::connect(main, cut_vertex_stack.top());
+                        main.connect(cut_vertex_stack.top());
                         cut_vertex_stack.pop();
                     }
 
@@ -227,9 +227,9 @@ Graph::Tarjans()
                     {
                         MetaVertex cut(*found_cut_vertex);
                         metagraph.add_vertex(cut);
-                        MetaVertex::connect(main, cut);}
+                        main.connect(cut);}
 
-                    else { MetaVertex::connect(main, cut_vertex_stack.top()); }
+                    else { main.connect(cut_vertex_stack.top()); }
 
 
 

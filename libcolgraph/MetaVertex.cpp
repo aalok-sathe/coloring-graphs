@@ -9,29 +9,30 @@ MetaVertex() {}
 MetaVertex::
 MetaVertex(Vertex v)
 {
-	this.name = v.name;
-	this.depth = v.depth;
+	this->name = v.name;
+	this->depth = v.depth;
 	vertices.push_back(v);
 }
 
 MetaVertex::
 ~MetaVertex(){}
 
-static void
+void
 MetaVertex::
-connect(MetaVertex v1, MetaVertex v2)
+connect(MetaVertex v)
 {
-	v1.meta_neighbors.push_back(v2);
-	v2.meta_neighbors.push_back(v1);
+	this->meta_neighbors.push_back(v);
+	v.meta_neighbors.push_back(*this);
 }
 
-static void
+void
 MetaVertex::
-disconnect(MetaVertex v1, MetaVertex v2)
+disconnect(MetaVertex v)
 {
-	v1.meta_neighbors.remove(v2);
-	v2.meta_neighbors.remove(v1);
+	this->meta_neighbors.remove(v);
+	v.meta_neighbors.remove(*this);
 }
+
 
 
 

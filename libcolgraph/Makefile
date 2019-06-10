@@ -30,7 +30,7 @@ TESTER: tester.o Graph.o Vertex.o MetaGraph.o MetaVertex.o
 	echo -e "WARNING: require GNU/Linux. Might not work on MacOS"
 	g++ -o TESTER tester.o Graph.o Vertex.o
 
-Graph.o: Graph.h Vertex.h MetaGraph.h 
+Graph.o: Graph.h Vertex.h MetaGraph.h MetaVertex.h
 
 Vertex.o: Vertex.h 
 

@@ -30,11 +30,12 @@ remove_vertex(MetaVertex m)
 {
 	for (auto& n : m.meta_neighbors)
 	{
-		MetaVertex::disconnect(m, n);
+		m.disconnect(n);
 	}
 	
 	vertices.remove(m);
 }
+
 
 // void
 // MetaGraph::
