@@ -19,6 +19,7 @@ class MetaGraph
         void add_vertex(MetaVertex m){};
         void remove_vertex(MetaVertex m){};
     
+    	void save_txt();
 };
 
 #endif

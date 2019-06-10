@@ -36,34 +36,34 @@ load_txt(char* path)
         }
 }
 
-void
-BaseGraph::
-save_txt(char* path)
-{
-    // std::string path_ = std::string(path);
-    std::ofstream file(path);
-    file << size() << std::endl;
+// void
+// BaseGraph::
+// save_txt(char* path)
+// {
+//     // std::string path_ = std::string(path);
+//     std::ofstream file(path);
+//     file << size() << std::endl;
 
-    std::map<long, long> adjacent = new map<long, long>();
-    for (auto& [name1, v1] : vertices)
-        for (auto& [name2, v2] : vertices)
-        {
+//     std::map<long, long> adjacent = new map<long, long>();
+//     for (auto& [name1, v1] : vertices)
+//         for (auto& [name2, v2] : vertices)
+//         {
             
-        }
+//         }
 
 
-    for (int i=0; i<n; i++)
-        add_vertex((long)i);
+//     for (int i=0; i<n; i++)
+//         add_vertex((long)i);
 
-    int value;
-    for (int i=0; i<n; i++)
-        for (int j=0; j<n; j++)
-        {
-            file >> value;
-            if (value)
-                vertices[i].add_neighbor(vertices[j]);
-        }
-}
+//     int value;
+//     for (int i=0; i<n; i++)
+//         for (int j=0; j<n; j++)
+//         {
+//             file >> value;
+//             if (value)
+//                 vertices[i].add_neighbor(vertices[j]);
+//         }
+// }
 
 
 long

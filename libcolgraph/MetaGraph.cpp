@@ -3,6 +3,9 @@
 
 #include "MetaGraph.h"
 #include <list>
+#include <fstream>
+
+using namespace std;
 
 MetaGraph::MetaGraph()
 {
@@ -31,6 +34,22 @@ remove_vertex(MetaVertex m)
 	}
 	
 	vertices.remove(m);
+}
+
+void
+MetaGraph::
+save_txt()
+{
+	ofstream outfile;
+	outfile.open("graph.txt", ios::out);
+
+	for (auto& metavertex : vertices)
+	{
+		for (auto& metavertex : vertices)
+		{
+			if 
+		}
+	}
 }
 
 #endif

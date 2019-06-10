@@ -46,6 +46,8 @@ class BaseGraph : public Graph
     public:
         void load_txt(char* path);
 
+        void save_txt(char* path);
+
         void add_vertex(long name);
 
         MetaGraph Tarjans();
