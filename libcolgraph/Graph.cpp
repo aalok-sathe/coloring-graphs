@@ -179,12 +179,16 @@ Graph::Tarjans()
 
             else
             {
+                // if (current->hasNext())
+                // {
+                //     current->lowpoint = std::min(current->lowpoint, child.depth);
+                //     break;
+                // }
+
                 // Break if the root has no more children
                 if (current->name == root.name) {break;}
 
-                // Compute lowpoint
-                current->lowpoint = current->lp(this);
-
+                current->parent->lowpoint = std::min(current->parent->lowpoint, current->lowpoint);
 
                 if (current->parent->name == root.name ||
                     current->lowpoint >= current->parent->depth)
