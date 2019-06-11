@@ -1,60 +1,88 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
-#include <map>
+#include <unordered_map>
 #include <cstddef>
-// #include <string>
+#include <stdexcept>
+#include <iostream>
 #include <fstream>
+#include <vector>
+#include "GraphTemplates.h"
 #include "Vertex.h"
 
 
-/*
- *  the OG graph class
- */
-class Graph
+class Vertex;
+class BaseVertex;
+class ColoringVertex;
+template <typename V> class Graph;
+class BaseGraph;
+class ColoringGraph;
+
+
+
+class BaseGraphVertexIterator : public GraphVertexIterator<BaseVertex>
 {
-    private:
-
-    protected:
     public:
-        std::map<long, Vertex> vertices;
+        BaseGraphVertexIterator() {};
+        BaseGraphVertexIterator(typename std::unordered_map<long, BaseVertex*>::iterator it_, long len_)
+            : GraphVertexIterator<BaseVertex>(it_, len_) {};
 
+        // BaseGraphVertexIterator* __iter__();
+};
+
+
+class ColoringGraphVertexIterator : public GraphVertexIterator<ColoringVertex>
+{
     public:
+        ColoringGraphVertexIterator() {};
+        ColoringGraphVertexIterator(typename std::unordered_map<long, ColoringVertex*>::iterator it_, long len_)
+            : GraphVertexIterator<ColoringVertex>(it_, len_) {};
 
-        Graph();
-        ~Graph();
+        // ColoringGraphVertexIterator* __iter__();
+};
+
+
+// template <typename V = Vertex>
+class BaseGraph : public Graph<BaseVertex>
+{
+    public:
+        BaseGraph();
 
         void load_txt(char* path);
 
-        long size();
+        void add_vertex(long name) override;
+        void make_edge(long a, long b);
 
-        void add_vertex(long name);
+        bool is_valid_coloring(long coloring, int k);
 
-        Vertex& get_vertex(long name);
+        int get_vertex_color(long coloring, long name, int k);
 
-        std::map<long, Vertex>::iterator get_vertices();
+        ColoringGraph* build_coloring_graph(int k);
 
+        const BaseGraphVertexIterator* __iter__() override;
+        const BaseGraphVertexIterator* get_vertices() override;
 };
 
 
-class BaseGraph : Graph
+// template <typename V = ColoringVertex>
+class ColoringGraph : public Graph<ColoringVertex>
 {
-    private:
-
-    protected:
-
     public:
-};
+        int colors;
+        BaseGraph* base;
+        // precompexp[p][c] --> c * (COLORS ** p)
+        std::vector<std::vector<long> > precompexp;
 
+        ColoringGraph(int k, BaseGraph* bg);
 
-class ColoringGraph
-{
-    private:
-        Graph* base;
+        void add_vertex(long name) override;
 
-    protected:
+        // ColoringVertex& get_vertex(long name);
+        // ColoringVertex& get_some_vertex();
 
-    public:
+        const ColoringGraphVertexIterator* __iter__() override;
+        const ColoringGraphVertexIterator* get_vertices() override;
+
 };
 
 

@@ -1,48 +1,117 @@
 #ifndef __VERTEX_H__
 #define __VERTEX_H__
 
-#include <set>
+#include <unordered_set>
 #include <cstddef>
-// #include "GraphUtils.h"
+#include <stdexcept>
+#include <math.h>
 
-enum V_ATTR
+#include "Graph.h"
+#include "GraphTemplates.h"
+
+class Vertex;
+class BaseVertex;
+class ColoringVertex;
+template <typename V> class Graph;
+class BaseGraph;
+class ColoringGraph;
+
+
+class BaseVertexNeighborIterator : public VertexNeighborIterator<BaseVertex>
 {
-    NAME,
-    COLOR
+    public:
+        std::unordered_set<long>::iterator it;
+        long len;
+
+        BaseVertexNeighborIterator() {};
+        BaseVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_);
+
+        long next() override;
+
+        bool hasnext() override;
+};
+
+class ColoringVertexNeighborIterator : public VertexNeighborIterator<ColoringVertex>
+{
+    public:
+        long name;
+        int colors;
+        ColoringGraph* graph;
+
+        // long remaining;
+        int positionctr;
+        int colorctr;
+
+        ColoringVertexNeighborIterator() {};
+        ColoringVertexNeighborIterator(long name_, int colors_, ColoringGraph* graph_);
+
+        // ~ColoringVertexNeighborIterator() {};
+
+        long next() override;
+
+        bool hasnext() override;
+
 };
 
 
 class Vertex
 {
-    friend class Graph;
-
-    private:
-
-    protected:
-        long name;
-        std::set<long> neighbors;
-
     public:
-        Vertex();
+        long name;
+
+        Vertex() {};
         Vertex(long name_);
 
-        ~Vertex();
+        virtual ~Vertex();
 
-        long get_name();
+        // virtual const char* __repr__();
+        // virtual const char* __str__();
 
-        void add_neighbor(Vertex& other);
+        bool operator==(const Vertex& other);
 
-        std::set<long>::iterator get_neighbors();
+        virtual long get_next_neighbor() = 0;
+        virtual void reset_neighbor_track() = 0;
+
+        virtual long get_name() const;
+
+        // virtual VertexNeighborIterator<Vertex>* __iter__() = 0;
+        // virtual VertexNeighborIterator<Vertex>* get_neighbors() = 0;
 };
 
 
-class ColoringVertex : Vertex
+class BaseVertex : public Vertex
 {
-    private:
-
-    protected:
-
     public:
+        std::unordered_set<long> neighbors;
+        BaseVertexNeighborIterator* nt;
+
+        BaseVertex() {};
+        BaseVertex(long name_);
+
+        void add_neighbor(Vertex& other);
+
+        long get_next_neighbor() override;
+        void reset_neighbor_track() override;
+
+        BaseVertexNeighborIterator* __iter__();
+        BaseVertexNeighborIterator* get_neighbors();
+};
+
+
+class ColoringVertex : public Vertex
+{
+    public:
+        int colors;
+        ColoringGraph* graph;
+        ColoringVertexNeighborIterator* nt;
+
+        ColoringVertex(long name_, int k, ColoringGraph* graph_);
+
+        long get_next_neighbor() override;
+        void reset_neighbor_track() override;
+
+        ColoringVertexNeighborIterator* __iter__();
+        ColoringVertexNeighborIterator* get_neighbors();
 };
 
 #endif
