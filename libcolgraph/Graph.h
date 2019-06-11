@@ -41,7 +41,7 @@ class Graph
 };
 
 
-class BaseGraph : Graph
+class BaseGraph : public Graph
 {
     private:
 
@@ -68,7 +68,7 @@ class BaseGraph : Graph
 };
 
 
-class ColoringGraph : Graph
+class ColoringGraph : public Graph
 {
         
 
