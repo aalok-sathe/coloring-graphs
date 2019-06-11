@@ -3,6 +3,7 @@
 from libcolgraph import *
 # from tqdm import tqdm
 import networkx as nx
+from pyvis.network import Network
 from matplotlib import pyplot as plt
 
 def sep(infostr=''):
@@ -14,9 +15,9 @@ def sep(infostr=''):
     print(infostr, '\n')
 
 
-def graphdraw(g, draw_fn=nx.draw, **kwargs):
+def make_nx(g):
     '''
-    internal method to draw graph
+    returns a NetworkX graph from g
     '''
     G = nx.Graph()
     # G.add_nodes_from(self.vertices.keys())
@@ -25,8 +26,27 @@ def graphdraw(g, draw_fn=nx.draw, **kwargs):
         for nbr in v.get_neighbors():
             G.add_edge(v.get_name(), nbr)
             # G.add_edge(nbr, v.get_name())
+    return G
+
+
+def nxdraw(g, draw_fn=nx.draw, **kwargs):
+    '''
+    helper method to draw graph using networkx
+    '''
+    G = make_nx(g)
     draw_fn(G, **kwargs)
 
+
+def pyvisdraw(g, title='', **kwargs):
+    '''
+    use pyvis to draw graph
+    '''
+    net = Network(height='100%', width='100%', bgcolor='#222222',
+                  font_color='white', **kwargs)
+    # net = Network(**kwargs)
+    net.barnes_hut()
+    net.from_nx(make_nx(g))
+    net.show("viz/{}_{}.html".format(title, len(g)))
 
 
 ########    TEST: basic instantation
@@ -36,8 +56,11 @@ bipartite = BaseGraph()
 bipartite.load_txt('./test/input/bipartite_test_graph0.in')
 
 bg = BaseGraph()
-#bg.load_txt('./test/input/g1.in')
-bg.load_txt('g.in')
+bg.load_txt('./test/input/g1.in')
+# bg.load_txt('./test/input/g2.in')
+# bg.load_txt('./test/input/g3.in')
+# bg.load_txt('g.in')
+bg = bipartite
 
 print('INFO: Graphs initialized: bipartite,bg:', bipartite, bg)
 
@@ -64,21 +87,23 @@ for v in bg.get_vertices():
 ########    TEST: vertex neighborhood
 sep('TEST: vertex neighborhood'.upper())
 
-print('INFO: getting the last vertex of bg')
-v = [*bg.get_vertices()][-1]
-print('INFO: retrieving neighbors of v=', v)
-for nbr_name in v.get_neighbors():
-    print(bg.get_vertex(nbr_name))
+try:
+    print('INFO: getting the last vertex of bg')
+    v = [*bg.get_vertices()][-1]
+    print('INFO: retrieving neighbors of v=', v)
+    for nbr_name in v.get_neighbors():
+        print(bg.get_vertex(nbr_name))
 
-print('INFO: getting some neighbor of v, `n`')
-n = bg.get_vertex([*v.get_neighbors()][0])
-print('INFO: getting all neighbors of n', n)
-for nbr_name in n.get_neighbors():
-    print(bg.get_vertex(nbr_name))
+    print('INFO: getting some neighbor of v, `n`')
+    n = bg.get_vertex([*v.get_neighbors()][0])
+    print('INFO: getting all neighbors of n', n)
+    for nbr_name in n.get_neighbors():
+        print(bg.get_vertex(nbr_name))
 
-print('INFO: `v.get_name() in n.get_neighbors()?`',
-      v.get_name() in n.get_neighbors())
-
+    print('INFO: `v.get_name() in n.get_neighbors()?`',
+          v.get_name() in n.get_neighbors())
+except Exception as e:
+    print('\nERROR!\n', e)
 
 
 ########    TEST: generating a coloring graph
@@ -93,20 +118,22 @@ print('{} leads to coloring graph {}'.format(bg, cg))
 ########    TEST: getting a vertex of cg
 sep('TEST: getting a vertex of cg'.upper())
 
-print('INFO: getting a vertex of cg')
-v = cg.get_some_vertex()
-print(v)
+try:
+    print('INFO: getting a vertex of cg')
+    v = cg.get_some_vertex()
+    print(v)
 
-# print('INFO: getting neighbors of v', v)
-# for n in v.get_neighbors():
-#     print(n)
-print('INFO: getting some neighbor of v')
-n = cg.get_vertex([*v.get_neighbors()][0])
-print(n)
+    # print('INFO: getting neighbors of v', v)
+    # for n in v.get_neighbors():
+    #     print(n)
+    print('INFO: getting some neighbor of v')
+    n = cg.get_vertex([*v.get_neighbors()][0])
+    print(n)
 
-print('INFO: `v.get_name() in n.get_neighbors()?`',
-      v.get_name() in n.get_neighbors())
-
+    print('INFO: `v.get_name() in n.get_neighbors()?`',
+          v.get_name() in n.get_neighbors())
+except Exception as e:
+    print('\nERROR!\n', e)
 
 
 ########    TEST: visualize
@@ -114,16 +141,18 @@ sep('TEST: visualize'.upper())
 
 kwargs = dict(with_labels=1, node_size=1024, font_size=10)
 
-plt.subplot(1, 2, 1)
-graphdraw(bg, **kwargs)
-plt.title(str(bg))
+# plt.subplot(1, 2, 1)
+# graphdraw(bg, **kwargs)
+# plt.title(str(bg))
+#
+# plt.subplot(1, 2, 2)
+# graphdraw(cg, **kwargs)
+# plt.title(str(cg))
+#
+# plt.show()
 
-plt.subplot(1, 2, 2)
-graphdraw(cg, **kwargs)
-plt.title(str(cg))
-
-plt.show()
-
+pyvisdraw(bg, 'testbg')
+pyvisdraw(cg, 'testcg')
 
 
 

@@ -20,27 +20,6 @@ Vertex::
 ~Vertex()
 {}
 
-// const char*
-// Vertex::
-// __repr__()
-// {
-//     std::stringstream repr;
-//     repr << "object of base class Vertex; ";
-//     repr << "with name: " << name << "; ";
-//     std::string reprstr = repr.str();
-//     return reprstr.c_str();
-// }
-//
-//
-// const char*
-// Vertex::
-// __str__()
-// {
-//     std::stringstream repr;
-//     repr << name;
-//     std::string reprstr = repr.str();
-//     return reprstr.c_str();
-// }
 
 bool
 Vertex::
@@ -221,7 +200,7 @@ ColoringVertexNeighborIterator(long name_, int k, ColoringGraph* graph_)
 {
     positionctr = 0;
     colorctr = 0;
-    remaining = graph->base->size() * colors;
+    // remaining = graph->base->size() * colors;
 }
 
 
@@ -229,59 +208,51 @@ long
 ColoringVertexNeighborIterator::
 next()
 {
-    if (not remaining--)
+    for (; positionctr < graph->base->size(); positionctr++)
     {
-        positionctr = 0;
-        colorctr = 0;
-        remaining = graph->size() * colors;
-        throw std::out_of_range("");
-    }
-
-    long newcoloring;
-    std::map<long, ColoringVertex>::iterator it;
-
-    // std::cout << "CVNIt::next beginning loopity loop" << std::endl;
-
-    // operate the nested for-loop manually
-    loopanchor:
-        // long divisor = pow(colors, (graph->size()-positionctr-1));
+        long newcoloring;
+        int curcol;
+        std::map<long, ColoringVertex*>::iterator it;
         long divisor = graph->precompexp[positionctr][1];
 
-        int curcol = (name / divisor) % colors;
-        if (curcol == colorctr)
-            goto loopcontrol; // `continue`
-
-        newcoloring = name;
-        // long newcoloring = name / divisor;
-        newcoloring -= graph->precompexp[positionctr][curcol];
-        // newcoloring -= newcoloring % colors;
-        newcoloring += graph->precompexp[positionctr][colorctr]; // colorctr;
-        // newcoloring *= divisor;
-        // newcoloring += name % divisor;
-
-        it = graph->vertices.find(newcoloring);
-        if (it == graph->vertices.end())
-            goto loopcontrol; // `continue`
-        else
-            goto after;
-
-    loopcontrol:
-        if (positionctr+1 < graph->base->size() and colorctr >= colors)
+        for (; colorctr < colors; colorctr++)
         {
-            positionctr++;
-            colorctr = 0;
-        }
-        else if (positionctr < graph->base->size() and colorctr+1 < colors)
+            curcol = (name / divisor) % colors;
+            if (curcol == colorctr)
+                continue;
+
+            newcoloring = name;
+            std::cerr << std::endl << "start newcoloring with name " << newcoloring
+                      << std::endl;
+            newcoloring -= graph->precompexp[positionctr][curcol];
+            std::cerr << "remove current color " << newcoloring
+                      << std::endl;
+            newcoloring += graph->precompexp[positionctr][colorctr];
+            std::cerr << "add colorctr color to it " << newcoloring
+                      << std::endl;
+
+            std::cerr << "Potential neighbor of " << name
+                      << ": " << newcoloring << " when posn=" << positionctr
+                      << " and colctr=" << colorctr << std::endl;
+
+            it = graph->vertices.find(newcoloring); // valid coloring?
+            std::cerr << "trying to see if iterator found anything" << std::endl;
+            if (it == graph->vertices.end())
+                continue;
+
+            std::cerr << "Confirmed neighbor of " << name << ": "
+                      << newcoloring << std::endl;
+
             colorctr++;
-        else
-            throw std::out_of_range("");
+            return newcoloring;
+        }
 
-        goto loopanchor;
+        colorctr = 0;
+    }
 
-    after:
-        std::cerr << name << " " << newcoloring << std::endl;
-        std::cerr << "DEBUG found match! " << newcoloring << std::endl;
-        return newcoloring;
+    positionctr = 0;
+    colorctr = 0;
+    throw std::out_of_range("");
 }
 
 
@@ -289,9 +260,21 @@ bool
 ColoringVertexNeighborIterator::
 hasnext()
 {
-    if (true)
-        throw std::logic_error("not implemented");
-    return (this->remaining > 0);
+    int p = positionctr, c = colorctr;
+    // long rem = remaining;
+
+    try
+    {
+        next();
+        positionctr = p;
+        colorctr = c;
+        // remaining = rem;
+        return true;// and remaining;
+    }
+    catch (std::out_of_range& e)
+    {
+        return false;
+    }
 }
 
 

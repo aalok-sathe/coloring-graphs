@@ -38,7 +38,7 @@ class ColoringVertexNeighborIterator : public VertexNeighborIterator<ColoringVer
         int colors;
         ColoringGraph* graph;
 
-        long remaining;
+        // long remaining;
         int positionctr;
         int colorctr;
 

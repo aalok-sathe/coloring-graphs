@@ -36,11 +36,11 @@ template <typename V>
 class GraphVertexIterator
 {
     public:
-        typename std::map<long, V>::iterator it;
+        typename std::map<long, V*>::iterator it;
         long len;
 
         GraphVertexIterator<V>() {};
-        GraphVertexIterator<V>(typename std::map<long, V>::iterator it_,
+        GraphVertexIterator<V>(typename std::map<long, V*>::iterator it_,
                                long len_)
             : it(it_), len(len_) {};
         virtual ~GraphVertexIterator() {};
@@ -58,7 +58,7 @@ template <typename V>
 class Graph
 {
     public:
-        std::map<long, V> vertices;
+        std::map<long, V*> vertices;
 
         Graph();
         virtual ~Graph();
