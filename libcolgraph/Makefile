@@ -26,13 +26,19 @@ default: TESTER build
 .cpp.o:
 	g++ $(CFLAGS) -c $<
 
-TESTER: tester.o Graph.o Vertex.o
-	echo -e "WARNING: require GNU/Linux. Might not work on MacOS"
-	g++ -o TESTER tester.o Graph.o Vertex.o
+TESTER: tester.o Graph.o Vertex.o MetaVertex.o MetaGraph.o GraphAlgo.o
+	g++ -o TESTER tester.o Graph.o Vertex.o MetaVertex.o MetaGraph.o GraphAlgo.o
 
-Graph.o: Graph.h Vertex.h GraphTemplates.h
+Graph.o: Graph.h Vertex.h GraphTemplates.h MetaGraph.h MetaVertex.h
 
 Vertex.o: Vertex.h GraphTemplates.h
+
+GraphAlgo.o: Graph.o MetaGraph.o
+
+MetaGraph.o: MetaGraph.h MetaVertex.h
+
+MetaVertex.o: MetaVertex.h
+
 
 ## SWIG
 

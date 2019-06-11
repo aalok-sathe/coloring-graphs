@@ -13,7 +13,7 @@ class ColoringVertex;
 template <typename V> class Graph;
 class BaseGraph;
 class ColoringGraph;
-// template <typename V> struct GraphVertexIterator;
+template <typename V> class MetaGraph;
 
 
 template <typename V>
@@ -78,6 +78,7 @@ class Graph
         virtual const GraphVertexIterator<V>* __iter__() = 0;
         virtual const GraphVertexIterator<V>* get_vertices() = 0;
 
+        MetaGraph<V> tarjans();
 
 };
 
