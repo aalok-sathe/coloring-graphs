@@ -1,7 +1,6 @@
 #ifndef __GRAPH_CPP__
 #define __GRAPH_CPP__
 
-// #include "GraphTemplates.h"
 #include "Graph.h"
 
 
@@ -93,7 +92,7 @@ void
 BaseGraph::
 make_edge(long a, long b)
 {
-    typename std::map<long, BaseVertex*>::iterator it;
+    typename std::unordered_map<long, BaseVertex*>::iterator it;
     BaseVertex * va, * vb;
 
     it = vertices.find(a);

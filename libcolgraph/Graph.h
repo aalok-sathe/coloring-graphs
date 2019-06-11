@@ -1,7 +1,7 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
-#include <map>
+#include <unordered_map>
 #include <cstddef>
 #include <stdexcept>
 #include <iostream>
@@ -24,7 +24,7 @@ class BaseGraphVertexIterator : public GraphVertexIterator<BaseVertex>
 {
     public:
         BaseGraphVertexIterator() {};
-        BaseGraphVertexIterator(typename std::map<long, BaseVertex*>::iterator it_, long len_)
+        BaseGraphVertexIterator(typename std::unordered_map<long, BaseVertex*>::iterator it_, long len_)
             : GraphVertexIterator<BaseVertex>(it_, len_) {};
 
         // BaseGraphVertexIterator* __iter__();
@@ -35,7 +35,7 @@ class ColoringGraphVertexIterator : public GraphVertexIterator<ColoringVertex>
 {
     public:
         ColoringGraphVertexIterator() {};
-        ColoringGraphVertexIterator(typename std::map<long, ColoringVertex*>::iterator it_, long len_)
+        ColoringGraphVertexIterator(typename std::unordered_map<long, ColoringVertex*>::iterator it_, long len_)
             : GraphVertexIterator<ColoringVertex>(it_, len_) {};
 
         // ColoringGraphVertexIterator* __iter__();
@@ -70,7 +70,6 @@ class ColoringGraph : public Graph<ColoringVertex>
     public:
         int colors;
         BaseGraph* base;
-        // std::map<long, ColoringVertex> vertices;
         // precompexp[p][c] --> c * (COLORS ** p)
         std::vector<std::vector<long> > precompexp;
 

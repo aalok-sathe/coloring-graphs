@@ -1,7 +1,7 @@
 #ifndef __VERTEX_H__
 #define __VERTEX_H__
 
-#include <set>
+#include <unordered_set>
 #include <cstddef>
 #include <stdexcept>
 #include <math.h>
@@ -20,11 +20,11 @@ class ColoringGraph;
 class BaseVertexNeighborIterator : public VertexNeighborIterator<BaseVertex>
 {
     public:
-        std::set<long>::iterator it;
+        std::unordered_set<long>::iterator it;
         long len;
 
         BaseVertexNeighborIterator() {};
-        BaseVertexNeighborIterator(std::set<long>::iterator it_, long len_);
+        BaseVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_);
 
         long next() override;
 
@@ -82,7 +82,7 @@ class Vertex
 class BaseVertex : public Vertex
 {
     public:
-        std::set<long> neighbors;
+        std::unordered_set<long> neighbors;
         BaseVertexNeighborIterator* nt;
 
         BaseVertex() {};

@@ -46,6 +46,8 @@ def pyvisdraw(g, title='', **kwargs):
     # net = Network(**kwargs)
     net.barnes_hut()
     net.from_nx(make_nx(g))
+    # net.show_buttons(filter_=['physics'])
+    # net.toggle_physics(1)
     net.show("viz/{}_{}.html".format(title, len(g)))
 
 
@@ -58,8 +60,8 @@ bipartite.load_txt('./test/input/bipartite_test_graph0.in')
 bg = BaseGraph()
 # bg.load_txt('./test/input/g1.in')
 # bg.load_txt('./test/input/g2.in')
-# bg.load_txt('./test/input/g3.in')
-bg.load_txt('hexmod.in')
+bg.load_txt('./test/input/g3.in')
+# bg.load_txt('hexmod.in')
 # bg.load_txt('g.in')
 # bg = bipartite
 

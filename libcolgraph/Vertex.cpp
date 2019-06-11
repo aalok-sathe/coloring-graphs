@@ -165,7 +165,7 @@ __iter__()
 
 
 BaseVertexNeighborIterator::
-BaseVertexNeighborIterator(std::set<long>::iterator it_, long len_)
+BaseVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_)
     : it(it_), len(len_)
 {}
 
@@ -212,7 +212,7 @@ next()
     {
         long newcoloring;
         int curcol;
-        std::map<long, ColoringVertex*>::iterator it;
+        std::unordered_map<long, ColoringVertex*>::iterator it;
         long divisor = graph->precompexp[positionctr][1];
 
         // std::cerr << "name: " << name
