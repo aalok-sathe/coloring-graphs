@@ -28,7 +28,7 @@ default: TESTER build
 
 TESTER: tester.o Graph.o Vertex.o MetaGraph.o MetaVertex.o
 	echo -e "WARNING: require GNU/Linux. Might not work on MacOS"
-	g++ -o TESTER tester.o Graph.o Vertex.o
+	g++ -o TESTER tester.o Graph.o Vertex.o MetaGraph.o MetaVertex.o
 
 Graph.o: Graph.h Vertex.h MetaGraph.h MetaVertex.h
 

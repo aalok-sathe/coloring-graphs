@@ -31,6 +31,13 @@ Vertex::
 {}
 
 void
+Vertex::
+add_neighbor(Vertex& v)
+{
+	
+}
+
+void
 BaseVertex::
 add_neighbor(Vertex& v)
 {
@@ -45,6 +52,13 @@ remove_neighbor(Vertex& v)
 }
 
 long
+Vertex::
+get_next_neighbor(Graph* g)
+{
+
+}
+
+long
 BaseVertex::
 get_next_neighbor(Graph* g)
 {
@@ -54,6 +68,13 @@ get_next_neighbor(Graph* g)
 long
 ColoringVertex::
 get_next_neighbor(Graph* g)
+{
+
+}
+
+int
+Vertex::
+lp(Graph* g)
 {
 
 }

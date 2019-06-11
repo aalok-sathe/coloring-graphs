@@ -41,7 +41,7 @@ class Graph
 };
 
 
-class BaseGraph : public Graph
+class BaseGraph : Graph
 {
     private:
 
@@ -57,8 +57,6 @@ class BaseGraph : public Graph
 
         void add_vertex(long name);
 
-
-
         
         // long size();
         //
@@ -70,7 +68,7 @@ class BaseGraph : public Graph
 };
 
 
-class ColoringGraph : public Graph
+class ColoringGraph : Graph
 {
         
 
