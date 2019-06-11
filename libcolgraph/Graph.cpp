@@ -7,11 +7,25 @@
 #include <stack>
 
 
+
 Graph::
 Graph() {}
 
 Graph::
 ~Graph() {}
+
+BaseGraph::
+BaseGraph() {};
+
+BaseGraph::
+~BaseGraph() {};
+
+ColoringGraph::
+ColoringGraph() {};
+
+ColoringGraph::
+~ColoringGraph() {};
+
 
 
 void

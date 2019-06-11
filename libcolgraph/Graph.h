@@ -12,6 +12,7 @@
 
 class Vertex;
 class MetaGraph;
+class MetaVertex;
 /*
  *  the OG graph class
  */
@@ -47,13 +48,15 @@ class BaseGraph : public Graph
     protected:
 
     public:
+        BaseGraph();
+        ~BaseGraph();
+
         void load_txt(char* path);
 
         void save_txt(char* path);
 
         void add_vertex(long name);
 
-        MetaGraph Tarjans();
 
 
         
@@ -72,8 +75,10 @@ class ColoringGraph : public Graph
         
 
     public:
+        ColoringGraph();
+        ~ColoringGraph();
+
         Graph* base;
-        MetaGraph Tarjans();
 
         // void load_txt(char* path);
         //
