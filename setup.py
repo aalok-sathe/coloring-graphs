@@ -19,7 +19,7 @@ colgraph_module = Extension('libcolgraph._libcolgraph',
                                      'libcolgraph/Vertex.cpp'],
                             include_dirs = ['libcolgraph/*.h'],
                             swig_opts=['-c++'],
-                            extra_compile_args=['-std=gnu++17'])
+                            extra_compile_args=['-std=gnu++11'])
 
 with open("README.md", "r") as readme:
     long_description = readme.read()
