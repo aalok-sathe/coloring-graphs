@@ -56,13 +56,14 @@ bipartite = BaseGraph()
 bipartite.load_txt('./test/input/bipartite_test_graph0.in')
 
 bg = BaseGraph()
-bg.load_txt('./test/input/g1.in')
+# bg.load_txt('./test/input/g1.in')
 # bg.load_txt('./test/input/g2.in')
 # bg.load_txt('./test/input/g3.in')
+bg.load_txt('hexmod.in')
 # bg.load_txt('g.in')
-bg = bipartite
+# bg = bipartite
 
-print('INFO: Graphs initialized: bipartite,bg:', bipartite, bg)
+print('INFO: Graphs initialized')#: bipartite,bg:', bipartite, bg)
 
 
 
@@ -109,7 +110,7 @@ except Exception as e:
 ########    TEST: generating a coloring graph
 sep('TEST: generating a coloring graph'.upper())
 
-k = 3
+k = int(input('how many colors? '))
 print('INFO: bg.build_coloring_graph using k=%d'%k)
 cg = bg.build_coloring_graph(k)
 print('{} leads to coloring graph {}'.format(bg, cg))
@@ -118,22 +119,22 @@ print('{} leads to coloring graph {}'.format(bg, cg))
 ########    TEST: getting a vertex of cg
 sep('TEST: getting a vertex of cg'.upper())
 
-try:
-    print('INFO: getting a vertex of cg')
-    v = cg.get_some_vertex()
-    print(v)
-
-    # print('INFO: getting neighbors of v', v)
-    # for n in v.get_neighbors():
-    #     print(n)
-    print('INFO: getting some neighbor of v')
-    n = cg.get_vertex([*v.get_neighbors()][0])
-    print(n)
-
-    print('INFO: `v.get_name() in n.get_neighbors()?`',
-          v.get_name() in n.get_neighbors())
-except Exception as e:
-    print('\nERROR!\n', e)
+# try:
+#     print('INFO: getting a vertex of cg')
+#     v = cg.get_some_vertex()
+#     print(v)
+#
+#     # print('INFO: getting neighbors of v', v)
+#     # for n in v.get_neighbors():
+#     #     print(n)
+#     print('INFO: getting some neighbor of v')
+#     n = cg.get_vertex([*v.get_neighbors()][0])
+#     print(n)
+#
+#     print('INFO: `v.get_name() in n.get_neighbors()?`',
+#           v.get_name() in n.get_neighbors())
+# except Exception as e:
+#     print('\nERROR!\n', e)
 
 
 ########    TEST: visualize

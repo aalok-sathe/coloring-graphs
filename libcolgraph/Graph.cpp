@@ -169,9 +169,7 @@ is_valid_coloring(long coloring, int k)
         int vcol = get_vertex_color(coloring, vname, k);
 
         BaseVertex* v = pair.second;
-
-        std::set<long>::iterator it;
-        for (it = v->neighbors.begin(); it != v->neighbors.end(); it++)
+        for (auto it = v->neighbors.begin(); it != v->neighbors.end(); it++)
             if (vcol == get_vertex_color(coloring, *it, k))
                 return false;
     }
@@ -204,7 +202,14 @@ __iter__()
 ColoringGraph::
 ColoringGraph(int k, BaseGraph* bg)
     : colors(k), base(bg)
-{}
+{
+    for (int i=0; i<bg->size(); i++)
+    {
+        std::vector<long> v;
+        for (int j=0; j<colors; v.push_back(j++*pow(colors, i)));
+        precompexp.push_back(v);
+    }
+}
 
 
 void
@@ -213,10 +218,6 @@ add_vertex(long name)
 {
     ColoringVertex* vertex = new ColoringVertex(name, colors, this);
     vertices.insert(std::pair<long, ColoringVertex*>(name, vertex));
-
-    std::vector<long> v;
-    for (int i=0; i<colors; v.push_back(i++*pow(colors, precompexp.size())));
-    precompexp.push_back(v);
 }
 
 

@@ -215,6 +215,10 @@ next()
         std::map<long, ColoringVertex*>::iterator it;
         long divisor = graph->precompexp[positionctr][1];
 
+        // std::cerr << "name: " << name
+        //           << " divisor: " << divisor
+        //           << std:: endl;
+
         for (; colorctr < colors; colorctr++)
         {
             curcol = (name / divisor) % colors;
@@ -222,26 +226,27 @@ next()
                 continue;
 
             newcoloring = name;
-            std::cerr << std::endl << "start newcoloring with name " << newcoloring
-                      << std::endl;
+            // std::cerr << std::endl << "start newcoloring with name " << newcoloring
+            //           << std::endl;
             newcoloring -= graph->precompexp[positionctr][curcol];
-            std::cerr << "remove current color " << newcoloring
-                      << std::endl;
+            // std::cerr << "remove current color " << newcoloring
+            //           << std::endl;
             newcoloring += graph->precompexp[positionctr][colorctr];
-            std::cerr << "add colorctr color to it " << newcoloring
-                      << std::endl;
+            // std::cerr << "add colorctr color to it " << newcoloring
+            //           << std::endl;
 
-            std::cerr << "Potential neighbor of " << name
-                      << ": " << newcoloring << " when posn=" << positionctr
-                      << " and colctr=" << colorctr << std::endl;
+            // std::cerr << "Potential neighbor of " << name
+            //           << ": " << newcoloring << " when posn=" << positionctr
+            //           << " and colctr=" << colorctr << std::endl;
 
             it = graph->vertices.find(newcoloring); // valid coloring?
-            std::cerr << "trying to see if iterator found anything" << std::endl;
+
+            // std::cerr << "trying to see if iterator found anything" << std::endl;
             if (it == graph->vertices.end())
                 continue;
 
-            std::cerr << "Confirmed neighbor of " << name << ": "
-                      << newcoloring << std::endl;
+            // std::cerr << "Confirmed neighbor of " << name << ": "
+            //           << newcoloring << std::endl;
 
             colorctr++;
             return newcoloring;
