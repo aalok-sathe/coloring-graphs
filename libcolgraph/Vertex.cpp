@@ -34,7 +34,7 @@ void
 Vertex::
 add_neighbor(Vertex& v)
 {
-	
+
 }
 
 void
@@ -84,9 +84,21 @@ BaseVertex::
 lp(Graph* g)
 {
 	int min = depth;
+	Vertex next;
 	for (auto& neighbor : neighbors)
 	{
-		min = std::min(min, g->vertices.find(neighbor)->second.depth);
+		next = g->vertices.find(neighbor)->second;
+		
+		if (next.parent->name == this->name)
+		{
+			min = std::min(min, next.lowpoint);
+		}
+
+		else
+		
+		{
+			min = std::min(min, next.depth);
+		}
 	}
 	return min;
 }
