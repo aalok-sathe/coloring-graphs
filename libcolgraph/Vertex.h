@@ -143,6 +143,8 @@ class MetaVertex : public BaseVertex
         MetaVertex();
         MetaVertex(Vertex& v);
 
+        ~MetaVertex() {};
+
         // add to each other's neighbor list
         void connect(MetaVertex* v);
         void disconnect(MetaVertex* v);

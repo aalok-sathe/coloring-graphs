@@ -286,6 +286,12 @@ __iter__()
 *******************************************************************************/
 
 
+// template<>
+// Graph<MetaVertex>::
+// ~Graph()
+// {};
+
+
 // template <typename V>
 void
 MetaGraph::
@@ -316,14 +322,15 @@ remove_vertex(MetaVertex m)
 
 
 template <typename V>
-MetaGraph
+MetaGraph*
 Graph<V>::tarjans()
 {
 
     //*****************************
     // Declare helper variables and structures
 
-    MetaGraph metagraph;
+    MetaGraph* mg =  new MetaGraph();
+
     V next, root, child;
     typename std::list<V>::iterator current, found_cut_vertex;
     typename std::list<V> list;
@@ -477,7 +484,7 @@ Graph<V>::tarjans()
 
     } // end of main for-loop
 
-    return metagraph;
+    return mg;
 }
 
 

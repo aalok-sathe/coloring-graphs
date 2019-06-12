@@ -28,8 +28,7 @@ int main(int argc, char *argv[])
 
     cout << "reached EOF tester" << endl;
 
-    MetaGraph mg;
-    mg = cg->tarjans();
+    MetaGraph* mg = bg.tarjans();
 
     return 0;
 }

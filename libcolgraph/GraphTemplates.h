@@ -80,7 +80,7 @@ class Graph
         virtual const GraphVertexIterator<V>* __iter__() = 0;
         virtual const GraphVertexIterator<V>* get_vertices() = 0;
 
-        MetaGraph tarjans();
+        virtual MetaGraph* tarjans();
 
 };
 

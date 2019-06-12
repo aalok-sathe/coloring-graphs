@@ -105,6 +105,9 @@ class ColoringGraph : public Graph<ColoringVertex>
 class MetaGraph : public Graph<MetaVertex>
 {
     public:
+        MetaGraph() {};
+        ~MetaGraph() {};
+
         void add_vertex(long name) override {};
 
         void add_vertex(MetaVertex m);
