@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <list>
+#include <stack>
 #include "GraphTemplates.h"
 #include "Vertex.h"
 
@@ -103,8 +105,6 @@ class ColoringGraph : public Graph<ColoringVertex>
 class MetaGraph : public Graph<MetaVertex>
 {
     public:
-        MetaGraph();
-
         void add_vertex(long name) override {};
 
         void add_vertex(MetaVertex m);

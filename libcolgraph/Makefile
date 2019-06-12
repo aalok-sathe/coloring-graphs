@@ -26,14 +26,14 @@ default: TESTER
 .cpp.o:
 	g++ $(CFLAGS) -c $<
 
-TESTER: tester.o Graph.o Vertex.o GraphAlgo.o
-	g++ -o TESTER tester.o Graph.o Vertex.o GraphAlgo.o
+TESTER: tester.o Graph.o Vertex.o #GraphAlgo.o
+	g++ -o TESTER tester.o Graph.o Vertex.o #GraphAlgo.o
 
 Graph.o: Graph.h Vertex.h GraphTemplates.h
 
 Vertex.o: Vertex.h GraphTemplates.h
 
-GraphAlgo.o: Graph.h Vertex.h GraphTemplates.h
+# GraphAlgo.o: Graph.h Vertex.h GraphTemplates.h
 
 ## SWIG
 

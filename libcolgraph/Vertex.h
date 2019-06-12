@@ -2,6 +2,7 @@
 #define __VERTEX_H__
 
 #include <unordered_set>
+#include <list>
 #include <cstddef>
 #include <stdexcept>
 #include <math.h>
@@ -51,6 +52,20 @@ class ColoringVertexNeighborIterator : public VertexNeighborIterator<ColoringVer
 
         bool hasnext() override;
 
+};
+
+class MetaVertexNeighborIterator : public VertexNeighborIterator<MetaVertex>
+{
+    public:
+        std::unordered_set<long>::iterator it;
+        long len;
+
+        MetaVertexNeighborIterator() {};
+        MetaVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_);
+
+        long next() override;
+
+        bool hasnext() override;
 };
 
 
@@ -120,9 +135,10 @@ class MetaVertex : public BaseVertex
 {
     public:
         // long name;
-        typename std::unordered_set<long> vertices;
+        typename std::list<long> vertices;
         // typename std::unordered_set<long> meta_neighbors;
         int depth;
+        MetaVertexNeighborIterator* nt;
 
         MetaVertex();
         MetaVertex(Vertex& v);
@@ -130,6 +146,12 @@ class MetaVertex : public BaseVertex
         // add to each other's neighbor list
         void connect(MetaVertex* v);
         void disconnect(MetaVertex* v);
+
+        long get_next_neighbor() override;
+        void reset_neighbor_track() override {};
+
+        MetaVertexNeighborIterator* __iter__();
+        MetaVertexNeighborIterator* get_neighbors();
 
         // bool operator==(const MetaVertex<V>& v) const
         // {

@@ -284,15 +284,44 @@ hasnext()
 
 
 /*******************************************************************************
+*************************** MetaVertexNeighborIterator *************************
+*******************************************************************************/
+
+
+MetaVertexNeighborIterator::
+MetaVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_)
+    : it(it_), len(len_)
+{}
+
+
+long
+MetaVertexNeighborIterator::
+next()
+{
+    if (this->len--)
+        return *this->it++;
+
+    throw std::out_of_range("");
+}
+
+
+bool
+MetaVertexNeighborIterator::
+hasnext()
+{
+    return (this->len > 0);
+}
+
+
+/*******************************************************************************
 *********************************** MetaVertex *********************************
 *******************************************************************************/
 
 
-// template <typename V>
 MetaVertex::
 MetaVertex()
+    : BaseVertex(), nt(new MetaVertexNeighborIterator())
 {}
-
 
 // // template <typename V>
 // MetaVertex::
@@ -325,6 +354,22 @@ disconnect(MetaVertex* v)
 	v->neighbors.erase(this->name);
 }
 
+
+long
+MetaVertex::
+get_next_neighbor()
+{
+    return nt->next();
+}
+
+
+MetaVertexNeighborIterator*
+MetaVertex::
+__iter__()
+{
+    return new MetaVertexNeighborIterator(neighbors.begin(),
+                                          (long)neighbors.size());
+}
 
 
 

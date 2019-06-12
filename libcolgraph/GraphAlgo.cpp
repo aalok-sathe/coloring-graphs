@@ -123,9 +123,9 @@ Graph<V>::tarjans()
                     // does not already exist.
                     if (cut_vertex_stack.top().name != found_cut_vertex->name)
                     {
-                        MetaVertex<V> cut(*found_cut_vertex);
+                        MetaVertex cut(*found_cut_vertex);
                         metagraph.add_vertex(cut);
-                        main.connect(cut);}
+                        main.connect(&cut);}
 
                     else
                     {
