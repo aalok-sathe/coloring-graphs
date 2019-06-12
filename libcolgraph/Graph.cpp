@@ -331,10 +331,10 @@ Graph<V>::tarjans()
 
     MetaGraph* mg =  new MetaGraph();
 
-    V next, root, child;
-    typename std::list<V>::iterator current, found_cut_vertex;
-    typename std::list<V> list;
-    typename std::stack<V> cut_vertex_stack;
+    V * next, * root, * child;
+    typename std::list<V*>::iterator current, found_cut_vertex;
+    typename std::list<V*> list;
+    typename std::stack<V*> cut_vertex_stack;
 
     //*****************************
     // Main body of the method
@@ -349,13 +349,13 @@ Graph<V>::tarjans()
         list.clear();
         while(!cut_vertex_stack.empty()){cut_vertex_stack.pop();}
 
-        if (next.depth == -1)
+        if (next->depth == -1)
         {
             // If vertex has not been
             // visited, set up that
             // vertex as a root for DFS
             root = next;
-            next.depth = 0;
+            next->depth = 0;
             list.push_back(next);
             current = list.begin();
         }
@@ -363,15 +363,15 @@ Graph<V>::tarjans()
         while (true)
         {
 
-            child = vertices.find(current->get_next_neighbor(this))->second;
+            child = vertices.find((*current)->get_next_neighbor())->second;
 
-            if (child.depth == -1)
+            if (child->depth == -1)
             {
                 // if the DFS found another child,
                 // go down that path
                 list.push_back(child);
-                child.parent = current;
-                child.depth = current->depth + 1;
+                child->parent = current;
+                child->depth = (*current)->depth + 1; // TODO
                 ++current;
             }
 
@@ -384,12 +384,12 @@ Graph<V>::tarjans()
                 // }
 
                 // Break if the root has no more children
-                if (current->name == root.name) {break;}
+                if ((*current)->name == root->name) {break;}
 
-                current->parent->lowpoint = std::min(current->parent->lowpoint, current->lowpoint);
+                (*current)->parent->lowpoint = std::min((*current)->parent->lowpoint, (*current)->lowpoint);
 
-                if (current->parent->name == root.name ||
-                    current->lowpoint >= current->parent->depth)
+                if ((*current)->parent->name == root->name ||
+                    (*current)->lowpoint >= (*current)->parent->depth)
                 {
                     // If DFS ever gets back to the
                     // root, everything left in the list
@@ -407,17 +407,17 @@ Graph<V>::tarjans()
 
 
                     // Store this since we'll be using it a lot
-                    found_cut_vertex = current->parent;
+                    found_cut_vertex = (*current)->parent;
 
                     // This MetaVertex will store all vertices
                     // in the biconnected component
-                    MetaVertex main;
+                    MetaVertex* main = new MetaVertex();
 
                     // Splice the vertices from the DFS list
                     // into the component
-                    main.vertices.splice(main.vertices.begin(), list, current, list.end());
+                    main->vertices.splice(main->vertices.begin(), list, current, list.end());
                     // Also add the cut vertex itself
-                    main.vertices.push_back(*(found_cut_vertex));
+                    main->vertices.push_back(*(found_cut_vertex));
 
 
 
@@ -429,9 +429,9 @@ Graph<V>::tarjans()
                     // were found after that cut vertex.
                     // Thus, they are part of the component.
                     // So we connect them to the component.
-                    while (cut_vertex_stack.top().depth > found_cut_vertex->depth)
+                    while (cut_vertex_stack.top()->depth > found_cut_vertex->depth)
                     {
-                        main.connect(cut_vertex_stack.top());
+                        main->connect(cut_vertex_stack.top());
                         cut_vertex_stack.pop();
                     }
 
@@ -439,25 +439,25 @@ Graph<V>::tarjans()
                     // This if statement creates a MetaVertex
                     // object for the cut vertex if one
                     // does not already exist.
-                    if (cut_vertex_stack.top().name != found_cut_vertex->name)
+                    if (cut_vertex_stack.top()->name != found_cut_vertex->name)
                     {
                         MetaVertex cut(*found_cut_vertex);
-                        metagraph.add_vertex(cut);
-                        main.connect(&cut);}
+                        mg->add_vertex(cut);
+                        main->connect(&cut);}
 
                     else
                     {
-                        main.connect(cut_vertex_stack.top());
+                        main->connect(cut_vertex_stack.top());
                     }
 
 
 
 
                     // Add the cut vertex to the stack
-                    cut_vertex_stack.push(*found_cut_vertex);
+                    cut_vertex_stack.push(found_cut_vertex);
 
                     // Add the new component to the MetaGraph
-                    metagraph.add_vertex(main);
+                    mg->add_vertex(main->name);
 
                     // The cut vertex is the parent,
                     // so we return the DFS to it
@@ -466,7 +466,7 @@ Graph<V>::tarjans()
 
                 else
                 {
-                    current = current->parent;
+                    current = (*current)->parent;
                 }
 
             }

@@ -74,6 +74,10 @@ class Vertex
     public:
         long name;
 
+        int depth;
+        int lowpoint;
+        std::list<Vertex*>::iterator parent;
+
         Vertex() {};
         Vertex(long name_);
 
@@ -135,8 +139,8 @@ class MetaVertex : public BaseVertex
 {
     public:
         // long name;
-        typename std::list<long> vertices;
-        // typename std::unordered_set<long> meta_neighbors;
+        typename std::list<Vertex*> vertices;
+        // typename std::unordered_set<long> meta_neighbors ;
         int depth;
         MetaVertexNeighborIterator* nt;
 
