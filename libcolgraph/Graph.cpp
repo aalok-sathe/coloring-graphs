@@ -136,7 +136,7 @@ Graph::Tarjans()
     std::list<Vertex>::iterator current, found_cut_vertex;
     Vertex next, root, child;
     std::list<Vertex> list;
-    std::stack<Vertex> cut_vertex_stack;
+    std::stack<MetaVertex> cut_vertex_stack;
 
     //*****************************
     // Main body of the method
@@ -245,15 +245,14 @@ Graph::Tarjans()
                     {
                         MetaVertex cut(*found_cut_vertex);
                         metagraph.add_vertex(cut);
-                        main.connect(cut);}
+                        main.connect(cut);
+                        cut_vertex_stack.push(cut);
+
+                    }
 
                     else { main.connect(cut_vertex_stack.top()); }
 
 
-
-
-                    // Add the cut vertex to the stack
-                    cut_vertex_stack.push(*found_cut_vertex);
 
                     // Add the new component to the MetaGraph
                     metagraph.add_vertex(main);
