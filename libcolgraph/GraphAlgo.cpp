@@ -93,7 +93,7 @@ Graph<V>::tarjans()
 
                     // This MetaVertex will store all vertices
                     // in the biconnected component
-                    MetaVertex<V> main;
+                    MetaVertex main;
 
                     // Splice the vertices from the DFS list
                     // into the component

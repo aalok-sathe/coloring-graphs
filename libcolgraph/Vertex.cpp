@@ -305,29 +305,24 @@ MetaVertex()
 // }
 
 
-// template <typename V>
-MetaVertex::
-~MetaVertex()
-{}
-
 
 // template <typename V>
 void
 MetaVertex::
-connect(MetaVertex v)
+connect(MetaVertex* v)
 {
-	this->neighbors.insert(v);
-	v.meta_neighbors.insert(*this);
+	this->neighbors.insert(v->name);
+	v->neighbors.insert(this->name);
 }
 
 
 // template <typename V>
 void
 MetaVertex::
-disconnect(MetaVertex v)
+disconnect(MetaVertex* v)
 {
-	this->meta_neighbors.remove(v);
-	v.meta_neighbors.remove(*this);
+	this->neighbors.erase(v->name);
+	v->neighbors.erase(this->name);
 }
 
 

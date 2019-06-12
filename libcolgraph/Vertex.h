@@ -128,8 +128,8 @@ class MetaVertex : public BaseVertex
         MetaVertex(Vertex& v);
 
         // add to each other's neighbor list
-        void connect(MetaVertex v);
-        void disconnect(MetaVertex v);
+        void connect(MetaVertex* v);
+        void disconnect(MetaVertex* v);
 
         // bool operator==(const MetaVertex<V>& v) const
         // {

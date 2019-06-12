@@ -308,10 +308,10 @@ remove_vertex(MetaVertex m)
 {
 	for (auto& n : m.neighbors)
 	{
-		m.disconnect(n);
+		m.disconnect(vertices[n]);
 	}
 
-	vertices.remove(m);
+	vertices.erase(m.name);
 }
 
 
