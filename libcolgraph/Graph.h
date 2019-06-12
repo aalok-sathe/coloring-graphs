@@ -17,6 +17,8 @@ class ColoringVertex;
 template <typename V> class Graph;
 class BaseGraph;
 class ColoringGraph;
+class MetaVertex;
+class MetaGraph;
 
 
 
@@ -39,6 +41,17 @@ class ColoringGraphVertexIterator : public GraphVertexIterator<ColoringVertex>
             : GraphVertexIterator<ColoringVertex>(it_, len_) {};
 
         // ColoringGraphVertexIterator* __iter__();
+};
+
+
+class MetaGraphVertexIterator : public GraphVertexIterator<MetaVertex>
+{
+    public:
+        MetaGraphVertexIterator() {};
+        MetaGraphVertexIterator(typename std::unordered_map<long, MetaVertex*>::iterator it_, long len_)
+            : GraphVertexIterator<MetaVertex>(it_, len_) {};
+
+        // MetaGraphVertexIterator* __iter__();
 };
 
 
@@ -84,6 +97,25 @@ class ColoringGraph : public Graph<ColoringVertex>
         const ColoringGraphVertexIterator* get_vertices() override;
 
 };
+
+
+// template <typename V>
+class MetaGraph : public Graph<MetaVertex>
+{
+    public:
+        MetaGraph();
+
+        void add_vertex(long name) override {};
+
+        void add_vertex(MetaVertex m);
+        void remove_vertex(MetaVertex m);
+
+        const MetaGraphVertexIterator* __iter__() override;
+        const MetaGraphVertexIterator* get_vertices() override;
+
+};
+
+
 
 
 #endif

@@ -1,21 +1,20 @@
 
 #include "Graph.h"
-#include "MetaGraph.h"
 #include <list>
 #include <stack>
 
 
 template <typename V>
-MetaGraph<V>
+MetaGraph
 Graph<V>::tarjans()
 {
 
     //*****************************
     // Declare helper variables and structures
 
-    MetaGraph<V> metagraph;
-    typename std::list<V>::iterator current, found_cut_vertex;
+    MetaGraph metagraph;
     V next, root, child;
+    typename std::list<V>::iterator current, found_cut_vertex;
     typename std::list<V> list;
     typename std::stack<V> cut_vertex_stack;
 

@@ -283,5 +283,54 @@ hasnext()
 }
 
 
+/*******************************************************************************
+*********************************** MetaVertex *********************************
+*******************************************************************************/
+
+
+// template <typename V>
+MetaVertex::
+MetaVertex()
+{}
+
+
+// // template <typename V>
+// MetaVertex::
+// MetaVertex(long v)
+// {
+//     Vertex other =
+// 	this->name = other.name;
+// 	this->depth = other.depth;
+// 	vertices.push_back(other);
+// }
+
+
+// template <typename V>
+MetaVertex::
+~MetaVertex()
+{}
+
+
+// template <typename V>
+void
+MetaVertex::
+connect(MetaVertex v)
+{
+	this->neighbors.insert(v);
+	v.meta_neighbors.insert(*this);
+}
+
+
+// template <typename V>
+void
+MetaVertex::
+disconnect(MetaVertex v)
+{
+	this->meta_neighbors.remove(v);
+	v.meta_neighbors.remove(*this);
+}
+
+
+
 
 #endif

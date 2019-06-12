@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cstdlib>
 #include "Graph.h"
-#include "MetaGraph.h"
 
 using namespace std;
 
@@ -29,7 +28,7 @@ int main(int argc, char *argv[])
 
     cout << "reached EOF tester" << endl;
 
-    MetaGraph<ColoringVertex> mg;
+    MetaGraph mg;
     mg = cg->tarjans();
 
     return 0;

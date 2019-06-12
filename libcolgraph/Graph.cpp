@@ -280,4 +280,39 @@ __iter__()
 }
 
 
+
+/*******************************************************************************
+********************************** MetaGraph ***********************************
+*******************************************************************************/
+
+
+// template <typename V>
+MetaGraph::
+MetaGraph()
+{}
+
+
+// template <typename V>
+void
+MetaGraph::
+add_vertex(MetaVertex m)
+{
+	vertices.insert(std::pair<long, MetaVertex*>(m.name, &m));
+}
+
+
+// template <typename V>
+void
+MetaGraph::
+remove_vertex(MetaVertex m)
+{
+	for (auto& n : m.neighbors)
+	{
+		m.disconnect(n);
+	}
+
+	vertices.remove(m);
+}
+
+
 #endif

@@ -114,4 +114,30 @@ class ColoringVertex : public Vertex
         ColoringVertexNeighborIterator* get_neighbors();
 };
 
+
+
+class MetaVertex : public BaseVertex
+{
+    public:
+        // long name;
+        typename std::unordered_set<long> vertices;
+        // typename std::unordered_set<long> meta_neighbors;
+        int depth;
+
+        MetaVertex();
+        MetaVertex(Vertex& v);
+
+        // add to each other's neighbor list
+        void connect(MetaVertex v);
+        void disconnect(MetaVertex v);
+
+        // bool operator==(const MetaVertex<V>& v) const
+        // {
+        //     return this->name == v.name;
+        // }
+
+};
+
+
+
 #endif

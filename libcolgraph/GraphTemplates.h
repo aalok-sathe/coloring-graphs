@@ -13,7 +13,8 @@ class ColoringVertex;
 template <typename V> class Graph;
 class BaseGraph;
 class ColoringGraph;
-template <typename V> class MetaGraph;
+class MetaVertex;
+class MetaGraph;
 
 
 template <typename V>
@@ -64,6 +65,7 @@ class Graph
         virtual ~Graph();
 
         virtual void load_txt(char* path) {};
+        virtual void save_txt() {};
 
         virtual long size();
         virtual long __len__() { return size(); };
@@ -78,8 +80,10 @@ class Graph
         virtual const GraphVertexIterator<V>* __iter__() = 0;
         virtual const GraphVertexIterator<V>* get_vertices() = 0;
 
-        MetaGraph<V> tarjans();
+        MetaGraph tarjans();
 
 };
+
+
 
 #endif
