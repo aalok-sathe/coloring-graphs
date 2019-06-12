@@ -320,18 +320,17 @@ hasnext()
 
 MetaVertex::
 MetaVertex()
-    : BaseVertex(), nt(new MetaVertexNeighborIterator())
+    : BaseVertex(), nt(new MetaVertexNeighborIterator()), identity(NULL)
 {}
 
-// // template <typename V>
-// MetaVertex::
-// MetaVertex(long v)
-// {
-//     Vertex other =
-// 	this->name = other.name;
-// 	this->depth = other.depth;
-// 	vertices.push_back(other);
-// }
+// template <typename V>
+MetaVertex::
+MetaVertex(Vertex* v)
+    : BaseVertex(), nt(new MetaVertexNeighborIterator()), identity(v)
+{
+    BaseVertex::depth = v->depth;
+	vertices.push_back(v->name);
+}
 
 
 

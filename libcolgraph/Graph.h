@@ -110,8 +110,8 @@ class MetaGraph : public Graph<MetaVertex>
 
         void add_vertex(long name) override {};
 
-        void add_vertex(MetaVertex m);
-        void remove_vertex(MetaVertex m);
+        void add_vertex(MetaVertex* m);
+        void remove_vertex(MetaVertex* m);
 
         const MetaGraphVertexIterator* __iter__() override;
         const MetaGraphVertexIterator* get_vertices() override;
