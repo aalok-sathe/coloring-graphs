@@ -31,5 +31,8 @@ int main(int argc, char *argv[])
 
     MetaGraph* mg = bg.tarjans();
 
+    cout << "metagraph size: " << mg->size() << endl;
+
+
     return 0;
 }

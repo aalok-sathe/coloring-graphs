@@ -62,7 +62,8 @@ bg = BaseGraph()
 #bg.load_txt('./test/input/g2.in')
 #bg.load_txt('./test/input/g3.in')
 #bg.load_txt('hexmod.in')
-bg.load_txt('in/g.in')
+#bg.load_txt('in/g.in')
+bg.load_txt('smolgraph.in')
 #bg = bipartite
 
 print('INFO: Graphs initialized')#: bipartite,bg:', bipartite, bg)

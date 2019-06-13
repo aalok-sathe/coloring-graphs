@@ -136,11 +136,11 @@ class ColoringVertex : public Vertex
 
 
 
-class MetaVertex : public BaseVertex
+class MetaVertex : public Vertex
 {
     public:
         // long name;
-        // std::unordered_set<long> neighbors;
+        std::unordered_set<long> neighbors;
         typename std::list<long> vertices;
         // typename std::unordered_set<long> meta_neighbors ;
         // int depth;
@@ -151,6 +151,8 @@ class MetaVertex : public BaseVertex
         MetaVertex(Vertex* v);
 
         ~MetaVertex() {};
+
+        void add_neighbor(MetaVertex& other);
 
         // add to each other's neighbor list
         void connect(MetaVertex* v);

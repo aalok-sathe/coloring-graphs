@@ -320,19 +320,27 @@ hasnext()
 
 MetaVertex::
 MetaVertex()
-    : BaseVertex(), nt(new MetaVertexNeighborIterator()), identity(NULL)
+    : Vertex(0), nt(new MetaVertexNeighborIterator()), identity(NULL)
 {}
 
 // template <typename V>
 MetaVertex::
 MetaVertex(Vertex* v)
-    : BaseVertex(), nt(new MetaVertexNeighborIterator()), identity(v)
+    : Vertex(0), nt(new MetaVertexNeighborIterator()), identity(v)
 {
-    BaseVertex::depth = v->depth;
+    depth = v->depth;
 	vertices.push_back(v->name);
-    std::cout << "alt init constructor called" << "\n";
 }
 
+
+void
+MetaVertex::
+add_neighbor(MetaVertex& other)
+{
+    // std::cout << "ADD_NBR" << "\n";
+    // return;
+    neighbors.insert(other.name);
+}
 
 
 // template <typename V>
@@ -340,15 +348,10 @@ void
 MetaVertex::
 connect(MetaVertex* v)
 {
-    std::cout << "connecting "
-              << this << " and " << v << "\n";
-    this->add_neighbor(*v);
+    // std::cout << "CONNECT" << "\n";
+    // return;
+    add_neighbor(*v);
     v->add_neighbor(*this);
-    // this->neighbors.insert(v->name);
-	// v->neighbors.insert(this->name);
-
-    std::cout << "connecting DONE"
-              << this << " and " << v << "\n";
 }
 
 
@@ -357,8 +360,8 @@ void
 MetaVertex::
 disconnect(MetaVertex* v)
 {
-    std::cout << "disconnect called on me\n";
-              // << this << " and " << v << "\n";
+    // std::cout << "DISCONNECT" << "\n";
+    // return;
 
 	this->neighbors.erase(v->name);
 	v->neighbors.erase(this->name);
@@ -379,6 +382,13 @@ __iter__()
 {
     return new MetaVertexNeighborIterator(neighbors.begin(),
                                           (long)neighbors.size());
+}
+
+MetaVertexNeighborIterator*
+MetaVertex::
+get_neighbors()
+{
+    return __iter__();
 }
 
 

@@ -376,7 +376,8 @@ Graph<V>::tarjans()
     // graph is disconnected
     for (auto& v : this->vertices)
     {
-        std::cout << std::endl << "INFO: top of the for-loop" << std::endl;
+        std::cout << std::endl << "INFO: top of the for-loop "
+                  << v.first << std::endl;
 
         next = v.first;
         list.clear();
@@ -404,9 +405,19 @@ Graph<V>::tarjans()
             std::cout << std::endl << "INFO: top of the while loop"
                       << std::endl;
 
-            child = vertices.find(vertices[*current]->get_next_neighbor())->first;
+            bool execif = true;
+            try
+            {
+                child = vertices.find(vertices[*current]->get_next_neighbor())->first;
+            }
+            catch (std::out_of_range& e)
+            {
+                execif = false;
+                std::cout << "whoops " << child << ' ' << e.what() << "\n";
+            }
 
-            if (vertices[child]->depth == -1)
+
+            if (execif and vertices[child]->depth == -1)
             {
                 // if the DFS found another child,
                 // go down that path
@@ -415,8 +426,8 @@ Graph<V>::tarjans()
                 vertices[child]->depth = vertices[*current]->depth + 1;
                 current++;
 
-                std::cout << std::endl << "INFO: found vertex in while loop!"
-                          << std::endl;
+                std::cout << std::endl << "INFO: found new child! "
+                          << child << std::endl;
 
             }
 
@@ -428,6 +439,7 @@ Graph<V>::tarjans()
                             vertices[*current]->lowpoint,
                             vertices[child]->depth
                         );
+                    std::cout << "INFO: hasnext so continuing." << "\n";
                     continue;
                 }
 
@@ -468,7 +480,11 @@ Graph<V>::tarjans()
 
                     // This MetaVertex will store all vertices
                     // in the biconnected component
+
+                    std::cout << "DEBUG: constructing blank metavertex" << "\n";
                     MetaVertex* main = new MetaVertex();
+                    std::cout << "DEBUG: DONE constructing metavertex" << "\n";
+
 
                     // Splice the vertices from the DFS list
                     // into the component
@@ -478,6 +494,7 @@ Graph<V>::tarjans()
                                           current,
                                           list.end());
                     // Also add the cut vertex itself
+                    std::cout << "DEBUG: add cut vertex " << *found_cut_vertex << "to metavertex " << "\n";
                     main->vertices.push_back(*found_cut_vertex);
 
 
@@ -490,24 +507,31 @@ Graph<V>::tarjans()
                     // were found after that cut vertex.
                     // Thus, they are part of the component.
                     // So we connect them to the component.
-                    while (cut_vertex_stack.top()->depth
+                    while (!cut_vertex_stack.empty() and cut_vertex_stack.top()->depth
                            > vertices[*found_cut_vertex]->depth)
                     {
                         main->connect(cut_vertex_stack.top());
                         cut_vertex_stack.pop();
+
+                        std::cout << "INFO: inside the depth check while loop" << "\n";
                     }
 
 
                     // This if statement creates a MetaVertex
                     // object for the cut vertex if one
                     // does not already exist.
-                    if (cut_vertex_stack.top()->name != vertices[*found_cut_vertex]->name)
+                    std::cout << "DEBUG: about to enter identity check IF" << "\n";
+                    if (cut_vertex_stack.top()->identity != vertices[*found_cut_vertex])
                     {
+                        std::cout << "INFO: check identity IF statement (at top)" << "\n";
+
                         MetaVertex* cut = new MetaVertex(vertices[*found_cut_vertex]);
                         mg->add_vertex(cut);
                         main->connect(cut);
                         // Add the cut vertex to the stack
                         cut_vertex_stack.push(cut);
+
+                        std::cout << "INFO: check identity IF statement" << "\n";
                     }
 
                     else
@@ -547,8 +571,9 @@ Graph<V>::tarjans()
         {
             try
             {
-                vertices[root]->get_next_neighbor();
-                count++;
+                long nbr = vertices[root]->get_next_neighbor();
+                if (*vertices[nbr]->parent == root)
+                    count++;
             }
             catch (std::out_of_range& e)
             {
