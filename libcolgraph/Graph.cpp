@@ -343,15 +343,21 @@ MetaGraph*
 Graph<V>::tarjans()
 {
 
+    std::cout << "INFO: lets start at the very beginning" << std::endl;
+
     //*****************************
     // Declare helper variables and structures
 
     MetaGraph* mg =  new MetaGraph();
 
+    std::cout << "INFO: successful init" << std::endl;
+
     long next, root, child;
     typename std::list<long>::iterator current, found_cut_vertex;
     typename std::list<long> list;
     typename std::stack<MetaVertex*> cut_vertex_stack;
+
+    std::cout << "INFO: local vars init" << std::endl;
 
     //*****************************
     // Main body of the method
@@ -362,6 +368,8 @@ Graph<V>::tarjans()
     // graph is disconnected
     for (auto& v : this->vertices)
     {
+        std::cout << std::endl << "INFO: top of the for-loop" << std::endl;
+
         next = v.first;
         list.clear();
         while(!cut_vertex_stack.empty())
@@ -376,10 +384,14 @@ Graph<V>::tarjans()
             vertices[next]->depth = 0;
             list.push_back(next);
             current = list.begin();
+
+            std::cout << std::endl << "INFO: first vertex!" << std::endl;
         }
 
         while (true)
         {
+            std::cout << std::endl << "INFO: top of the while loop"
+                      << std::endl;
 
             child = vertices.find(vertices[*current]->get_next_neighbor())->first;
 
@@ -391,15 +403,22 @@ Graph<V>::tarjans()
                 vertices[child]->parent = current;
                 vertices[child]->depth = vertices[*current]->depth + 1;
                 current++;
+
+                std::cout << std::endl << "INFO: found vertex in while loop!"
+                          << std::endl;
+
             }
 
             else
             {
-                // if (current->hasNext())
-                // {
-                //     current->lowpoint = std::min(current->lowpoint, child->depth);
-                //     break;
-                // }
+                if (vertices[*current]->nt->hasnext())
+                {
+                    vertices[*current]->lowpoint = std::min(
+                            vertices[*current]->lowpoint,
+                            vertices[child]->depth
+                        );
+                    break;
+                }
 
                 // Break if the root has no more children
                 if (vertices[*current]->name == vertices[root]->name)
@@ -511,12 +530,34 @@ Graph<V>::tarjans()
         //  (root metavertex will be on top of the cut vertex stack)
         ////////////////////////
 
+        int count = 0;
+        vertices[root]->reset_neighbor_track();
+        while (count < 2)
+        {
+            try
+            {
+                vertices[root]->get_next_neighbor();
+                count++;
+            }
+            catch (std::out_of_range& e)
+            {
+                break;
+            }
+        }
+        if (count < 2)
+        {
+            std::cout << "INFO: count < 2" << std::endl;
+            MetaVertex* mv = cut_vertex_stack.top();
+            cut_vertex_stack.pop();
+            mg->remove_vertex(mv);
+            //  remove from metagraph and disconnect from all neighbors
+            //  (root metavertex will be on top of the cut vertex stack)
+        }
+
     } // end of main for-loop
 
     return mg;
 }
-
-
 
 
 
