@@ -307,9 +307,7 @@ void
 MetaGraph::
 remove_vertex(MetaVertex* m)
 {
-    // return;
-
-    std::cout << "removing " << m << "\n";
+    return;
 
     std::unordered_set<long>::iterator it;
 	for (it = m->neighbors.begin(); it != m->neighbors.end(); it++)
@@ -457,8 +455,6 @@ Graph<V>::tarjans()
                     or vertices[*current]->lowpoint
                        >= vertices[*vertices[*current]->parent]->depth
                    )
-                // if ((*current)->parent->name == root-name ||
-                //     (*current)->lowpoint >= (*current)->parent->depth)
                 {
                     // If DFS ever gets back to the
                     // root, everything left in the list
@@ -521,7 +517,16 @@ Graph<V>::tarjans()
                     // object for the cut vertex if one
                     // does not already exist.
                     std::cout << "DEBUG: about to enter identity check IF" << "\n";
-                    if (cut_vertex_stack.top()->identity != vertices[*found_cut_vertex])
+
+                    if (cut_vertex_stack.empty())
+                    {
+                        MetaVertex* cut = new MetaVertex(vertices[*found_cut_vertex]);
+                        mg->add_vertex(cut);
+                        main->connect(cut);
+                        // Add the cut vertex to the stack
+                        cut_vertex_stack.push(cut);
+                    }
+                    else if(cut_vertex_stack.top()->identity != vertices[*found_cut_vertex])
                     {
                         std::cout << "INFO: check identity IF statement (at top)" << "\n";
 

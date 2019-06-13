@@ -10,7 +10,8 @@ int main(int argc, char *argv[])
     cout << "before init!" << endl;
 
     // char* testpath = "../test/input/g1.in";
-    char* testpath = "../smolgraph.in";
+    char* testpath = "../in/square.in";
+    // char* testpath = "../in/smolgraph.in";
 
     BaseGraph bg;
 
@@ -33,6 +34,14 @@ int main(int argc, char *argv[])
 
     cout << "metagraph size: " << mg->size() << endl;
 
+    for (auto& p : mg->vertices)
+    {
+        MetaVertex* mv = p.second;
+        std::cout << "\nmetavertex contents: " << "\t";
+        for (long v : mv->vertices)
+            std::cout << v << ' ';
+    }
+    std::cout << "\n";
 
     return 0;
 }
