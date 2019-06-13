@@ -140,6 +140,7 @@ class MetaVertex : public BaseVertex
 {
     public:
         // long name;
+        // std::unordered_set<long> neighbors;
         typename std::list<long> vertices;
         // typename std::unordered_set<long> meta_neighbors ;
         // int depth;

@@ -330,6 +330,7 @@ MetaVertex(Vertex* v)
 {
     BaseVertex::depth = v->depth;
 	vertices.push_back(v->name);
+    std::cout << "alt init constructor called" << "\n";
 }
 
 
@@ -339,8 +340,15 @@ void
 MetaVertex::
 connect(MetaVertex* v)
 {
-	this->neighbors.insert(v->name);
-	v->neighbors.insert(this->name);
+    std::cout << "connecting "
+              << this << " and " << v << "\n";
+    this->add_neighbor(*v);
+    v->add_neighbor(*this);
+    // this->neighbors.insert(v->name);
+	// v->neighbors.insert(this->name);
+
+    std::cout << "connecting DONE"
+              << this << " and " << v << "\n";
 }
 
 
@@ -349,6 +357,9 @@ void
 MetaVertex::
 disconnect(MetaVertex* v)
 {
+    std::cout << "disconnect called on me\n";
+              // << this << " and " << v << "\n";
+
 	this->neighbors.erase(v->name);
 	v->neighbors.erase(this->name);
 }

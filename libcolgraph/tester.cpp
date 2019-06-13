@@ -9,7 +9,8 @@ int main(int argc, char *argv[])
 {
     cout << "before init!" << endl;
 
-    char* testpath = "../test/input/g1.in";
+    // char* testpath = "../test/input/g1.in";
+    char* testpath = "../smolgraph.in";
 
     BaseGraph bg;
 

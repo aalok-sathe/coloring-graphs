@@ -307,10 +307,18 @@ void
 MetaGraph::
 remove_vertex(MetaVertex* m)
 {
-	for (auto& n : m->neighbors)
+    // return;
+
+    std::cout << "removing " << m << "\n";
+
+    std::unordered_set<long>::iterator it;
+	for (it = m->neighbors.begin(); it != m->neighbors.end(); it++)
 	{
-		m->disconnect(vertices[n]);
+        std::cout << "disconn. " << "\n";
+		m->disconnect(vertices[*it]);
 	}
+
+    std::cout << "done removing all nbrs" << "\n";
 
 	vertices.erase(m->name);
 }
@@ -387,6 +395,9 @@ Graph<V>::tarjans()
 
             std::cout << std::endl << "INFO: first vertex!" << std::endl;
         }
+        else
+            continue;
+
 
         while (true)
         {
@@ -417,7 +428,7 @@ Graph<V>::tarjans()
                             vertices[*current]->lowpoint,
                             vertices[child]->depth
                         );
-                    break;
+                    continue;
                 }
 
                 // Break if the root has no more children
@@ -549,12 +560,18 @@ Graph<V>::tarjans()
             std::cout << "INFO: count < 2" << std::endl;
             MetaVertex* mv = cut_vertex_stack.top();
             cut_vertex_stack.pop();
+
+            std::cout << "INFO: trying to remove" << std::endl;
+
             mg->remove_vertex(mv);
-            //  remove from metagraph and disconnect from all neighbors
-            //  (root metavertex will be on top of the cut vertex stack)
+
+            std::cout << "INFO: done processing count < 2 case" << std::endl;
+
         }
 
     } // end of main for-loop
+
+    std::cout << "INFO: about to return now" << std::endl;
 
     return mg;
 }
