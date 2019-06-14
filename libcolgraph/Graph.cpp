@@ -409,13 +409,13 @@ Graph<V>::tarjans()
             list.push_back(next);
             current = list.begin();
 
-            if (!vertices[root]->nt->hasnext())
-            {
-                MetaVertex* rootmv = mg->add_vertex();
-                rootmv->identity = root;
-                rootmv->depth = vertices[root]->depth;
-                continue;
-            }
+            // if (!vertices[root]->nt->hasnext())
+            // {
+            //     MetaVertex* rootmv = mg->add_vertex();
+            //     rootmv->identity = root;
+            //     rootmv->depth = vertices[root]->depth;
+            //     continue;
+            // }
 
             std::cout << "INFO: vertices[next]->depth == -1 "
                       << "so adding to the current state list" << std::endl;
@@ -528,16 +528,16 @@ Graph<V>::tarjans()
                     // Splice the vertices from the DFS list
                     // into the component
                     // TODO
-                    main->vertices.splice(main->vertices.begin(),
-                                          list,
-                                          current,
-                                          list.end());
+                    // main->vertices.splice(main->vertices.begin(),
+                    //                       list,
+                    //                       current,
+                    //                       list.end());
+                    main->vertices.insert(current, list.end());
                     // Also add the cut vertex itself
                     std::cerr << "DEBUG: add cut vertex " << *found_cut_vertex
                               << "to metavertex " << main->name << "at line "
                               << __LINE__ << "\n";
-                    main->vertices.push_back(*found_cut_vertex);
-
+                    main->vertices.insert(*found_cut_vertex);
 
 
                     //**********************************************
@@ -556,15 +556,24 @@ Graph<V>::tarjans()
                                   << vertices[*found_cut_vertex]->depth
                                   << " before while loop at " << __LINE__
                                   << "\n";
-                    while (!cut_vertex_stack.empty() and cut_vertex_stack.top()->depth
-                           > vertices[*found_cut_vertex]->depth)
+                    while (!cut_vertex_stack.empty() and
+                           // cut_vertex_stack.top()->depth
+                           // > vertices[*found_cut_vertex]->depth)// and
+                           main->vertices.find(cut_vertex_stack.top()->name)
+                           != main->vertices.end())
                     {
-                        std::cout << "INFO: info: popping stuff from stack.\n"
-                        << "INFO: connecting " << main->name
-                        << " and " << cut_vertex_stack.top()->name << "\n";
-
                         main->connect(cut_vertex_stack.top());
-                        cut_vertex_stack.pop();
+                        std::cerr << "INFO: connecting " << main->name
+                                  << " and " << cut_vertex_stack.top()->name
+                                  << "\n";
+
+                        if (cut_vertex_stack.top()->identity
+                            != *found_cut_vertex)
+                            cut_vertex_stack.pop();
+                        else
+                            break;
+
+                        std::cerr << "INFO: info: popping stuff from stack.\n";
                     }
 
 
@@ -576,19 +585,23 @@ Graph<V>::tarjans()
                         MetaVertex* cut = mg->add_vertex();
                         cut->identity = vertices[*found_cut_vertex]->name;
                         cut->depth = vertices[*found_cut_vertex]->depth;
-                        cut->vertices.push_back(vertices[*found_cut_vertex]->name);
+                        cut->vertices.insert(vertices[*found_cut_vertex]->name);
                         main->connect(cut);
                         // Add the cut vertex to the stack
                         std::cerr << "INFO: adding MetaVertex " << cut->name
                                   << "to the stack at " << __LINE__ << "\n";
                         cut_vertex_stack.push(cut);
                     }
-                    else if(cut_vertex_stack.top()->identity != vertices[*found_cut_vertex]->name)
+                    else if(cut_vertex_stack.top()->identity
+                            != vertices[*found_cut_vertex]->name)
                     {
+                        // TODO check if the found cut vertex is already on
+                        // the stack
                         MetaVertex* cut = mg->add_vertex();
+                        // MetaVertex* cut = cut_vertex_stack.top();
                         cut->identity = vertices[*found_cut_vertex]->name;
                         cut->depth = vertices[*found_cut_vertex]->depth;
-                        cut->vertices.push_back(vertices[*found_cut_vertex]->name);
+                        cut->vertices.insert(vertices[*found_cut_vertex]->name);
                         main->connect(cut);
                         // Add the cut vertex to the stack
                         std::cerr << "INFO: adding MetaVertex " << cut->name

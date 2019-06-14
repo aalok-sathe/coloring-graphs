@@ -376,5 +376,12 @@ get_neighbors()
 }
 
 
+// MetaGraphVertexIterator*
+// MetaVertex::
+// get_vertices()
+// {
+//     return new //TODO;
+// }
+
 
 #endif

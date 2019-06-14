@@ -15,7 +15,9 @@ int main(int argc, char *argv[])
     // char* testpath = "../in/hexmod.in";
     // char* testpath = "../in/line.in";
     // char* testpath = "../in/3ring.in";
-    char* testpath = "../in/polypbg.in";
+    // char* testpath = "../in/3star.in";
+    // char* testpath = "../in/polypbg.in";
+    char* testpath = "../in/polypbgtriangle.in";
 
 
     BaseGraph* bg = new BaseGraph();
