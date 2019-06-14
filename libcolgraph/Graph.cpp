@@ -540,40 +540,52 @@ Graph<V>::tarjans()
                     // were found after that cut vertex.
                     // Thus, they are part of the component.
                     // So we connect them to the component.
+
+                    if (!cut_vertex_stack.empty())
+                        std::cerr << "DEBUG: cut vertex stack top depth="
+                                  << cut_vertex_stack.top()->depth
+                                  << ", found cut vertex depth="
+                                  << vertices[*found_cut_vertex]->depth
+                                  << " before while loop at " << __LINE__
+                                  << "\n";
                     while (!cut_vertex_stack.empty() and cut_vertex_stack.top()->depth
                            > vertices[*found_cut_vertex]->depth)
                     {
+                        std::cout << "INFO: info: popping stuff from stack.\n"
+                        << "INFO: connecting " << main->name
+                        << " and " << cut_vertex_stack.top()->name << "\n";
+
                         main->connect(cut_vertex_stack.top());
                         cut_vertex_stack.pop();
-
-                        std::cout << "INFO: inside the depth check while loop" << "\n";
                     }
 
 
                     // This if statement creates a MetaVertex
                     // object for the cut vertex if one
                     // does not already exist.
-                    std::cout << "DEBUG: about to enter identity check IF" << "\n";
-
                     if (cut_vertex_stack.empty())
                     {
                         MetaVertex* cut = mg->add_vertex();
                         cut->identity = vertices[*found_cut_vertex]->name;
+                        cut->depth = vertices[*found_cut_vertex]->depth;
+                        cut->vertices.push_back(vertices[*found_cut_vertex]->name);
                         main->connect(cut);
                         // Add the cut vertex to the stack
+                        std::cerr << "INFO: adding MetaVertex " << cut->name
+                                  << "to the stack at " << __LINE__ << "\n";
                         cut_vertex_stack.push(cut);
                     }
                     else if(cut_vertex_stack.top()->identity != vertices[*found_cut_vertex]->name)
                     {
-                        std::cout << "INFO: check identity IF statement (at top)" << "\n";
-
                         MetaVertex* cut = mg->add_vertex();
                         cut->identity = vertices[*found_cut_vertex]->name;
+                        cut->depth = vertices[*found_cut_vertex]->depth;
+                        cut->vertices.push_back(vertices[*found_cut_vertex]->name);
                         main->connect(cut);
                         // Add the cut vertex to the stack
+                        std::cerr << "INFO: adding MetaVertex " << cut->name
+                                  << "to the stack at " << __LINE__ << "\n";
                         cut_vertex_stack.push(cut);
-
-                        std::cout << "INFO: check identity IF statement" << "\n";
                     }
 
                     else
