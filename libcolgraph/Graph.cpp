@@ -448,7 +448,9 @@ Graph<V>::tarjans()
                 vertices[child]->depth = vertices[*current]->depth + 1;
 
                 std::cerr << "INFO: new child " << child << " of vertex "
-                          << vertices[*current]->get_name() << std::endl;
+                          << vertices[*current]->get_name()
+                          << ". depth of child set to "
+                          << vertices[child]->depth << std::endl;
 
                 current = list.end();
                 current--;
@@ -456,15 +458,18 @@ Graph<V>::tarjans()
 
             else
             {
+                vertices[*current]->lowpoint = std::min(
+                        vertices[*current]->lowpoint,
+                        vertices[child]->depth
+                    );
+
                 if (vertices[*current]->nt->hasnext())
                 {
-                    vertices[*current]->lowpoint = std::min(
-                            vertices[*current]->lowpoint,
-                            vertices[child]->depth
-                        );
                     std::cerr << "INFO: " << vertices[*current]->name
                               << " might have more children; continue "
-                              << __LINE__ << "\n";
+                              << " lowpoint set to "
+                              << vertices[*current]->lowpoint
+                              << " at line " << __LINE__ << "\n";
                     continue;
                 }
 
@@ -477,6 +482,12 @@ Graph<V>::tarjans()
                         vertices[*vertices[*current]->parent]->lowpoint,
                         vertices[*current]->lowpoint
                     );
+
+                std::cerr << "`current` stats: "
+                          << vertices[*current]->name << "\n"
+                          << "\tlowpoint=" << vertices[*current]->lowpoint
+                          << "\tdepth=" << vertices[*current]->depth
+                          << std::endl;
 
                 if (vertices[*vertices[*current]->parent] == vertices[root]
                     or vertices[*current]->lowpoint
@@ -502,10 +513,9 @@ Graph<V>::tarjans()
                     // This MetaVertex will store all vertices
                     // in the biconnected component
 
-                    std::cerr << "DEBUG: constructing blank metavertex" << "\n";
+                    std::cerr << "DEBUG: constructing a blank metavertex at "
+                              << __LINE__ << "\n";
                     MetaVertex* main = mg->add_vertex();
-                    std::cerr << "DEBUG: DONE constructing metavertex" << "\n";
-
 
                     // Splice the vertices from the DFS list
                     // into the component
