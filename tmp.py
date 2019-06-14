@@ -59,9 +59,9 @@ bipartite.load_txt('./test/input/bipartite_test_graph0.in')
 
 bg = BaseGraph()
 # bg.load_txt('./test/input/g1.in')
-bg.load_txt('in/hexmod.in')
+# bg.load_txt('in/hexmod.in')
 # bg.load_txt('in/polypbg.in')
-#bg.load_txt('./test/input/g2.in')
+bg.load_txt('./test/input/g2.in')
 #bg.load_txt('./test/input/g3.in')
 # bg.load_txt('in/g.in')
 # bg.load_txt('in/smolgraph.in')
@@ -151,7 +151,7 @@ print('{} leads to meta base graph {}'.format(bg, mbg))
 
 
 ########    TEST: generating a meta coloring graph
-sep('TEST: generating a meta base graph'.upper())
+sep('TEST: generating a coloring base graph'.upper())
 
 print('INFO: cg.tarjans()')
 mcg = cg.tarjans()

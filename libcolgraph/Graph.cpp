@@ -409,6 +409,14 @@ Graph<V>::tarjans()
             list.push_back(next);
             current = list.begin();
 
+            if (!vertices[root]->nt->hasnext())
+            {
+                MetaVertex* rootmv = mg->add_vertex();
+                rootmv->identity = root;
+                rootmv->depth = vertices[root]->depth;
+                continue;
+            }
+
             std::cout << "INFO: vertices[next]->depth == -1 "
                       << "so adding to the current state list" << std::endl;
         }
