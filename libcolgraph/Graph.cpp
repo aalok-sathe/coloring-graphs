@@ -329,8 +329,6 @@ void
 MetaGraph::
 remove_vertex(MetaVertex* m)
 {
-    return;
-
     std::unordered_set<long>::iterator it;
 	for (it = m->neighbors.begin(); it != m->neighbors.end(); it++)
 	{
@@ -610,14 +608,19 @@ Graph<V>::tarjans()
         if (count < 2)
         {
             std::cout << "INFO: count < 2" << std::endl;
-            MetaVertex* mv = cut_vertex_stack.top();
-            cut_vertex_stack.pop();
+            if (!cut_vertex_stack.empty())
+            {
+                MetaVertex* mv = cut_vertex_stack.top();
+                std::cout << "INFO: got metavrtx from cutvertex stack" << std::endl;
 
-            std::cout << "INFO: trying to remove" << std::endl;
+                cut_vertex_stack.pop();
 
-            mg->remove_vertex(mv);
+                std::cout << "INFO: trying to remove" << std::endl;
 
-            std::cout << "INFO: done processing count < 2 case" << std::endl;
+                mg->remove_vertex(mv);
+
+                std::cout << "INFO: done processing count < 2 case" << std::endl;
+            }
 
         }
 

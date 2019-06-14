@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
 {
     cout << "before init!" << endl;
 
-    // char* testpath = "../test/input/g1.in";
-    char* testpath = "../in/square.in";
+    char* testpath = "../test/input/g1.in";
+    // char* testpath = "../in/square.in";
     // char* testpath = "../in/smolgraph.in";
 
     BaseGraph* bg = new BaseGraph();
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     cout << "reached EOF tester" << endl;
 
-    MetaGraph* mg = cg->tarjans();
+    MetaGraph* mg = bg->tarjans();
 
     cout << "metagraph size: " << mg->size() << endl;
 
