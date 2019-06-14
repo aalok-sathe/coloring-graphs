@@ -6,11 +6,12 @@
 %{
     #include <Python.h>
     #include <assert.h>
+    #include <stdexcept>
+    #include <iostream>
+
     #include "GraphTemplates.h"
     #include "Graph.h"
-    #include <iostream>
     #include "Vertex.h"
-    #include <stdexcept>
 %}
 
 
@@ -86,7 +87,7 @@
     %}
 };
 
-%include "GraphTemplates.h"
+%import "GraphTemplates.h"
 
 %template(GBVIt) GraphVertexIterator<BaseVertex>;
 %template(GCVIt) GraphVertexIterator<ColoringVertex>;
@@ -98,6 +99,6 @@
 %template(CGraph) Graph<ColoringVertex>;
 %template(MGraph) Graph<MetaVertex>;
 
-/* %include "GraphTemplates.h" */
+%include "GraphTemplates.h"
 %include "Graph.h"
 %include "Vertex.h"

@@ -10,10 +10,10 @@
 class Vertex;
 class BaseVertex;
 class ColoringVertex;
+class MetaVertex;
 template <typename V> class Graph;
 class BaseGraph;
 class ColoringGraph;
-class MetaVertex;
 class MetaGraph;
 
 

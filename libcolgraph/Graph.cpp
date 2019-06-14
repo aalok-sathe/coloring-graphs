@@ -286,20 +286,39 @@ __iter__()
 *******************************************************************************/
 
 
-// template<>
-// Graph<MetaVertex>::
-// ~Graph()
-// {};
+MetaGraph::
+MetaGraph()
+    : Graph<MetaVertex>()
+{}
 
 
-// template <typename V>
 void
 MetaGraph::
-add_vertex(MetaVertex* m)
+add_vertex(long name)
 {
-    m->name = size();
-	vertices.insert(std::pair<long, MetaVertex*>(m->name, m));
+    MetaVertex* mv = new MetaVertex(name);
+    vertices.insert(std::pair<long, MetaVertex*>(name, mv));
 }
+
+
+MetaVertex*
+MetaGraph::
+add_vertex()
+{
+    long name = size();
+    add_vertex(name);
+    return vertices[name];
+}
+
+
+// // template <typename V>
+// void
+// MetaGraph::
+// add_vertex(MetaVertex* m)
+// {
+//     m->name = size();
+// 	vertices.insert(std::pair<long, MetaVertex*>(m->name, m));
+// }
 
 
 // template <typename V>
@@ -478,7 +497,7 @@ Graph<V>::tarjans()
                     // in the biconnected component
 
                     std::cout << "DEBUG: constructing blank metavertex" << "\n";
-                    MetaVertex* main = new MetaVertex();
+                    MetaVertex* main = mg->add_vertex();
                     std::cout << "DEBUG: DONE constructing metavertex" << "\n";
 
 
@@ -520,8 +539,8 @@ Graph<V>::tarjans()
 
                     if (cut_vertex_stack.empty())
                     {
-                        MetaVertex* cut = new MetaVertex(vertices[*found_cut_vertex]);
-                        mg->add_vertex(cut);
+                        MetaVertex* cut = mg->add_vertex();
+                        cut->identity = vertices[*found_cut_vertex];
                         main->connect(cut);
                         // Add the cut vertex to the stack
                         cut_vertex_stack.push(cut);
@@ -530,8 +549,8 @@ Graph<V>::tarjans()
                     {
                         std::cout << "INFO: check identity IF statement (at top)" << "\n";
 
-                        MetaVertex* cut = new MetaVertex(vertices[*found_cut_vertex]);
-                        mg->add_vertex(cut);
+                        MetaVertex* cut = mg->add_vertex();
+                        cut->identity = vertices[*found_cut_vertex];
                         main->connect(cut);
                         // Add the cut vertex to the stack
                         cut_vertex_stack.push(cut);
@@ -545,7 +564,7 @@ Graph<V>::tarjans()
                     }
 
                     // Add the new component to the MetaGraph
-                    mg->add_vertex(main);
+                    // mg->add_vertex(main);
 
                     // The cut vertex is the parent,
                     // so we return the DFS to it
@@ -605,7 +624,6 @@ Graph<V>::tarjans()
 
     return mg;
 }
-
 
 
 #endif

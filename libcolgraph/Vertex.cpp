@@ -215,10 +215,6 @@ next()
         std::unordered_map<long, ColoringVertex*>::iterator it;
         long divisor = graph->precompexp[positionctr][1];
 
-        // std::cerr << "name: " << name
-        //           << " divisor: " << divisor
-        //           << std:: endl;
-
         for (; colorctr < colors; colorctr++)
         {
             curcol = (name / divisor) % colors;
@@ -319,18 +315,19 @@ hasnext()
 
 
 MetaVertex::
-MetaVertex()
-    : Vertex(0), nt(new MetaVertexNeighborIterator()), identity(NULL)
+MetaVertex(long name_)
+    : Vertex(name_), nt(new MetaVertexNeighborIterator()), identity(NULL)
 {}
 
+
 // template <typename V>
-MetaVertex::
-MetaVertex(Vertex* v)
-    : Vertex(0), nt(new MetaVertexNeighborIterator()), identity(v)
-{
-    depth = v->depth;
-	vertices.push_back(v->name);
-}
+// MetaVertex::
+// MetaVertex(Vertex* v)
+//     : Vertex(0), nt(new MetaVertexNeighborIterator()), identity(v)
+// {
+//     depth = v->depth;
+// 	vertices.push_back(v->name);
+// }
 
 
 void
