@@ -148,7 +148,7 @@ class MetaVertex : public Vertex
         // typename std::unordered_set<long> meta_neighbors ;
         // int depth;
         MetaVertexNeighborIterator* nt;
-        Vertex* identity;
+        long identity;
 
         MetaVertex(long name_);
         // MetaVertex(Vertex* v);

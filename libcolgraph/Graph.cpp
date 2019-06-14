@@ -450,7 +450,8 @@ Graph<V>::tarjans()
                 std::cerr << "INFO: new child " << child << " of vertex "
                           << vertices[*current]->get_name() << std::endl;
 
-                current++;
+                current = list.end();
+                current--;
             }
 
             else
@@ -547,17 +548,17 @@ Graph<V>::tarjans()
                     if (cut_vertex_stack.empty())
                     {
                         MetaVertex* cut = mg->add_vertex();
-                        cut->identity = vertices[*found_cut_vertex];
+                        cut->identity = vertices[*found_cut_vertex]->name;
                         main->connect(cut);
                         // Add the cut vertex to the stack
                         cut_vertex_stack.push(cut);
                     }
-                    else if(cut_vertex_stack.top()->identity != vertices[*found_cut_vertex])
+                    else if(cut_vertex_stack.top()->identity != vertices[*found_cut_vertex]->name)
                     {
                         std::cout << "INFO: check identity IF statement (at top)" << "\n";
 
                         MetaVertex* cut = mg->add_vertex();
-                        cut->identity = vertices[*found_cut_vertex];
+                        cut->identity = vertices[*found_cut_vertex]->name;
                         main->connect(cut);
                         // Add the cut vertex to the stack
                         cut_vertex_stack.push(cut);

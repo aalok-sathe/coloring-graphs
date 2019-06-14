@@ -236,8 +236,8 @@ next()
         colorctr = 0;
     }
 
-    positionctr = 0;
-    colorctr = 0;
+    // positionctr = 0;
+    // colorctr = 0;
     throw std::out_of_range("");
 }
 
@@ -248,6 +248,8 @@ hasnext()
 {
     int p = positionctr, c = colorctr;
     // long rem = remaining;
+    if (positionctr >= graph->base->size())
+        return false;
 
     try
     {
@@ -301,7 +303,7 @@ hasnext()
 
 MetaVertex::
 MetaVertex(long name_)
-    : Vertex(name_), nt(new MetaVertexNeighborIterator()), identity(NULL)
+    : Vertex(name_), nt(new MetaVertexNeighborIterator()), identity(-1)
 {}
 
 
