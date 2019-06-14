@@ -368,22 +368,19 @@ template <typename V>
 MetaGraph*
 Graph<V>::tarjans()
 {
-
-    std::cout << "INFO: lets start at the very beginning" << std::endl;
-
     //*****************************
     // Declare helper variables and structures
 
     MetaGraph* mg =  new MetaGraph();
 
-    std::cout << "INFO: successful init" << std::endl;
+    std::cerr << "INFO: initialized empty metagraph" << std::endl;
 
     long next, root, child;
     typename std::list<long>::iterator current, found_cut_vertex;
     typename std::list<long> list;
     typename std::stack<MetaVertex*> cut_vertex_stack;
 
-    std::cout << "INFO: local vars init" << std::endl;
+    std::cerr << "INFO: initialized local variables" << std::endl;
 
     //*****************************
     // Main body of the method
@@ -394,8 +391,8 @@ Graph<V>::tarjans()
     // graph is disconnected
     for (auto& v : this->vertices)
     {
-        std::cout << std::endl << "INFO: top of the for-loop "
-                  << v.first << std::endl;
+        std::cout << std::endl << "INFO: processing vertex " << v.first
+                  << " at line " << __LINE__ << std::endl;
 
         next = v.first;
         list.clear();
@@ -412,7 +409,8 @@ Graph<V>::tarjans()
             list.push_back(next);
             current = list.begin();
 
-            std::cout << std::endl << "INFO: first vertex!" << std::endl;
+            std::cout << "INFO: vertices[next]->depth == -1 "
+                      << "so adding to the current state list" << std::endl;
         }
         else
             continue;
@@ -420,18 +418,24 @@ Graph<V>::tarjans()
 
         while (true)
         {
-            std::cout << std::endl << "INFO: top of the while loop"
+            std::cout << std::endl << "INFO: top of while loop; current="
+                      << vertices[*current]->get_name() << '\t' << __LINE__
                       << std::endl;
 
             bool execif = true;
             try
             {
+                std::cerr << "DEBUG: try to get next neighbor of "
+                          << vertices[*current]->name
+                          << " at line " << __LINE__ << "\n";
                 child = vertices.find(vertices[*current]->get_next_neighbor())->first;
             }
             catch (std::out_of_range& e)
             {
                 execif = false;
-                std::cout << "whoops " << child << ' ' << e.what() << "\n";
+                std::cerr << "DEBUG: no more neighbors of "
+                          << vertices[*current]->name
+                          << " at line " << __LINE__ << "\n";
             }
 
 
@@ -442,11 +446,11 @@ Graph<V>::tarjans()
                 list.push_back(child);
                 vertices[child]->parent = current;
                 vertices[child]->depth = vertices[*current]->depth + 1;
+
+                std::cerr << "INFO: new child " << child << " of vertex "
+                          << vertices[*current]->get_name() << std::endl;
+
                 current++;
-
-                std::cout << std::endl << "INFO: found new child! "
-                          << child << std::endl;
-
             }
 
             else
@@ -457,7 +461,9 @@ Graph<V>::tarjans()
                             vertices[*current]->lowpoint,
                             vertices[child]->depth
                         );
-                    std::cout << "INFO: hasnext so continuing." << "\n";
+                    std::cerr << "INFO: " << vertices[*current]->name
+                              << " might have more children; continue "
+                              << __LINE__ << "\n";
                     continue;
                 }
 
@@ -485,8 +491,6 @@ Graph<V>::tarjans()
                     // is a biconnected component.
 
 
-
-
                     //**********************************************
                     // Create biconnected component
 
@@ -497,9 +501,9 @@ Graph<V>::tarjans()
                     // This MetaVertex will store all vertices
                     // in the biconnected component
 
-                    std::cout << "DEBUG: constructing blank metavertex" << "\n";
+                    std::cerr << "DEBUG: constructing blank metavertex" << "\n";
                     MetaVertex* main = mg->add_vertex();
-                    std::cout << "DEBUG: DONE constructing metavertex" << "\n";
+                    std::cerr << "DEBUG: DONE constructing metavertex" << "\n";
 
 
                     // Splice the vertices from the DFS list
@@ -510,7 +514,9 @@ Graph<V>::tarjans()
                                           current,
                                           list.end());
                     // Also add the cut vertex itself
-                    std::cout << "DEBUG: add cut vertex " << *found_cut_vertex << "to metavertex " << "\n";
+                    std::cerr << "DEBUG: add cut vertex " << *found_cut_vertex
+                              << "to metavertex " << main->name << "at line "
+                              << __LINE__ << "\n";
                     main->vertices.push_back(*found_cut_vertex);
 
 

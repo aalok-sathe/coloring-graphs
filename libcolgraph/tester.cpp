@@ -9,9 +9,13 @@ int main(int argc, char *argv[])
 {
     cout << "before init!" << endl;
 
-    char* testpath = "../test/input/g1.in";
+    // char* testpath = "../test/input/g1.in";
     // char* testpath = "../in/square.in";
     // char* testpath = "../in/smolgraph.in";
+    // char* testpath = "../in/hexmod.in";
+    // char* testpath = "../in/line.in";
+    char* testpath = "../in/3ring.in";
+
 
     BaseGraph* bg = new BaseGraph();
 
@@ -37,7 +41,8 @@ int main(int argc, char *argv[])
     for (auto& p : mg->vertices)
     {
         MetaVertex* mv = p.second;
-        std::cout << "\nmetavertex contents: " << "\t";
+        std::cout << "\nmetavertex " << mv->get_name()
+                  << " contents: " << "\t";
         for (long v : mv->vertices)
             std::cout << v << ' ';
     }
