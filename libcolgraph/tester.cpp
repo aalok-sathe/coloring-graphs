@@ -13,24 +13,24 @@ int main(int argc, char *argv[])
     char* testpath = "../in/square.in";
     // char* testpath = "../in/smolgraph.in";
 
-    BaseGraph bg;
+    BaseGraph* bg = new BaseGraph();
 
     cout << "loading graph from " << testpath << endl;
-    bg.load_txt(testpath);
+    bg->load_txt(testpath);
 
-    cout << "graph size: " << bg.size() << endl;
+    cout << "graph size: " << bg->size() << endl;
 
     cout << "building coloring. k=? " << endl;
     int k;
     cin >> k;
 
-    ColoringGraph* cg = bg.build_coloring_graph(k);
+    ColoringGraph* cg = bg->build_coloring_graph(k);
 
     cout << "coloring graph size: " << cg->size() << endl;
 
     cout << "reached EOF tester" << endl;
 
-    MetaGraph* mg = bg.tarjans();
+    MetaGraph* mg = cg->tarjans();
 
     cout << "metagraph size: " << mg->size() << endl;
 

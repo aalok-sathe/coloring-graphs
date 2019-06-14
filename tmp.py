@@ -61,10 +61,10 @@ bg = BaseGraph()
 #bg.load_txt('./test/input/g1.in')
 #bg.load_txt('./test/input/g2.in')
 #bg.load_txt('./test/input/g3.in')
-#bg.load_txt('hexmod.in')
+# bg.load_txt('in/hexmod.in')
 #bg.load_txt('in/g.in')
-bg.load_txt('smolgraph.in')
-#bg = bipartite
+# bg.load_txt('in/smolgraph.in')
+bg = bipartite
 
 print('INFO: Graphs initialized')#: bipartite,bg:', bipartite, bg)
 
@@ -120,7 +120,7 @@ print('{} leads to coloring graph {}'.format(bg, cg))
 
 
 ########    TEST: getting a vertex of cg
-sep('TEST: getting a vertex of cg'.upper())
+# sep('TEST: getting a vertex of cg'.upper())
 
 # try:
 #     print('INFO: getting a vertex of cg')
@@ -140,6 +140,22 @@ sep('TEST: getting a vertex of cg'.upper())
 #     print('\nERROR!\n', e)
 
 
+########    TEST: generating a meta base graph
+sep('TEST: generating a meta base graph'.upper())
+
+print('INFO: bg.tarjans()')
+mbg = bg.tarjans()
+print('{} leads to meta base graph {}'.format(bg, mbg))
+
+
+########    TEST: generating a meta coloring graph
+sep('TEST: generating a meta base graph'.upper())
+
+print('INFO: cg.tarjans()')
+mcg = cg.tarjans()
+print('{} leads to meta base graph {}'.format(bg, mcg))
+
+
 ########    TEST: visualize
 sep('TEST: visualize'.upper())
 
@@ -157,6 +173,8 @@ kwargs = dict(with_labels=1, node_size=1024, font_size=10)
 
 pyvisdraw(bg, 'testbg')
 pyvisdraw(cg, 'testcg')
+pyvisdraw(mbg, 'testmbg')
+pyvisdraw(mcg, 'testmcg')
 
 
 

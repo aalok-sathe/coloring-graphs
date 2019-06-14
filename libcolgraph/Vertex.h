@@ -14,9 +14,11 @@
 class Vertex;
 class BaseVertex;
 class ColoringVertex;
+class MetaVertex;
 template <typename V> class Graph;
 class BaseGraph;
 class ColoringGraph;
+class MetaGraph;
 
 
 class BaseVertexNeighborIterator : public VertexNeighborIterator<BaseVertex>
@@ -41,6 +43,7 @@ class ColoringVertexNeighborIterator : public VertexNeighborIterator<ColoringVer
         ColoringGraph* graph;
 
         // long remaining;
+        int outerpos;
         int positionctr;
         int colorctr;
 
@@ -147,8 +150,8 @@ class MetaVertex : public Vertex
         MetaVertexNeighborIterator* nt;
         Vertex* identity;
 
-        MetaVertex();
-        MetaVertex(Vertex* v);
+        MetaVertex(long name_);
+        // MetaVertex(Vertex* v);
 
         ~MetaVertex() {};
 
@@ -164,10 +167,6 @@ class MetaVertex : public Vertex
         MetaVertexNeighborIterator* __iter__();
         MetaVertexNeighborIterator* get_neighbors();
 
-        // bool operator==(const MetaVertex<V>& v) const
-        // {
-        //     return this->name == v.name;
-        // }
 
 };
 

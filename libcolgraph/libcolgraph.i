@@ -6,11 +6,12 @@
 %{
     #include <Python.h>
     #include <assert.h>
+    #include <stdexcept>
+    #include <iostream>
+
     #include "GraphTemplates.h"
     #include "Graph.h"
-    #include <iostream>
     #include "Vertex.h"
-    #include <stdexcept>
 %}
 
 
@@ -62,6 +63,18 @@
         SWIG_fail;
     }
 }
+%exception BaseGraph::load_txt
+{
+    try
+    {
+        $action
+    }
+    catch(std::runtime_error& e)
+    {
+        PyErr_SetString(PyExc_FileNotFoundError, "unable to load from txt");
+        SWIG_fail;
+    }
+}
 
 %extend Vertex {
     %pythoncode %{
@@ -86,7 +99,7 @@
     %}
 };
 
-%include "GraphTemplates.h"
+%import "GraphTemplates.h"
 
 %template(GBVIt) GraphVertexIterator<BaseVertex>;
 %template(GCVIt) GraphVertexIterator<ColoringVertex>;
@@ -98,6 +111,6 @@
 %template(CGraph) Graph<ColoringVertex>;
 %template(MGraph) Graph<MetaVertex>;
 
-/* %include "GraphTemplates.h" */
+%include "GraphTemplates.h"
 %include "Graph.h"
 %include "Vertex.h"

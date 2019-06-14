@@ -16,10 +16,10 @@
 class Vertex;
 class BaseVertex;
 class ColoringVertex;
+class MetaVertex;
 template <typename V> class Graph;
 class BaseGraph;
 class ColoringGraph;
-class MetaVertex;
 class MetaGraph;
 
 
@@ -105,12 +105,11 @@ class ColoringGraph : public Graph<ColoringVertex>
 class MetaGraph : public Graph<MetaVertex>
 {
     public:
-        MetaGraph() {};
-        ~MetaGraph() {};
+        MetaGraph();
 
-        void add_vertex(long name) override {};
+        void add_vertex(long name) override;
+        MetaVertex* add_vertex();
 
-        void add_vertex(MetaVertex* m);
         void remove_vertex(MetaVertex* m);
 
         const MetaGraphVertexIterator* __iter__() override;

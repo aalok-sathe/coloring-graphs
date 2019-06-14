@@ -215,10 +215,6 @@ next()
         std::unordered_map<long, ColoringVertex*>::iterator it;
         long divisor = graph->precompexp[positionctr][1];
 
-        // std::cerr << "name: " << name
-        //           << " divisor: " << divisor
-        //           << std:: endl;
-
         for (; colorctr < colors; colorctr++)
         {
             curcol = (name / divisor) % colors;
@@ -226,27 +222,12 @@ next()
                 continue;
 
             newcoloring = name;
-            // std::cerr << std::endl << "start newcoloring with name " << newcoloring
-            //           << std::endl;
             newcoloring -= graph->precompexp[positionctr][curcol];
-            // std::cerr << "remove current color " << newcoloring
-            //           << std::endl;
             newcoloring += graph->precompexp[positionctr][colorctr];
-            // std::cerr << "add colorctr color to it " << newcoloring
-            //           << std::endl;
-
-            // std::cerr << "Potential neighbor of " << name
-            //           << ": " << newcoloring << " when posn=" << positionctr
-            //           << " and colctr=" << colorctr << std::endl;
 
             it = graph->vertices.find(newcoloring); // valid coloring?
-
-            // std::cerr << "trying to see if iterator found anything" << std::endl;
             if (it == graph->vertices.end())
                 continue;
-
-            // std::cerr << "Confirmed neighbor of " << name << ": "
-            //           << newcoloring << std::endl;
 
             colorctr++;
             return newcoloring;
@@ -319,18 +300,19 @@ hasnext()
 
 
 MetaVertex::
-MetaVertex()
-    : Vertex(0), nt(new MetaVertexNeighborIterator()), identity(NULL)
+MetaVertex(long name_)
+    : Vertex(name_), nt(new MetaVertexNeighborIterator()), identity(NULL)
 {}
 
+
 // template <typename V>
-MetaVertex::
-MetaVertex(Vertex* v)
-    : Vertex(0), nt(new MetaVertexNeighborIterator()), identity(v)
-{
-    depth = v->depth;
-	vertices.push_back(v->name);
-}
+// MetaVertex::
+// MetaVertex(Vertex* v)
+//     : Vertex(0), nt(new MetaVertexNeighborIterator()), identity(v)
+// {
+//     depth = v->depth;
+// 	vertices.push_back(v->name);
+// }
 
 
 void
