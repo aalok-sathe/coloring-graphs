@@ -59,14 +59,15 @@ bipartite.load_txt('./test/input/bipartite_test_graph0.in')
 
 bg = BaseGraph()
 # bg.load_txt('./test/input/g1.in')
-# bg.load_txt('in/hexmod.in')
+bg.load_txt('in/hexmod.in')
 # bg.load_txt('in/polypbg.in')
-bg.load_txt('in/polypbgtriangle.in')
+# bg.load_txt('in/polypbgtriangle.in')
 # bg.load_txt('./test/input/g2.in')
 # bg.load_txt('./test/input/g3.in')
 # bg.load_txt('in/g.in')
 # bg.load_txt('in/smolgraph.in')
 # bg.load_txt('in/3ring.in')
+# bg.load_txt('in/pentatentac.in')
 # bg.load_txt('in/3star.in')
 # bg = bipartite
 
