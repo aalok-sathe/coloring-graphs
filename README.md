@@ -49,6 +49,15 @@ for questions, reach out.
         --no-mcg              hide meta ColoringGraph?
   ```
 
+  Ex., a BaseGraph made from a 12 vertex bipartite graph like this:
+
+  <img src="https://i.imgur.com/HAqNYEA.png" />
+
+  leads to a ColoringGraph that looks like this with k=3:
+
+  <img src="https://i.imgur.com/FgabBRf.png" />
+
+
   launch web GUI [WIP]:
   ```
     libcolgraph [OPTIONS]
@@ -114,4 +123,3 @@ full documentation coming soon
 
 Coloring Graphs lab, University of Richmond. Multiple contributors.
 (C) 2017-2019
-
