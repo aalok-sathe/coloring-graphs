@@ -344,11 +344,14 @@ void
 MetaVertex::
 disconnect(MetaVertex* v)
 {
-    // std::cout << "DISCONNECT" << "\n";
+    std::cout << "DISCONNECT" << "\n";
     // return;
 
-	this->neighbors.erase(v->name);
-	v->neighbors.erase(this->name);
+    // std::unordered_set<long>::iterator it;
+    if (this->neighbors.find(v->name) != this->neighbors.end())
+	    this->neighbors.erase(v->name);
+    if (v->neighbors.find(this->name) != v->neighbors.end())
+    	v->neighbors.erase(this->name);
 }
 
 
