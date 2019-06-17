@@ -332,11 +332,10 @@ remove_vertex(MetaVertex* m)
     std::unordered_set<long>::iterator it;
 	for (it = m->neighbors.begin(); it != m->neighbors.end(); it++)
 	{
-        std::cout << "disconn. " << "\n";
+        std::cerr << "disconn. " << "\n";
 		m->disconnect(vertices[*it]);
 	}
-
-    std::cout << "done removing all nbrs" << "\n";
+    std::cerr << "done removing all nbrs" << "\n";
 
 	vertices.erase(m->name);
 }
@@ -392,7 +391,7 @@ Graph<V>::tarjans()
     // graph is disconnected
     for (auto& v : this->vertices)
     {
-        std::cout << std::endl << "INFO: processing vertex " << v.first
+        std::cerr << std::endl << "INFO: processing vertex " << v.first
                   << " at line " << __LINE__ << std::endl;
 
         next = v.first;
@@ -420,7 +419,7 @@ Graph<V>::tarjans()
             //     continue;
             // }
 
-            std::cout << "INFO: vertices[next]->depth == -1 "
+            std::cerr << "INFO: vertices[next]->depth == -1 "
                       << "so adding to the current state list" << std::endl;
         }
         else
@@ -429,7 +428,7 @@ Graph<V>::tarjans()
 
         while (true)
         {
-            std::cout << std::endl << "INFO: top of while loop; current="
+            std::cerr << std::endl << "INFO: top of while loop; current="
                       << vertices[*current]->get_name() << '\t' << __LINE__
                       << std::endl;
 
@@ -646,26 +645,26 @@ Graph<V>::tarjans()
 
         if (count < 2)
         {
-            std::cout << "INFO: count < 2" << std::endl;
+            std::cerr << "INFO: count < 2" << std::endl;
             if (!cut_vertex_stack.empty())
             {
                 MetaVertex* mv = cut_vertex_stack.top();
-                std::cout << "INFO: got metavrtx from cutvertex stack" << std::endl;
+                std::cerr << "INFO: got metavrtx from cutvertex stack" << std::endl;
 
                 cut_vertex_stack.pop();
 
-                std::cout << "INFO: trying to remove" << std::endl;
+                std::cerr << "INFO: trying to remove" << std::endl;
 
                 mg->remove_vertex(mv);
 
-                std::cout << "INFO: done processing count < 2 case" << std::endl;
+                std::cerr << "INFO: done processing count < 2 case" << std::endl;
             }
 
         }
 
     } // end of main for-loop
 
-    std::cout << "INFO: about to return now" << std::endl;
+    std::cerr << "INFO: about to return now" << std::endl;
 
     return mg;
 }
