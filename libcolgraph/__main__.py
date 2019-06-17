@@ -62,10 +62,26 @@ def pyvisdraw(g, title='', **kwargs):
 
 
 
-def main(args=defaultdict(None)):
+def plotfromfile():
     '''
     main method
     '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument('INPUT_GRAPH', type=str,
+                        help='read in BaseGraph from adjacency matrix file')
+    parser.add_argument('-k', '--colors', type=int, default=3,
+                        help='number of colors to use to create ColoringGraph')
+    parser.add_argument('-v', '--verbosity', action='count', default=0,
+                        help='set output verbosity')
+    parser.add_argument('--no-bg', help='hide BaseGraph?',
+                        action='store_true')
+    parser.add_argument('--no-cg', help='hide ColoringGraph?',
+                        action='store_true')
+    parser.add_argument('--no-mbg', help='hide meta BaseGraph?',
+                        action='store_true')
+    parser.add_argument('--no-mcg', help='hide meta ColoringGraph?',
+                        action='store_true')
+    args = parser.parse_args()
 
     # kwargs = dict(with_labels=1, node_size=1024, font_size=10)
 
@@ -97,22 +113,13 @@ def main(args=defaultdict(None)):
         pyvisdraw(mcg, 'testmcg')
 
 
+def main():
+    '''
+    '''
+    pass
+
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('INPUT_GRAPH', type=str,
-                        help='read in BaseGraph from adjacency matrix file')
-    parser.add_argument('-k', '--colors', type=int, default=3,
-                        help='number of colors to use to create ColoringGraph')
-    parser.add_argument('-v', '--verbosity', action='count', default=0,
-                        help='set output verbosity')
-    parser.add_argument('--no-bg', help='hide BaseGraph?',
-                        action='store_true')
-    parser.add_argument('--no-cg', help='hide ColoringGraph?',
-                        action='store_true')
-    parser.add_argument('--no-mbg', help='hide meta BaseGraph?',
-                        action='store_true')
-    parser.add_argument('--no-mcg', help='hide meta ColoringGraph?',
-                        action='store_true')
-
-    main(parser.parse_args())
+    pass
+    # main()
+    # plotfromfile()
