@@ -96,6 +96,12 @@
 
         def __repr__(self):
             return self.__str__()
+
+        def __len__(self):
+            '''
+            proxy method that just calls this->size()
+            '''
+            return self.size()
     %}
 };
 
