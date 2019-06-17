@@ -344,7 +344,7 @@ void
 MetaVertex::
 disconnect(MetaVertex* v)
 {
-    // std::cout << "DISCONNECT" << "\n";
+    std::cout << "DISCONNECT" << "\n";
     // return;
 
     // std::unordered_set<long>::iterator it;
