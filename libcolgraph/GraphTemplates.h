@@ -17,6 +17,8 @@ class ColoringGraph;
 class MetaGraph;
 
 
+// A base iterator class to support iteration over a Vertex's
+// neighboring vertices. Assumes an instance of polymorphic Vertex
 template <typename V>
 class VertexNeighborIterator
 {
@@ -33,6 +35,10 @@ class VertexNeighborIterator
 };
 
 
+// A base iterator class to support iteration over a Graph<>'s
+// vertices. Assumes an instance of polymorphic Graph class,
+// and assumes that vertices are stored in an internal hashmap
+// mapping long->Vertex-inherited objects
 template <typename V>
 class GraphVertexIterator
 {
