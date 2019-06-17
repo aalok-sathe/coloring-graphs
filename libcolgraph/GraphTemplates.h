@@ -17,8 +17,9 @@ class ColoringGraph;
 class MetaGraph;
 
 
-// A base iterator class to support iteration over a Vertex's
-// neighboring vertices. Assumes an instance of polymorphic Vertex
+// a base iterator class to support iteration over a Vertex's
+// neighboring vertices. Assumes an instance of polymorphic Vertex.
+// may be subclassed to specialize for particular kinds of vertices.
 template <typename V>
 class VertexNeighborIterator
 {
@@ -35,10 +36,11 @@ class VertexNeighborIterator
 };
 
 
-// A base iterator class to support iteration over a Graph<>'s
+// a base iterator class to support iteration over a Graph<>'s
 // vertices. Assumes an instance of polymorphic Graph class,
 // and assumes that vertices are stored in an internal hashmap
 // mapping long->Vertex-inherited objects
+// may be subclassed to specialize for particular kinds of vertices.
 template <typename V>
 class GraphVertexIterator
 {
@@ -61,6 +63,16 @@ class GraphVertexIterator
 };
 
 
+// the OG Graph<> class. It is a pure virtual class so it cannot
+// be instantiated. Some of the methods may need implementation
+// depending on the purpose of the graph being subclassed, in
+// order for the class to function.
+// Maintains a hashmap of <long, Vertex*>, so each vertex must have
+// a unique long-type name.
+// Stores V objects which are instances of or subclassed from Vertex
+// Supports iteration via GraphVertexIterator objects, making it
+// easy to wrap the iterator as a standalone object in high-level
+// languages such as Python
 template <typename V>
 class Graph
 {
@@ -70,13 +82,17 @@ class Graph
         Graph();
         virtual ~Graph();
 
+        // load in data from a standard adjacency matrix format
+        // text file
         virtual void load_txt(char* path) {};
+
+        // TODO
         virtual void save_txt() {};
 
+        // returns the size of the graph in terms of the number of vertices
         virtual long size();
-        virtual long __len__() { return size(); };
-
-        // virtual char* __repr__() {};
+        // proxy method that just calls this->size()
+        // virtual long __len__() { return size(); };
 
         virtual void add_vertex(long name) = 0;
 
