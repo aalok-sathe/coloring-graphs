@@ -28,11 +28,15 @@ setup(name='libcolgraph',
       cmdclass = {'build_py': build_py},
       ext_modules=[colgraph_module],
       py_modules=['libcolgraph'],
+      entry_points = {
+        'console_scripts': ['colgraphplot = libcolgraph.__main__:plotfromfile',
+                            'libcolgraph = libcolgraph.__main__:main'],
+      },
       #package_data =
       #  {'libcolgraph._libcolgraph': ['libcolgraph/*.h',
       #                                      'libcolgraph/*.cpp']},
       packages = setuptools.find_packages(),
-      version='0.0.2.post1',
+      version='0.0.2.post2',
       description='this library provides support to construct graphs and their '
                   'coloring graphs. a coloring graph is a metagraph '
                   'representing all the valid colorings of a graph. each '

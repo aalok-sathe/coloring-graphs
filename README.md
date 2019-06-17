@@ -1,5 +1,5 @@
 ## coloring-graphs
-[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=1065614557318660159)](https://gitlab.com/aalok-sathe/coloring-graphs/)
+[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=2825177572518850315)](https://gitlab.com/aalok-sathe/coloring-graphs/)
 
 a coloring graphs library written in C++ for speedy computation and wrapped in
 Python for ease of development and extension!
@@ -28,28 +28,33 @@ for questions, reach out.
 
   basic usage:
   ```
-    python3 -m libcolgraph [PATH_TO_FILE] [-k COLORS]
+    colgraphplot [PATH_TO_FILE] [-k COLORS]
+    ---
+    options:
+      usage: colgraphplot [-h] [-k COLORS] [-v] [--no-bg] [--no-cg] [--no-mbg]
+                     [--no-mcg]
+                     INPUT_GRAPH
+
+      positional arguments:
+        INPUT_GRAPH           read in BaseGraph from adjacency matrix file
+
+      optional arguments:
+        -h, --help            show this help message and exit
+        -k COLORS, --colors COLORS
+                              number of colors to use to create ColoringGraph
+        -v, --verbosity       set output verbosity
+        --no-bg               hide BaseGraph?
+        --no-cg               hide ColoringGraph?
+        --no-mbg              hide meta BaseGraph?
+        --no-mcg              hide meta ColoringGraph?
   ```
 
-  options:
+  launch web GUI [WIP]:
   ```
-    usage: python3 -m libcolgraph [-h] [-k COLORS] [-v] [--no-bg] [--no-cg] [--no-mbg]
-                   [--no-mcg]
-                   INPUT_GRAPH
-
-    positional arguments:
-      INPUT_GRAPH           read in BaseGraph from adjacency matrix file
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      -k COLORS, --colors COLORS
-                            number of colors to use to create ColoringGraph
-      -v, --verbosity       set output verbosity
-      --no-bg               hide BaseGraph?
-      --no-cg               hide ColoringGraph?
-      --no-mbg              hide meta BaseGraph?
-      --no-mcg              hide meta ColoringGraph?
+    libcolgraph [OPTIONS]
   ```
+
+
 
 - as a library
 
