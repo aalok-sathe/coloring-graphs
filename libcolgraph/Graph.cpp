@@ -379,6 +379,7 @@ Graph<V>::tarjans()
     typename std::list<long>::iterator current, found_cut_vertex;
     typename std::list<long> list;
     typename std::stack<MetaVertex*> cut_vertex_stack;
+    typename std::set<MetaVertex*> cut_vertex_set;
 
     std::cerr << "INFO: initialized local variables" << std::endl;
 
@@ -398,6 +399,8 @@ Graph<V>::tarjans()
         list.clear();
         while(!cut_vertex_stack.empty())
             cut_vertex_stack.pop();
+        cut_vertex_set.clear();
+
 
         if (vertices[next]->depth == -1)
         {
@@ -559,7 +562,7 @@ Graph<V>::tarjans()
                     while (!cut_vertex_stack.empty() and
                            // cut_vertex_stack.top()->depth
                            // > vertices[*found_cut_vertex]->depth)// and
-                           main->vertices.find(cut_vertex_stack.top()->name)
+                           main->vertices.find(cut_vertex_stack.top()->identity)
                            != main->vertices.end())
                     {
                         main->connect(cut_vertex_stack.top());
