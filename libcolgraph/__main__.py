@@ -3,6 +3,7 @@
 # stdlib
 import argparse
 from collections import defaultdict
+from pathlib import Path
 # installed packages
 from tqdm import tqdm
 import networkx as nx
@@ -55,7 +56,9 @@ def pyvisdraw(g, title='', **kwargs):
     net.from_nx(make_nx(g))
     # net.show_buttons(filter_=['physics'])
     # net.toggle_physics(1)
-    net.show("viz/{}_{}.html".format(title, len(g)))
+    Path('~/libcolgraph').expanduser().mkdir(parents=True, exist_ok=True)
+    path = Path('~/libcolgraph/{}_{}.html'.format(title, len(g))).expanduser()
+    net.show(str(path))
 
 
 
