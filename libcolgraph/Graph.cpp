@@ -8,10 +8,17 @@
 
 
 
-Graph::
+/*******************************************************************************
+***************************** GRAPH ********************************************
+*******************************************************************************/
+
+template <typename V>
+Graph<V>::
 Graph() {}
 
-Graph::
+
+template <typename V>
+Graph<V>::
 ~Graph() {}
 
 BaseGraph::
@@ -28,17 +35,113 @@ ColoringGraph::
 
 
 
+template <typename V>
+long
+Graph<V>::
+size()
+{
+    return vertices.size();
+}
+
+
+template <typename V>
+V&
+Graph<V>::
+get_vertex(long name)
+{
+    return *vertices.at(name);
+}
+
+
+template <typename V>
+V&
+Graph<V>::
+get_some_vertex()
+{
+    for (auto& pair : vertices)
+        return *pair.second;
+    throw std::out_of_range("graph is empty");
+}
+
+
+template <typename V>
+const GraphVertexIterator<V>*
+Graph<V>::
+get_vertices()
+{
+    if (true)
+        throw std::logic_error("not implemented");
+    return __iter__();
+}
+
+
+template <typename V>
+const GraphVertexIterator<V>*
+Graph<V>::
+__iter__()
+{
+    if (true)
+        throw std::logic_error("not implemented");
+    return new GraphVertexIterator<V>({ vertices.begin(), size() });
+}
+
+/*******************************************************************************
+***************************** BASEGRAPH ****************************************
+*******************************************************************************/
+
+
+BaseGraph::
+BaseGraph()
+    : Graph<BaseVertex>()
+{}
+
+
+void
+BaseGraph::
+add_vertex(long name)
+{
+    BaseVertex* v = new BaseVertex(name);
+    this->vertices.insert(std::pair<long, BaseVertex*>(name, v));
+}
+
+
+void
+BaseGraph::
+make_edge(long a, long b)
+{
+    typename std::unordered_map<long, BaseVertex*>::iterator it;
+    BaseVertex * va, * vb;
+
+    it = vertices.find(a);
+    if (it != vertices.end())
+        va = it->second;
+    else
+        throw std::out_of_range("");
+
+    it = vertices.find(b);
+    if (it != vertices.end())
+        vb = it->second;
+    else
+        throw std::out_of_range("");
+
+    vb->add_neighbor(*va);
+    va->add_neighbor(*vb);
+}
+
+
 void
 BaseGraph::
 load_txt(char* path)
 {
-    // std::string path_ = std::string(path);
     std::ifstream file(path);
+    if (!file.is_open())
+        throw std::runtime_error("");
+
     int n;
     file >> n;
 
     for (int i=0; i<n; i++)
-        add_vertex((long)i);
+        this->add_vertex((long)i);
 
     int value;
     for (int i=0; i<n; i++)
@@ -46,7 +149,7 @@ load_txt(char* path)
         {
             file >> value;
             if (value)
-                vertices[i].add_neighbor(vertices[j]);
+                vertices[i]->add_neighbor(*vertices[j]);
         }
 }
 
@@ -80,63 +183,250 @@ load_txt(char* path)
 // }
 
 
-long
-Graph::
-size()
-{
-    return vertices.size();
-}
-
-
-void
-Graph::
-add_vertex(long name)
-{
-    vertices.insert(std::map<int, Vertex>::value_type(name, Vertex()));
-}
-
-void
+ColoringGraph*
 BaseGraph::
-add_vertex(long name)
+build_coloring_graph(int k)
 {
-    vertices.insert(std::map<int, Vertex>::value_type(name, BaseVertex()));
+    // TODO: make recursive backtracking based search
+    ColoringGraph* cg = new ColoringGraph(k, this);
+    for (long coloring=0; coloring<pow(k, size()); coloring++)
+        if (is_valid_coloring(coloring, k))
+            cg->add_vertex(coloring);
+        else
+            continue;
+
+    return cg;
 }
 
 
-// Vertex&
-// Graph::
-// get_vertex(long name = NULL)
-// {
-//     if (name == NULL)
-//         for (auto& item : vertices)
-//             return item.second;
-//     // try
-//         return vertices.at(name);
-//     // catch(const std::out_of_range& oor)
-// }
-
-
-// std::map<long, Vertex>::iterator
-// Graph::
-// get_vertices()
-// {
-//     // TODO
-// }
-
-
-
-MetaGraph
-Graph::Tarjans()
+int
+BaseGraph::
+get_vertex_color(long coloring, long name, int k)
 {
+    return (coloring / (long)pow(k, (size()-name-1))) % k;
+}
 
+
+bool
+BaseGraph::
+is_valid_coloring(long coloring, int k)
+{
+    for (auto& pair : vertices)
+    {
+        long vname = pair.first;
+        int vcol = get_vertex_color(coloring, vname, k);
+
+        BaseVertex* v = pair.second;
+        for (auto it = v->neighbors.begin(); it != v->neighbors.end(); it++)
+            if (vcol == get_vertex_color(coloring, *it, k))
+                return false;
+    }
+
+    return true;
+}
+
+
+const BaseGraphVertexIterator*
+BaseGraph::
+get_vertices()
+{
+    return __iter__();
+}
+
+
+const BaseGraphVertexIterator*
+BaseGraph::
+__iter__()
+{
+    return new BaseGraphVertexIterator(vertices.begin(), size());
+}
+
+
+/*******************************************************************************
+***************************** COLORINGGRAPH ************************************
+*******************************************************************************/
+
+
+ColoringGraph::
+ColoringGraph(int k, BaseGraph* bg)
+    : colors(k), base(bg)
+{
+    for (int i=0; i<bg->size(); i++)
+    {
+        std::vector<long> v;
+        for (int j=0; j<colors; v.push_back(j++*pow(colors, i)));
+        precompexp.push_back(v);
+    }
+}
+
+
+void
+ColoringGraph::
+add_vertex(long name)
+{
+    ColoringVertex* vertex = new ColoringVertex(name, colors, this);
+    vertices.insert(std::pair<long, ColoringVertex*>(name, vertex));
+}
+
+
+const ColoringGraphVertexIterator*
+ColoringGraph::
+get_vertices()
+{
+    return __iter__();
+}
+
+
+const ColoringGraphVertexIterator*
+ColoringGraph::
+__iter__()
+{
+    return new ColoringGraphVertexIterator(vertices.begin(), size());
+}
+
+
+/*******************************************************************************
+***************************** GraphVertexIterator*******************************
+*******************************************************************************/
+
+
+template <typename V>
+V
+GraphVertexIterator<V>::
+next()
+{
+    if (this->len--)
+        return *(this->it++->second);
+
+    throw std::out_of_range("");
+}
+
+
+template <typename V>
+V
+GraphVertexIterator<V>::
+__next__()
+{
+    return this->next();
+}
+
+
+template <typename V>
+bool
+GraphVertexIterator<V>::
+hasnext()
+{
+    return (this->len > 0);
+}
+
+
+template <typename V>
+GraphVertexIterator<V>*
+GraphVertexIterator<V>::
+__iter__()
+{
+    return this;
+}
+
+
+
+/*******************************************************************************
+********************************** MetaGraph ***********************************
+*******************************************************************************/
+
+
+MetaGraph::
+MetaGraph()
+    : Graph<MetaVertex>()
+{}
+
+
+void
+MetaGraph::
+add_vertex(long name)
+{
+    MetaVertex* mv = new MetaVertex(name);
+    vertices.insert(std::pair<long, MetaVertex*>(name, mv));
+}
+
+
+MetaVertex*
+MetaGraph::
+add_vertex()
+{
+    long name = size();
+    add_vertex(name);
+    return vertices[name];
+}
+
+
+// // template <typename V>
+// void
+// MetaGraph::
+// add_vertex(MetaVertex* m)
+// {
+//     m->name = size();
+// 	vertices.insert(std::pair<long, MetaVertex*>(m->name, m));
+// }
+
+
+// template <typename V>
+void
+MetaGraph::
+remove_vertex(MetaVertex* m)
+{
+    std::unordered_set<long>::iterator it;
+	for (it = m->neighbors.begin(); it != m->neighbors.end(); it++)
+	{
+        std::cerr << "disconn. " << "\n";
+		m->disconnect(vertices[*it]);
+	}
+    std::cerr << "done removing all nbrs" << "\n";
+
+	vertices.erase(m->name);
+}
+
+
+const MetaGraphVertexIterator*
+MetaGraph::
+get_vertices()
+{
+    return __iter__();
+}
+
+
+const MetaGraphVertexIterator*
+MetaGraph::
+__iter__()
+{
+    return new MetaGraphVertexIterator(vertices.begin(), size());
+}
+
+
+
+/*******************************************************************************
+******************************** ALGORITHMS ************************************
+*******************************************************************************/
+
+
+template <typename V>
+MetaGraph*
+Graph<V>::tarjans()
+{
     //*****************************
     // Declare helper variables and structures
 
-    MetaGraph metagraph;
-    std::list<Vertex>::iterator current, found_cut_vertex;
-    Vertex next, root, child;
-    std::list<Vertex> list;
-    std::stack<MetaVertex> cut_vertex_stack;
+    MetaGraph* mg =  new MetaGraph();
+
+    std::cerr << "INFO: initialized empty metagraph" << std::endl;
+
+    long next, root, child;
+    typename std::list<long>::iterator current, found_cut_vertex;
+    typename std::list<long> list;
+    typename std::stack<MetaVertex*> cut_vertex_stack;
+    typename std::set<MetaVertex*> cut_vertex_set;
+
+    std::cerr << "INFO: initialized local variables" << std::endl;
 
     //*****************************
     // Main body of the method
@@ -147,51 +437,118 @@ Graph::Tarjans()
     // graph is disconnected
     for (auto& v : this->vertices)
     {
-        next = v.second;
-        list.clear();
-        while(!cut_vertex_stack.empty()){cut_vertex_stack.pop();}
+        std::cerr << std::endl << "INFO: processing vertex " << v.first
+                  << " at line " << __LINE__ << std::endl;
 
-        if (next.depth == -1)
+        next = v.first;
+        list.clear();
+        while(!cut_vertex_stack.empty())
+            cut_vertex_stack.pop();
+        cut_vertex_set.clear();
+
+
+        if (vertices[next]->depth == -1)
         {
             // If vertex has not been
             // visited, set up that
             // vertex as a root for DFS
             root = next;
-            next.depth = 0;
+            vertices[next]->depth = 0;
             list.push_back(next);
             current = list.begin();
+
+            // if (!vertices[root]->nt->hasnext())
+            // {
+            //     MetaVertex* rootmv = mg->add_vertex();
+            //     rootmv->identity = root;
+            //     rootmv->depth = vertices[root]->depth;
+            //     continue;
+            // }
+
+            std::cerr << "INFO: vertices[next]->depth == -1 "
+                      << "so adding to the current state list" << std::endl;
         }
+        else
+            continue;
+
 
         while (true)
         {
+            std::cerr << std::endl << "INFO: top of while loop; current="
+                      << vertices[*current]->get_name() << '\t' << __LINE__
+                      << std::endl;
 
-            child = vertices.find(current->get_next_neighbor(this))->second;
+            bool execif = true;
+            try
+            {
+                std::cerr << "DEBUG: try to get next neighbor of "
+                          << vertices[*current]->name
+                          << " at line " << __LINE__ << "\n";
+                child = vertices.find(vertices[*current]->get_next_neighbor())->first;
+            }
+            catch (std::out_of_range& e)
+            {
+                execif = false;
+                std::cerr << "DEBUG: no more neighbors of "
+                          << vertices[*current]->name
+                          << " at line " << __LINE__ << "\n";
+            }
 
-            if (child.depth == -1)
+
+            if (execif and vertices[child]->depth == -1)
             {
                 // if the DFS found another child,
                 // go down that path
                 list.push_back(child);
-                child.parent = current;
-                child.depth = current->depth + 1;
-                ++current;
+                vertices[child]->parent = current;
+                vertices[child]->depth = vertices[*current]->depth + 1;
+
+                std::cerr << "INFO: new child " << child << " of vertex "
+                          << vertices[*current]->get_name()
+                          << ". depth of child set to "
+                          << vertices[child]->depth << std::endl;
+
+                current = list.end();
+                current--;
             }
 
             else
             {
-                // if (current->hasNext())
-                // {
-                //     current->lowpoint = std::min(current->lowpoint, child.depth);
-                //     break;
-                // }
+                vertices[*current]->lowpoint = std::min(
+                        vertices[*current]->lowpoint,
+                        vertices[child]->depth
+                    );
+
+                if (vertices[*current]->nt->hasnext())
+                {
+                    std::cerr << "INFO: " << vertices[*current]->name
+                              << " might have more children; continue "
+                              << " lowpoint set to "
+                              << vertices[*current]->lowpoint
+                              << " at line " << __LINE__ << "\n";
+                    continue;
+                }
 
                 // Break if the root has no more children
-                if (current->name == root.name) {break;}
+                if (vertices[*current]->name == vertices[root]->name)
+                    break;
 
-                current->parent->lowpoint = std::min(current->parent->lowpoint, current->lowpoint);
+                vertices[*vertices[*current]->parent]->lowpoint =
+                    std::min(
+                        vertices[*vertices[*current]->parent]->lowpoint,
+                        vertices[*current]->lowpoint
+                    );
 
-                if (current->parent->name == root.name ||
-                    current->lowpoint >= current->parent->depth)
+                std::cerr << "`current` stats: "
+                          << vertices[*current]->name << "\n"
+                          << "\tlowpoint=" << vertices[*current]->lowpoint
+                          << "\tdepth=" << vertices[*current]->depth
+                          << std::endl;
+
+                if (vertices[*vertices[*current]->parent] == vertices[root]
+                    or vertices[*current]->lowpoint
+                       >= vertices[*vertices[*current]->parent]->depth
+                   )
                 {
                     // If DFS ever gets back to the
                     // root, everything left in the list
@@ -202,25 +559,33 @@ Graph::Tarjans()
                     // is a biconnected component.
 
 
-
-
                     //**********************************************
                     // Create biconnected component
 
 
                     // Store this since we'll be using it a lot
-                    found_cut_vertex = current->parent;
+                    found_cut_vertex = vertices[*current]->parent;
 
                     // This MetaVertex will store all vertices
                     // in the biconnected component
-                    MetaVertex main;
+
+                    std::cerr << "DEBUG: constructing a blank metavertex at "
+                              << __LINE__ << "\n";
+                    MetaVertex* main = mg->add_vertex();
 
                     // Splice the vertices from the DFS list
                     // into the component
-                    main.vertices.splice(main.vertices.begin(), list, current, list.end());
+                    // TODO
+                    // main->vertices.splice(main->vertices.begin(),
+                    //                       list,
+                    //                       current,
+                    //                       list.end());
+                    main->vertices.insert(current, list.end());
                     // Also add the cut vertex itself
-                    main.vertices.push_back(*(found_cut_vertex));
-
+                    std::cerr << "DEBUG: add cut vertex " << *found_cut_vertex
+                              << "to metavertex " << main->name << "at line "
+                              << __LINE__ << "\n";
+                    main->vertices.insert(*found_cut_vertex);
 
 
                     //**********************************************
@@ -231,38 +596,69 @@ Graph::Tarjans()
                     // were found after that cut vertex.
                     // Thus, they are part of the component.
                     // So we connect them to the component.
-                    while (cut_vertex_stack.top().depth > found_cut_vertex->depth)
+
+                    if (!cut_vertex_stack.empty())
+                        std::cerr << "DEBUG: cut vertex stack top depth="
+                                  << cut_vertex_stack.top()->depth
+                                  << ", found cut vertex depth="
+                                  << vertices[*found_cut_vertex]->depth
+                                  << " before while loop at " << __LINE__
+                                  << "\n";
+                    while (!cut_vertex_stack.empty() and
+                           // cut_vertex_stack.top()->depth
+                           // > vertices[*found_cut_vertex]->depth)// and
+                           main->vertices.find(cut_vertex_stack.top()->identity)
+                           != main->vertices.end())
                     {
-                        main.connect(cut_vertex_stack.top());
-                        cut_vertex_stack.pop();
+                        main->connect(cut_vertex_stack.top());
+                        std::cerr << "INFO: connecting " << main->name
+                                  << " and " << cut_vertex_stack.top()->name
+                                  << "\n";
+
+                        if (cut_vertex_stack.top()->identity
+                            != *found_cut_vertex)
+                            cut_vertex_stack.pop();
+                        else
+                            break;
+
+                        std::cerr << "INFO: info: popping stuff from stack.\n";
                     }
 
 
                     // This if statement creates a MetaVertex
                     // object for the cut vertex if one
                     // does not already exist.
-                    if (cut_vertex_stack.top().name != found_cut_vertex->name)
+                    if (!cut_vertex_stack.empty() and
+                         cut_vertex_stack.top()->identity ==
+                          vertices[*found_cut_vertex]->name)
                     {
-                        MetaVertex cut(*found_cut_vertex);
-                        metagraph.add_vertex(cut);
-                        main.connect(cut);
-                        cut_vertex_stack.push(cut);
-
+                        main->connect(cut_vertex_stack.top());
                     }
+                    else
+                    {
+                        MetaVertex* cut = mg->add_vertex();
 
-                    else { main.connect(cut_vertex_stack.top()); }
+                        cut->identity = vertices[*found_cut_vertex]->name;
+                        cut->depth = vertices[*found_cut_vertex]->depth;
+                        cut->vertices.insert(vertices[*found_cut_vertex]->name);
 
+                        main->connect(cut);
 
-
-                    // Add the new component to the MetaGraph
-                    metagraph.add_vertex(main);
+                        // Add the cut vertex to the stack
+                        std::cerr << "INFO: adding MetaVertex " << cut->name
+                                  << "to the stack at " << __LINE__ << "\n";
+                        cut_vertex_stack.push(cut);
+                    }
 
                     // The cut vertex is the parent,
                     // so we return the DFS to it
                     current = found_cut_vertex;
                 }
 
-                else {current = current->parent;}
+                else
+                {
+                    current = vertices[*current]->parent;
+                }
 
             }
 
@@ -277,9 +673,46 @@ Graph::Tarjans()
         //  (root metavertex will be on top of the cut vertex stack)
         ////////////////////////
 
+        int count = 0;
+        vertices[root]->reset_neighbor_track();
+        while (count < 2)
+        {
+            try
+            {
+                long nbr = vertices[root]->get_next_neighbor();
+                if (*vertices[nbr]->parent == root)
+                    count++;
+            }
+            catch (std::out_of_range& e)
+            {
+                break;
+            }
+        }
+
+        if (count < 2)
+        {
+            std::cerr << "INFO: count < 2" << std::endl;
+            if (!cut_vertex_stack.empty())
+            {
+                MetaVertex* mv = cut_vertex_stack.top();
+                std::cerr << "INFO: got metavrtx from cutvertex stack" << std::endl;
+
+                cut_vertex_stack.pop();
+
+                std::cerr << "INFO: trying to remove" << std::endl;
+
+                mg->remove_vertex(mv);
+
+                std::cerr << "INFO: done processing count < 2 case" << std::endl;
+            }
+
+        }
+
     } // end of main for-loop
 
-    return metagraph;
+    std::cerr << "INFO: about to return now" << std::endl;
+
+    return mg;
 }
 
 

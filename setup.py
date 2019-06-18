@@ -8,7 +8,7 @@ from setuptools.command.build_py import build_py as _build_py
 
 class build_py(_build_py):
     def run(self):
-        self.run_command("build_ext")
+        self.run_command('build_ext')
         return super().run()
 
 
@@ -21,18 +21,22 @@ colgraph_module = Extension('libcolgraph._libcolgraph',
                             swig_opts=['-c++'],
                             extra_compile_args=['-std=gnu++11'])
 
-with open("README.md", "r") as readme:
+with open('README.md', 'r') as readme:
     long_description = readme.read()
 
 setup(name='libcolgraph',
       cmdclass = {'build_py': build_py},
       ext_modules=[colgraph_module],
       py_modules=['libcolgraph'],
+      entry_points = {
+        'console_scripts': ['colgraphplot = libcolgraph.__main__:plotfromfile',
+                            'libcolgraph = libcolgraph.__main__:main'],
+      },
       #package_data =
       #  {'libcolgraph._libcolgraph': ['libcolgraph/*.h',
       #                                      'libcolgraph/*.cpp']},
       packages = setuptools.find_packages(),
-      version='0.0.1.post8',
+      version='0.0.2.post2',
       description='this library provides support to construct graphs and their '
                   'coloring graphs. a coloring graph is a metagraph '
                   'representing all the valid colorings of a graph. each '

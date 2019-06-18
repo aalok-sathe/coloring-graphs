@@ -17,7 +17,7 @@ MODULE_TARGETS = $("PYTHON ./generate_targets.py")
 ##################
 ####   BUILD  ####
 
-default: TESTER build
+default: TESTER
 
 ## CPP
 
@@ -26,17 +26,13 @@ default: TESTER build
 .cpp.o:
 	g++ $(CFLAGS) -c $<
 
-TESTER: tester.o Graph.o Vertex.o MetaGraph.o MetaVertex.o
-	echo -e "WARNING: require GNU/Linux. Might not work on MacOS"
-	g++ -o TESTER tester.o Graph.o Vertex.o MetaGraph.o MetaVertex.o
+TESTER: tester.o Graph.o Vertex.o
+	g++ -o TESTER tester.o Graph.o Vertex.o
 
-Graph.o: Graph.h Vertex.h MetaGraph.h MetaVertex.h
+Graph.o: Graph.h Vertex.h GraphTemplates.h
 
-Vertex.o: Vertex.h 
+Vertex.o: Vertex.h GraphTemplates.h
 
-MetaGraph.o: MetaGraph.h MetaVertex.h
-
-MetaVertex.o: MetaVertex.h
 
 ## SWIG
 
