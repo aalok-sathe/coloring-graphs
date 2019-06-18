@@ -75,7 +75,7 @@ class BaseGraph : public Graph<BaseVertex>
         void load_txt(char* path);
 
         // adds a vertex of supplied name to the vertex list
-        void add_vertex(long name) override;
+        void add_vertex(long name);
         // adds an edge between two vertices with supplied names
         void make_edge(long a, long b);
 
@@ -93,8 +93,8 @@ class BaseGraph : public Graph<BaseVertex>
         ColoringGraph* build_coloring_graph(int k);
 
         // returns an iterator object pointer over this graph's vertices
-        const BaseGraphVertexIterator* __iter__() override;
-        const BaseGraphVertexIterator* get_vertices() override;
+        const BaseGraphVertexIterator* __iter__();
+        const BaseGraphVertexIterator* get_vertices();
 };
 
 
@@ -112,11 +112,11 @@ class ColoringGraph : public Graph<ColoringVertex>
         ColoringGraph(int k, BaseGraph* bg);
 
         // adds a vertex with given name to this graph
-        void add_vertex(long name) override;
+        void add_vertex(long name);
 
         // returns an iterator object pointer over this graph's vertices
-        const ColoringGraphVertexIterator* __iter__() override;
-        const ColoringGraphVertexIterator* get_vertices() override;
+        const ColoringGraphVertexIterator* __iter__();
+        const ColoringGraphVertexIterator* get_vertices();
 
 };
 
@@ -127,15 +127,15 @@ class MetaGraph : public Graph<MetaVertex>
         // default constructor
         MetaGraph();
 
-        void add_vertex(long name) override;
+        void add_vertex(long name);
         MetaVertex* add_vertex();
 
         // removes vertex with
         void remove_vertex(MetaVertex* m);
 
         // returns an iterator object pointer over this graph's vertices
-        const MetaGraphVertexIterator* __iter__() override;
-        const MetaGraphVertexIterator* get_vertices() override;
+        const MetaGraphVertexIterator* __iter__();
+        const MetaGraphVertexIterator* get_vertices();
 
 };
 
