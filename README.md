@@ -14,7 +14,6 @@ base k (for a k-coloring), represents the vertex-wise colors [0,k).
 
 the library is under development being written using Python and C/C++.
 for documentation, feel free to take a look inside `libcolgraph/` and read the docstrings.
-for examples, see the files in `test/`.
 for questions, reach out.
 
 
@@ -49,15 +48,6 @@ for questions, reach out.
         --no-mcg              hide meta ColoringGraph?
   ```
 
-  Ex., a BaseGraph made from a 12 vertex bipartite graph like this:
-
-  <img src="https://i.imgur.com/HAqNYEA.png" />
-
-  leads to a ColoringGraph that looks like this with k=3:
-
-  <img src="https://i.imgur.com/FgabBRf.png" />
-
-
   launch web GUI [WIP]:
   ```
     libcolgraph [OPTIONS]
@@ -84,6 +74,13 @@ for questions, reach out.
 
 ### example output
 
+  A 12 vertex bipartite BaseGraph like this:
+
+  <img src="https://i.imgur.com/HAqNYEA.png" />
+
+  leads to a ColoringGraph that looks like this with k=3:
+
+  <img src="https://i.imgur.com/FgabBRf.png" />
 
 ### installation
 
