@@ -31,9 +31,9 @@ class BaseVertexNeighborIterator : public VertexNeighborIterator<BaseVertex>
         BaseVertexNeighborIterator() {};
         BaseVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_);
 
-        long next() override;
+        long next();
 
-        bool hasnext() override;
+        bool hasnext();
 };
 
 class Graph;
@@ -55,9 +55,9 @@ class ColoringVertexNeighborIterator : public VertexNeighborIterator<ColoringVer
 
         // ~ColoringVertexNeighborIterator() {};
 
-        long next() override;
+        long next();
 
-        bool hasnext() override;
+        bool hasnext();
 
 };
 
@@ -71,9 +71,9 @@ class MetaVertexNeighborIterator : public VertexNeighborIterator<MetaVertex>
         MetaVertexNeighborIterator() {};
         MetaVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_);
 
-        long next() override;
+        long next();
 
-        bool hasnext() override;
+        bool hasnext();
 };
 
 
@@ -130,8 +130,8 @@ class BaseVertex : public Vertex
         void add_neighbor(Vertex& other);
 
         // helper methods to support state-preserving iteration
-        long get_next_neighbor() override;
-        void reset_neighbor_track() override;
+        long get_next_neighbor();
+        void reset_neighbor_track();
 
         // returns a pointer to a BaseVertexNeighborIterator object to
         // support iteration over its neighbors
@@ -158,8 +158,8 @@ class ColoringVertex : public Vertex
         ColoringVertex(long name_, int k, ColoringGraph* graph_);
 
         // helper methods to support state-preserving iteration
-        long get_next_neighbor() override;
-        void reset_neighbor_track() override;
+        long get_next_neighbor();
+        void reset_neighbor_track();
 
         // returns a pointer to a ColoringVertexNeighborIterator object to
         // support iteration over its neighbors
@@ -200,8 +200,8 @@ class MetaVertex : public Vertex
         void disconnect(MetaVertex* v);
 
         // helper methods to support state-preserving iteration
-        long get_next_neighbor() override;
-        void reset_neighbor_track() override {};
+        long get_next_neighbor();
+        void reset_neighbor_track() {};
 
         // returns a pointer to a MetaVertexNeighborIterator object to support
         // iteration over its neighbors
