@@ -8,8 +8,7 @@ committing and pushing on the correct branch
 
 workflow is split between
 - master
-- dev
-- feature branches (ad-hoc)
+- feature/development branches (ad-hoc)
 
 ### master
 
@@ -58,11 +57,11 @@ workflow is split between
     
     `git push --follow-tags`
     
-### dev
+### feature-specific
 
 - **active development**
 
-  use this branch for active development. if you're developing without `swig`,
+  create a new branch for active development. if you're developing without `swig`,
   you may want to use the Makefile that is inside the `libcolgraphs` subdirectory
   instead of the Makefile in the root.
   
@@ -70,16 +69,17 @@ workflow is split between
   code works. please do not merge into `master` without making sure your code works.
   
   
-  
 - **feature**
 
   to work on something specific or something new that might break some existing
-  methods, please create a new branch so that others can continue to use `dev`
-  reliably for their own development. ideally, you would name this new branch by
-  an identifying name as to what you're working on. you would never push this
-  branch upstream, but only finish working and merge back into dev, and then delete
-  the temporary feature/work-in-progress branch.
+  methods, please create a new branch so that others can continue to use `master`
+  reliably to create new branches for their own development. ideally, you would
+  name this new branch by an identifying name as to what you're working on. 
+  you would preferably not push this branch upstream, unless you want it on
+  multiple devices. you would finish working on this branch and create a pull
+  request to be merged into master using a merger temporary branch, and then delete
+  the temporary feature/work-in-progress branch once the merge is successful.
   
 - **pull requests**
 
-  pull requests should be made to `dev`
+  pull requests should be used to propose merges
