@@ -100,10 +100,14 @@ class Vertex
         // determined by matching names
         bool operator==(const Vertex& other);
 
+        // some notion of size (default 1) to support plotting
+        virtual int size() { return 1; };
+
         // helper methods to support state-preserving iteration
         virtual long get_next_neighbor() = 0;
         virtual void reset_neighbor_track() = 0;
 
+        // returns the identifier `name` of this vertex object
         virtual long get_name() const;
 
         // virtual VertexNeighborIterator<Vertex>* __iter__() = 0;
@@ -189,6 +193,10 @@ class MetaVertex : public Vertex
 
         // deconstructor
         ~MetaVertex() {};
+        
+        // returns the size in terms of how many vertices this
+        // metavertex contains
+        int size();
 
         // adds a neighbor `other` to this MetaVertex
         void add_neighbor(MetaVertex& other);

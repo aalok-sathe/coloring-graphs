@@ -307,14 +307,12 @@ MetaVertex(long name_)
 {}
 
 
-// template <typename V>
-// MetaVertex::
-// MetaVertex(Vertex* v)
-//     : Vertex(0), nt(new MetaVertexNeighborIterator()), identity(v)
-// {
-//     depth = v->depth;
-// 	vertices.push_back(v->name);
-// }
+int
+MetaVertex::
+size()
+{
+    return vertices.size();
+}
 
 
 void
