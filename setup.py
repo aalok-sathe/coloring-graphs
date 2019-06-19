@@ -30,7 +30,7 @@ setup(name='libcolgraph',
       py_modules=['libcolgraph'],
       entry_points = {
         'console_scripts': ['colgraphplot = libcolgraph.__main__:plotfromfile',
-                            'libcolgraph = libcolgraph.__main__:main'],
+                            'colgraphweb = libcolgraph.__main__:main'],
       },
       #package_data =
       #  {'libcolgraph._libcolgraph': ['libcolgraph/*.h',
