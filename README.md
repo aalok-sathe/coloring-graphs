@@ -50,7 +50,7 @@ for questions, reach out.
 
   launch web GUI [WIP]:
   ```
-    libcolgraph [OPTIONS]
+    colgraphweb [OPTIONS]
   ```
 
 

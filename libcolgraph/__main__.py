@@ -4,6 +4,9 @@
 import argparse
 from collections import defaultdict
 from pathlib import Path
+import subprocess
+import sys
+import webbrowser
 # installed packages
 from tqdm import tqdm
 import networkx as nx
@@ -116,10 +119,44 @@ def plotfromfile():
 def main():
     '''
     '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input-file' type=str,
+                        help='read in BaseGraph from adjacency matrix file',
+                        default=None)
+    parser.add_argument('-k', '--colors', type=int, default=3,
+                        help='number of colors to use to create ColoringGraph')
+    parser.add_argument('-v', '--verbosity', action='count', default=0,
+                        help='set output verbosity')
+    args = parser.parse_args()
+    
+    command = ['python3', 'manage.py', 'runserver', '3142']
+    proc = subprocess.Popen(command, stdout=subprocess.PIPE, 
+                            stderr=subprocess.PIPE)
+    stdout, stderr = proc.communicate()
+    
+    if args.verbosity:
+        print(stdout, file=sys.stdout)
+        print(stderr, file=sys.stderr)
+    
+    webbrowser.open_new('localhost://3142')
+    
+    
     pass
 
 
 if __name__ == '__main__':
-    pass
+    helptxt = '''
+        Hi. Welcome to libcolgraph!
+        (C) 2017-2019 Coloring Graphs lab, University of Richmond.
+        Multiple contributors.
+        Homepage: https://github.com/aalok-sathe/coloring-graphs
+        
+        To plot a graph formatted in an adjacency matrix text file, use our
+        CLI plotting utility, `colgraphplot`. For help, type `colgraphplot -h` 
+        in your terminal window.
+        
+        To launch the interactive web interface, use `colgraphplot`.
+    '''
+    print()
     # main()
     # plotfromfile()
