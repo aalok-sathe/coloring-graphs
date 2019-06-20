@@ -74,13 +74,15 @@ for questions, reach out.
 
 ### example output
 
-  A 12 vertex bipartite BaseGraph like this:
+  [Clockwise]
+  A 7 vertex BaseGraph that is a hexagon with a central vertex and a missing 'spoke'
+  leads to a quite complex ColoringGraph with k=4 colors. You can see the formation of
+  polyps at the edges. The structure of the resultant ColoringGraph is shown in the
+  Meta ColoringGraph produced by a run of modified Tarjan's algorithm for biconnected
+  components. The central 'mothership' can be seen, adjacent to which there are cut
+  vertices, and finally the stray singular coloring vertices at the tips of polyps.
 
-  <img src="https://i.imgur.com/HAqNYEA.png" />
-
-  leads to a ColoringGraph that looks like this with k=3:
-
-  <img src="https://i.imgur.com/FgabBRf.png" />
+  <img src="https://i.imgur.com/TusisoA.png" />
 
 ### installation
 
