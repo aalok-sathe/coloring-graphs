@@ -1,24 +1,33 @@
 {% block content %}
-<!-- <div id="optionsbar" class="row">
-    <button id="generate-button" class="vis-button">Generate</button>
-</div> -->
+   <div id="optionsbar">
+      <button id="generate-button" class="vis-button">Generate</button>
+   </div>
    <div class="parent grid-parent">
-   <div>
-      <div>
+
+     <div>
+       <div>
         {% with container_type="bg" %}
           {% include "graphcontainer.html"  %}
         {% endwith %}
-      </div>
-      <div>
+       </div>
+       <div>
         {% with container_type="mcg" %}
           {% include "graphcontainer.html"  %}
         {% endwith %}
+       </div>
+     </div>
+
+    <div>
+      <div>
+          {% with container_type="cg" %}
+            {% include "graphcontainer.html"  %}
+          {% endwith %}
       </div>
-    </div>
-    <div class="tall">
-      {% with container_type="cg" %}
-        {% include "graphcontainer.html"  %}
-      {% endwith %}
+      <div>
+          {% with container_type="cg" %}
+            {% include "graphcontainer.html"  %}
+          {% endwith %}
+      </div>
     </div>
   </div>
 {% endblock %}

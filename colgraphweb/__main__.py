@@ -4,6 +4,7 @@ import argparse
 import subprocess
 import webbrowser
 import sys
+from os.path import expanduser
 from pathlib import Path
 from flask import Flask, url_for, request, render_template
 from collections import defaultdict
@@ -26,15 +27,18 @@ def index():
     if not args.new:
         bg.load_txt(args.input_file)
         #mbg = bg.tarjans()
-    
-    cg = bg.build_coloring_graph(args.colors)  
+
+    cg = bg.build_coloring_graph(args.colors)
     mcg = cg.tarjans()
-    
+
+    pcg = bg
+
     data = dict()
     data.update(lcg.viz.to_visjs(bg))
     data.update(lcg.viz.to_visjs(cg))
     data.update(lcg.viz.to_visjs(mcg))
-    
+    data.update(lcg.viz.to_visjs(pcg))
+
     return render_template('defaultview.html', **data)
 
 
@@ -42,21 +46,21 @@ def djangogui():
     '''
     launcher for the web webgui
     '''
-    
+
     raise DeprecationWarning
-    
+
     command = ['python3', str(Path(__file__).parent/'manage.py'), 'runserver', '3142']
-    proc = subprocess.Popen(command, stdout=subprocess.PIPE, 
+    proc = subprocess.Popen(command, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     stdout, stderr = proc.communicate()
-    
+
     if args.verbosity:
         print(stdout, file=sys.stdout)
         print(stderr, file=sys.stderr)
-    
+
     webbrowser.open_new('http://localhost:3142')
-    
-   
+
+
 def flaskgui(url='http://localhost', port='5000'):
     '''
     '''
@@ -73,7 +77,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input-file', type=str,
                         help='read in BaseGraph from adjacency matrix file',
-                        default='/home/aalok/code/coloring-graphs/in/hexmod.in')
+                        default=expanduser('~')
+                                + '/code/coloring-graphs/in/hexmod.in')
     parser.add_argument('-k', '--colors', type=int, default=3,
                         help='number of colors to use to create ColoringGraph')
     parser.add_argument('-n', '--new', default=False, action='store_true',
@@ -82,7 +87,7 @@ def main():
                         help='set output verbosity')
     global args
     args = parser.parse_args()
- 
+
     url = 'http://localhost'
     port = '5000'
     # webbrowser.open_new(url + ':{port}'.format(port=port))
