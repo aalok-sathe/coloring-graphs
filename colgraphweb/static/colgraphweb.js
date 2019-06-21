@@ -71,4 +71,3 @@ var mcgdata = {
 };
 
 var metacoloringgraph = new vis.Network(mcgcontainer, mcgdata, mcgoptions);
-

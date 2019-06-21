@@ -10,7 +10,7 @@
 
 #cgcontainer {
     width: 100%;
-    height: 50vh;
+    height: 100vh;
     border: 1px solid lightgray;
     background-color: #222222;
     border: 1px solid lightgray;
@@ -28,12 +28,14 @@
     float: left;
 }
 
-.grid-parent {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  grid-template-columns: 1fr 1fr;
-}
 
+.grid-parent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    /* grid-template-areas: ". ." ". ." ". ."; */
+}
+style()
 .tall {
   grid-row: 0 / 2;
 }

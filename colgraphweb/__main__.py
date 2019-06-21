@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from flask import Flask, url_for, request, render_template
 from collections import defaultdict
+import webbrowser
 
 import libcolgraph as lcg
 
@@ -56,10 +57,14 @@ def djangogui():
     webbrowser.open_new('http://localhost:3142')
     
    
-def flaskgui():
+def flaskgui(url='http://localhost', port='5000'):
     '''
     '''
-    app.run(port='5000')
+    app.config['ENV'] = 'development'
+    app.config['DEBUG'] = True
+    app.config['TESTING'] = True
+
+    app.run(port=port)
 
 
 def main():
@@ -77,8 +82,11 @@ def main():
                         help='set output verbosity')
     global args
     args = parser.parse_args()
-   
-    flaskgui()
+ 
+    url = 'http://localhost'
+    port = '5000'
+    # webbrowser.open_new(url + ':{port}'.format(port=port))
+    flaskgui(url, port)
 
 
 if __name__ == '__main__':
