@@ -1,0 +1,22 @@
+{% block content %}
+   <div class="parent grid-parent">
+  <!--div class="row"-->
+    <div>
+      <div>
+        {% with container_type="bg" %}
+          {% include "graphcontainer.html"  %}
+        {% endwith %}
+      </div>
+      <div>
+        {% with container_type="mcg" %}
+          {% include "graphcontainer.html"  %}
+        {% endwith %}
+      </div>
+    </div>
+    <div class="tall">
+      {% with container_type="cg" %}
+        {% include "graphcontainer.html"  %}
+      {% endwith %}
+    </div>
+  </div>
+{% endblock %}
