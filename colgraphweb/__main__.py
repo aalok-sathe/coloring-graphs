@@ -42,6 +42,7 @@ def djangogui():
     launcher for the web webgui
     '''
     
+    raise DeprecationWarning
     
     command = ['python3', str(Path(__file__).parent/'manage.py'), 'runserver', '3142']
     proc = subprocess.Popen(command, stdout=subprocess.PIPE, 
@@ -54,7 +55,11 @@ def djangogui():
     
     webbrowser.open_new('http://localhost:3142')
     
-    
+   
+def flaskgui():
+    '''
+    '''
+    app.run(port='5000')
 
 
 def main():
@@ -72,8 +77,8 @@ def main():
                         help='set output verbosity')
     global args
     args = parser.parse_args()
-    
-    app.run(port='5000')
+   
+    flaskgui()
 
 
 if __name__ == '__main__':
