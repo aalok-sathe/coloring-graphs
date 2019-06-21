@@ -71,3 +71,43 @@ var mcgdata = {
 };
 
 var metacoloringgraph = new vis.Network(mcgcontainer, mcgdata, mcgoptions);
+
+
+function objectToArray(obj) {
+    return Object.keys(obj).map(function (key) {
+      obj[key].id = key;
+      return obj[key];
+    });
+}
+
+function exportNetwork(network) {
+
+    function addConnections(elem, index) {
+        elem.connections = network.getConnectedNodes(index);
+    }
+
+    var nodes = objectToArray(network.getPositions());
+    nodes.forEach(addConnections);
+    // pretty print node data
+    var exportValue = JSON.stringify(nodes, undefined, 2);
+
+    return exportValue;
+}
+
+function generate(e) {
+    alert('!');
+    // e.preventDefault();
+    var value = exportNetwork(basegraph);
+    alert(value);
+    $.ajax({
+        type: "POST",
+        url: "/",
+        data: value,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            alert(JSON.stringify(data));
+        }
+    });
+
+}

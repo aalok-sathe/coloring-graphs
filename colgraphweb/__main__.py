@@ -14,32 +14,44 @@ import libcolgraph as lcg
 
 
 app = Flask(__name__)
+
 global args
-args = defaultdict(None)
+parser = argparse.ArgumentParser()
+parser.add_argument('-i', '--input-file', type=str,
+                    help='read in BaseGraph from adjacency matrix file',
+                    default=expanduser('~')
+                            + '/code/coloring-graphs/in/hexmod.in')
+parser.add_argument('-k', '--colors', type=int, default=3,
+                    help='number of colors to use to create ColoringGraph')
+parser.add_argument('-n', '--new', default=False, action='store_true',
+                    help='open a blank canvas?')
+parser.add_argument('-v', '--verbosity', action='count', default=0,
+                    help='set output verbosity')
+args = parser.parse_args()
+
+global data
+data = dict()
 
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def index():
     '''
     '''
-    # path = '/home/aalok/code/coloring-graphs/in/bipartite_test_graph0.in'
-    bg = lcg.BaseGraph()
-    if not args.new:
-        bg.load_txt(args.input_file)
-        #mbg = bg.tarjans()
+    if request.method == 'GET':
+        global data
+        return render_template('defaultview.html', **data)
+    elif request.method == 'POST':
+        requestdata = request.get_json()
 
-    cg = bg.build_coloring_graph(args.colors)
-    mcg = cg.tarjans()
+        bg = lcg.viz.from_visjs(requestdata)
+        cg = bg.build_coloring_graph(args.colors)
+        mcg = cg.tarjans()
 
-    pcg = bg
+        data.update(lcg.viz.to_visjs(bg))
+        data.update(lcg.viz.to_visjs(cg))
+        data.update(lcg.viz.to_visjs(mcg))
 
-    data = dict()
-    data.update(lcg.viz.to_visjs(bg))
-    data.update(lcg.viz.to_visjs(cg))
-    data.update(lcg.viz.to_visjs(mcg))
-    data.update(lcg.viz.to_visjs(pcg))
-
-    return render_template('defaultview.html', **data)
+        return render_template('defaultview.html', **data)
 
 
 def djangogui():
@@ -68,26 +80,28 @@ def flaskgui(url='http://localhost', port='5000'):
     app.config['DEBUG'] = True
     app.config['TESTING'] = True
 
+    bg = lcg.BaseGraph()
+    if not args.new:
+        bg.load_txt(args.input_file)
+        #mbg = bg.tarjans()
+
+    cg = bg.build_coloring_graph(args.colors)
+    mcg = cg.tarjans()
+
+    pcg = bg
+
+    global data
+    data.update(lcg.viz.to_visjs(bg))
+    data.update(lcg.viz.to_visjs(cg))
+    data.update(lcg.viz.to_visjs(mcg))
+    data.update(lcg.viz.to_visjs(pcg))
+
     app.run(port=port)
 
 
 def main():
     '''
     '''
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input-file', type=str,
-                        help='read in BaseGraph from adjacency matrix file',
-                        default=expanduser('~')
-                                + '/code/coloring-graphs/in/hexmod.in')
-    parser.add_argument('-k', '--colors', type=int, default=3,
-                        help='number of colors to use to create ColoringGraph')
-    parser.add_argument('-n', '--new', default=False, action='store_true',
-                        help='open a blank canvas?')
-    parser.add_argument('-v', '--verbosity', action='count', default=0,
-                        help='set output verbosity')
-    global args
-    args = parser.parse_args()
-
     url = 'http://localhost'
     port = '5000'
     # webbrowser.open_new(url + ':{port}'.format(port=port))
