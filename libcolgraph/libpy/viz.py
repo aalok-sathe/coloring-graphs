@@ -61,6 +61,6 @@ def from_visjs(data, *args, **kwargs):
 
     for node in data:
         for nbr in node['connections']:
-            g.make_edge(lookup[node['id']], lookup[nbr])
+            g.make_edge(lookup[node['id']], lookup[str(nbr)])
 
     return g
