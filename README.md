@@ -1,5 +1,5 @@
 ## coloring-graphs
-[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=8481320254605947786)](https://gitlab.com/aalok-sathe/coloring-graphs/)
+[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=934890200057993680)](https://gitlab.com/aalok-sathe/coloring-graphs/)
 
 a coloring graphs library written in C++ for speedy computation and wrapped in
 Python for ease of development and extension!
@@ -132,4 +132,6 @@ full documentation coming soon
 
 Coloring Graphs lab, University of Richmond. Multiple contributors.
 (C) 2017-2019
+
+
 
