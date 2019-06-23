@@ -1,8 +1,8 @@
 /* colgraphweb.js */
 
-var options = {
+options = {
     "interaction": {"hover": true},
-	"manipulation": {"enabled": true},
+	"manipulation": {"enabled": false},
     "configure": {"enabled": false},
     "edges": {
         "color": {"inherit": true},
@@ -17,7 +17,7 @@ var options = {
     "interaction": {
         "hover": true,
         "dragNodes": true,
-        "hideEdgesOnDrag": true,
+        "hideEdgesOnDrag": false,
         "hideNodesOnDrag": false
     },
     "physics": {
@@ -40,37 +40,48 @@ var options = {
     }
 };
 
-// same options for
-var bgoptions = mcgoptions = cgoptions = options;
 
-// create a basegraph
-var bgcontainer = document.getElementById('bgcontainer');
-var bgdata = {
-    nodes: bgnodes,
-    edges: bgedges
-};
-
-var basegraph = new vis.Network(bgcontainer, bgdata, bgoptions);
+// same options for now
+bgoptions = mcgoptions = cgoptions = options;
 
 
-// create a coloringgraph
-var cgcontainer = document.getElementById('cgcontainer');
-var cgdata = {
-    nodes: cgnodes,
-    edges: cgedges
-};
+function makebg() {
+    bgcontainer = document.getElementById('bgcontainer');
+    bgdata = {
+        nodes: bgnodes,
+        edges: bgedges
+    };
+    // create a basegraph
+    basegraph = new vis.Network(bgcontainer, bgdata, bgoptions);
+    basegraph.setOptions({"manipulation": {"enabled": true}});
+    return basegraph;
+}
 
-var coloringgraph = new vis.Network(cgcontainer, cgdata, cgoptions);
+function makecg() {
+    cgcontainer = document.getElementById('cgcontainer');
+    cgdata = {
+        nodes: cgnodes,
+        edges: cgedges
+    };
+    // create a coloringgraph
+    coloringgraph = new vis.Network(cgcontainer, cgdata, cgoptions);
+    return coloringgraph;
+}
 
+function makemcg() {
+    mcgcontainer = document.getElementById('mcgcontainer');
+    mcgdata = {
+        nodes: mcgnodes,
+        edges: mcgedges
+    };
+    // create a metagraph
+    metacoloringgraph = new vis.Network(mcgcontainer, mcgdata, mcgoptions);
+    return metacoloringgraph;
+}
 
-// create a metagraph
-var mcgcontainer = document.getElementById('mcgcontainer');
-var mcgdata = {
-    nodes: mcgnodes,
-    edges: mcgedges
-};
-
-var metacoloringgraph = new vis.Network(mcgcontainer, mcgdata, mcgoptions);
+basegraph = makebg();
+coloringgraph = makecg();
+metacoloringgraph = makemcg();
 
 
 function objectToArray(obj) {
@@ -82,12 +93,15 @@ function objectToArray(obj) {
 
 function exportNetwork(network) {
 
-    function addConnections(elem, index) {
-        elem.connections = network.getConnectedNodes(index);
-    }
+    // function addConnections(elem, index) {
+    //     elem.connections = network.getConnectedNodes(index);
+    // }
 
     var nodes = objectToArray(network.getPositions());
-    nodes.forEach(addConnections);
+    for (var ix = 0; ix < nodes.length; ix++) {
+        nodes[ix]["connections"] = network.getConnectedNodes(nodes[ix]["id"]);
+    }
+    // nodes.forEach(addConnections);
     // pretty print node data
     var exportValue = JSON.stringify(nodes, undefined, 2);
 
@@ -95,19 +109,22 @@ function exportNetwork(network) {
 }
 
 function generate(e) {
-    alert('!');
     // e.preventDefault();
     var value = exportNetwork(basegraph);
-    alert(value);
     $.ajax({
         type: "POST",
         url: "/",
         data: value,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function (data) {
-            alert(JSON.stringify(data));
+        success: function (response) {
+            // alert('RESPONSE OK');
+            var cgcontainer = $('#cgcontainer');
+            cgcontainer.html(response['cgcontainer']);
+            makecg();
+            var mcgcontainer = $('#mcgcontainer');
+            mcgcontainer.html(response['mcgcontainer']);
+            makemcg();
         }
     });
-
 }

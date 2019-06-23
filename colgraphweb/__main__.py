@@ -6,7 +6,7 @@ import webbrowser
 import sys
 from os.path import expanduser
 from pathlib import Path
-from flask import Flask, url_for, request, render_template
+from flask import Flask, url_for, request, render_template, json
 from collections import defaultdict
 import webbrowser
 
@@ -39,7 +39,9 @@ def index():
     '''
     if request.method == 'GET':
         global data
+        print('handling GET on index!')
         return render_template('defaultview.html', **data)
+
     elif request.method == 'POST':
         requestdata = request.get_json()
 
@@ -51,7 +53,19 @@ def index():
         data.update(lcg.viz.to_visjs(cg))
         data.update(lcg.viz.to_visjs(mcg))
 
-        return render_template('defaultview.html', **data)
+        print('handling POST on index!')
+
+        rettuple = {
+            'cgcontainer': render_template('graphcontainer.html',
+                                           container_type='cg', **data),
+            'mcgcontainer': render_template('graphcontainer.html',
+                                            container_type='mcg', **data)
+                    }
+
+        response = app.response_class(status=200, response=json.dumps(rettuple),
+                                      mimetype='application/json')
+
+        return response
 
 
 def djangogui():

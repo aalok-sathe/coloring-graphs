@@ -24,8 +24,13 @@
   <body style="width: 100%; height: 100%;">
     {% include "viewtemplate.html" %}
  </body>
- <!-- <script type="text/javascript">
-   $('#cgcontainer').height('100vh')
- </script> -->
  <script src={{ url_for('static', filename='colgraphweb.js') }}></script>
+ <!-- <script type="text/javascript">
+ // $('#cgcontainer').height('100vh')
+     $(document).ready(function() {
+         basegraph = makebg();
+         coloringgraph = makecg();
+         metacoloringgraph = makemcg();
+     });
+ </script> -->
 </html>
