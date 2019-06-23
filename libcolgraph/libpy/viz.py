@@ -54,11 +54,13 @@ def from_visjs(data, *args, **kwargs):
     '''
     g = BaseGraph()
 
+    lookup = dict()
     for i, node in enumerate(data):
-        g.add_vertex(int(node['id']))
+        lookup[node['id']] = i
+        g.add_vertex(i)
 
     for node in data:
         for nbr in node['connections']:
-            g.make_edge(int(node['id']), nbr)
+            g.make_edge(lookup[node['id']], lookup[nbr])
 
     return g
