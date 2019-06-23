@@ -49,8 +49,12 @@ def index():
         requestdata = request.get_json()
         # print(requestdata)
 
-        bg = lcg.viz.from_visjs(requestdata[0])
-        cg = bg.build_coloring_graph(int(requestdata[1]))
+        graphdata = requestdata[0]
+        args.colors = int(requestdata[1])
+        data.update(dict(colors=args.colors))
+
+        bg = lcg.viz.from_visjs(graphdata)
+        cg = bg.build_coloring_graph(args.colors)
         mcg = cg.tarjans()
 
         data.update(lcg.viz.to_visjs(bg))

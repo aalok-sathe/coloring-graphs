@@ -127,6 +127,10 @@ function generate(e) {
             var mcgcontainer = $('#mcgcontainer');
             mcgcontainer.html(response['mcgcontainer']);
             makemcg();
+        },
+        error: function (response) {
+            alert(response);
         }
     });
+    location.reload();
 }
