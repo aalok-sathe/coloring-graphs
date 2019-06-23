@@ -129,8 +129,8 @@ function generate(e) {
             makemcg();
         },
         error: function (response) {
-            alert(response);
+            alert('ERROR', response);
         }
     });
-    location.reload();
+    // location.reload();
 }
