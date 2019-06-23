@@ -27,6 +27,8 @@ parser.add_argument('-n', '--new', default=False, action='store_true',
                     help='open a blank canvas?')
 parser.add_argument('-v', '--verbosity', action='count', default=0,
                     help='set output verbosity')
+parser.add_argument('-p', '--port', default='5000', type=str,
+                    help='port to launch GUI on')
 args = parser.parse_args()
 
 global data
@@ -40,13 +42,15 @@ def index():
     if request.method == 'GET':
         global data
         print('handling GET on index!')
+        data.update(dict(colors=str(args.colors)))
         return render_template('defaultview.html', **data)
 
     elif request.method == 'POST':
         requestdata = request.get_json()
+        # print(requestdata)
 
-        bg = lcg.viz.from_visjs(requestdata)
-        cg = bg.build_coloring_graph(args.colors)
+        bg = lcg.viz.from_visjs(requestdata[0])
+        cg = bg.build_coloring_graph(int(requestdata[1]))
         mcg = cg.tarjans()
 
         data.update(lcg.viz.to_visjs(bg))
@@ -117,7 +121,7 @@ def main():
     '''
     '''
     url = 'http://localhost'
-    port = '5000'
+    port = args.port
     # webbrowser.open_new(url + ':{port}'.format(port=port))
     flaskgui(url, port)
 

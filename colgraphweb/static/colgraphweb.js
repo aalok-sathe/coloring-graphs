@@ -101,9 +101,11 @@ function exportNetwork(network) {
     for (var ix = 0; ix < nodes.length; ix++) {
         nodes[ix]["connections"] = network.getConnectedNodes(nodes[ix]["id"]);
     }
-    // nodes.forEach(addConnections);
-    // pretty print node data
-    var exportValue = JSON.stringify(nodes, undefined, 2);
+    postdata = [
+        nodes,
+        document.getElementById('numcolors-textfield').value
+    ]
+    var exportValue = JSON.stringify(postdata, undefined, 2);
 
     return exportValue;
 }
