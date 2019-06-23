@@ -1,20 +1,40 @@
 ## coloring-graphs
-[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=2825177572518850315)](https://gitlab.com/aalok-sathe/coloring-graphs/)
+[![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=8481320254605947786)](https://gitlab.com/aalok-sathe/coloring-graphs/)
 
 a coloring graphs library written in C++ for speedy computation and wrapped in
 Python for ease of development and extension!
 
 ### what
-this library provides support to construct graphs and their coloring graphs.
-a coloring graph is a metagraph representing all the valid colorings of a graph.
+this library provides support to construct graphs, their coloring graphs, and
+biconnected component metagraphs.
+a coloring graph is a graph representing all the valid colorings of a graph.
 each vertex of a coloring graph represents a coloring of the base graph.
+two colorings are considered adjacent if they differ in only one vertex's color.
 
 in this project, we represent a coloring as an integer, which, when converted to
-base k (for a k-coloring), represents the vertex-wise colors [0,k).
+base k (for a k-coloring), is a number of length |V| and represents the vertex-wise
+colors [0,k) for each vertex.
 
-the library is under development being written using Python and C/C++.
+the library is under development, being written using Python and C/C++.
+the web application uses the library to provide useful GUI for quick drawing and
+graph construction.
+in the future, we plan to develop a supplemental subsection of the library containing
+useful graph algorithms and ability to run simulations to test structural graph theoretic
+conjectures about graph coloring and coloring graphs.
 for documentation, feel free to take a look inside `libcolgraph/` and read the docstrings.
 for questions, reach out.
+
+### screenshot of the web GUI
+
+  [Clockwise]
+  A 7 vertex BaseGraph that is a hexagon with a central vertex and a missing 'spoke'
+  leads to a quite complex ColoringGraph with k=4 colors. You can see the formation of
+  polyps at the edges. The structure of the resultant ColoringGraph is shown in the
+  Meta ColoringGraph produced by a run of modified Tarjan's algorithm for biconnected
+  components. The central 'mothership' can be seen, adjacent to which there are cut
+  vertices, and finally the stray singular coloring vertices at the tips of polyps.
+
+  <img src="https://i.imgur.com/TusisoA.png" />
 
 
 ### usage
@@ -52,6 +72,7 @@ for questions, reach out.
   ```
     colgraphweb [OPTIONS]
   ```
+  currently under development.
 
 
 
@@ -72,15 +93,6 @@ for questions, reach out.
         pass
     ```
 
-### example output
-
-  A 12 vertex bipartite BaseGraph like this:
-
-  <img src="https://i.imgur.com/HAqNYEA.png" />
-
-  leads to a ColoringGraph that looks like this with k=3:
-
-  <img src="https://i.imgur.com/FgabBRf.png" />
 
 ### installation
 
@@ -120,3 +132,4 @@ full documentation coming soon
 
 Coloring Graphs lab, University of Richmond. Multiple contributors.
 (C) 2017-2019
+

@@ -330,7 +330,7 @@ void
 MetaVertex::
 connect(MetaVertex* v)
 {
-    // std::cout << "CONNECT" << "\n";
+    // std::cerr << "CONNECT" << "\n";
     // return;
     add_neighbor(*v);
     v->add_neighbor(*this);
@@ -342,7 +342,7 @@ void
 MetaVertex::
 disconnect(MetaVertex* v)
 {
-    std::cout << "DISCONNECT" << "\n";
+    // std::cerr << "DISCONNECT" << "\n";
     // return;
 
     // std::unordered_set<long>::iterator it;
