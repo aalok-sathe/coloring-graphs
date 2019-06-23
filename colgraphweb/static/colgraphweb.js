@@ -65,6 +65,26 @@ function makecg() {
     };
     // create a coloringgraph
     coloringgraph = new vis.Network(cgcontainer, cgdata, cgoptions);
+    
+    /*
+    coloringgraph.on("stabilizationProgress", function(params) {
+            document.getElementById('loadingBar').removeAttribute("style");
+            var maxWidth = cgcontainer.width;
+            var minWidth = 1;
+            var widthFactor = params.iterations/params.total;
+            var width = Math.max(minWidth,maxWidth * widthFactor);
+
+            document.getElementById('bar').style.width = width + 'px';
+            document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+        });
+    coloringgraph.once("stabilizationIterationsDone", function() {
+            document.getElementById('text').innerHTML = '100%';
+            document.getElementById('bar').style.width = cgcontainer.width;//'496px';
+            document.getElementById('loadingBar').style.opacity = 0;
+            // really clean the dom element
+            setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+    });*/
+
     return coloringgraph;
 }
 
