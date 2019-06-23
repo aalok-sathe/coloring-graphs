@@ -411,15 +411,16 @@ Graph<V>::tarjans()
             list.push_back(next);
             current = list.begin();
 
-            /*
+            
             if (!vertices[root]->nt->hasnext())
             {
                 MetaVertex* rootmv = mg->add_vertex();
                 rootmv->identity = root;
                 rootmv->depth = vertices[root]->depth;
+                rootmv->vertices.insert(root);
                 continue;
             }
-            */
+            
 
             // std::cerr << "INFO: vertices[next]->depth == -1 "
             //           << "so adding to the current state list" << std::endl;
@@ -645,7 +646,7 @@ Graph<V>::tarjans()
             }
         }
 
-        if (count < 2)
+        if (count < 2 and size() > 1)
         {
             // std::cerr << "INFO: count < 2" << std::endl;
             if (!cut_vertex_stack.empty())
