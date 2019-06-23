@@ -154,3 +154,8 @@ function generate(e) {
     });
     // location.reload();
 }
+
+
+function refresh_page(e) {
+    location.reload();
+}
