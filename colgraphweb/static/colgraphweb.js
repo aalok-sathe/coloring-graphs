@@ -31,7 +31,7 @@ options = {
         },
         "enabled": true,
         "stabilization": {
-            "enabled": true,
+            "enabled": false,//true,
             "fit": true,
             "iterations": 100,
             "onlyDynamicEdges": false,
