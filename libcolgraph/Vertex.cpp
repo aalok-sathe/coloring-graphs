@@ -13,7 +13,7 @@
 
 Vertex::
 Vertex(long name_)
-    : name(name_), depth(-1), lowpoint(INT_MAX), parent(NULL)
+    : name(name_), depth(-1), lowpoint(INT_MAX)//, parent(NULL)
 {}
 
 Vertex::
