@@ -40,7 +40,7 @@ workflow is split between
       
     `git tag <name_of_tag>`
     
-    refer to ![semver.org](https://semver.org/) to learn how to decide
+    refer to [semver.org](https://semver.org/) to learn how to decide
     what tag to create. in general, we use the pattern `X.Y.Z.postP`,
     where `X` is major (may be backwards incompatible), `Y` is minor
     enhancement or new functionality (backwards compatible), `Z` is
