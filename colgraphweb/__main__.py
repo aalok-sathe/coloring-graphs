@@ -59,7 +59,7 @@ def index():
 
         data.update(lcg.viz.to_visjs(bg))
         data.update(lcg.viz.to_visjs(cg))
-        data.update(lcg.viz.to_visjs(mcg))
+        data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
 
         print('handling POST on index!')
 
@@ -115,7 +115,7 @@ def flaskgui(url='http://localhost', port='5000'):
     global data
     data.update(lcg.viz.to_visjs(bg))
     data.update(lcg.viz.to_visjs(cg))
-    data.update(lcg.viz.to_visjs(mcg))
+    data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
     data.update(lcg.viz.to_visjs(pcg))
 
     app.run(port=port)

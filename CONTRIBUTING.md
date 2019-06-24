@@ -33,19 +33,29 @@ workflow is split between
   deployments will be created from this branch. in order to create a
   deployment, you must allow for a reasonable number of commits to
   accumulate that together make up a *feature*. not every compiling
-  credit needs to be packaged and shipped. once you believe the master
+  commit needs to be packaged and shipped. once you believe the master
   branch has accumulated enough new work, or if the contributors choose
   to repackage, then:
   - create a tag at the current most recent commit/merge in master using
       
     `git tag <name_of_tag>`
     
+    refer to [semver.org](https://semver.org/) to learn how to decide
+    what tag to create. in general, we use the pattern `X.Y.Z.postP`,
+    where `X` is major (may be backwards incompatible), `Y` is minor
+    enhancement or new functionality (backwards compatible), `Z` is
+    small bugfixes, and `post`-number `P` is a very small last-minute
+    change.
+    
     the tag you apply must be the tag you intend for the package deployment
     to PyPI. as such, the tag must be [PEP-friendly](https://www.python.org/dev/peps/pep-0440/)
     otherwise deployment will **fail**
   
   - update the package version in `setup.py` with the **same version tag**
-    as what you used in the repository
+    as what you used in the repository, otherwise deployment will **fail**
+    
+  - update `setup.py` required_packages argument with any new packages you
+    might have added dependence on.
     
   - run `make trigger` to trigger the pipeline on next push (`gitlab-ci`
     is set up to take the hint this way). if you forget to run `make trigger`
@@ -61,10 +71,7 @@ workflow is split between
 
 - **active development**
 
-  create a new branch for active development. if you're developing without `swig`,
-  you may want to use the Makefile that is inside the `libcolgraphs` subdirectory
-  instead of the Makefile in the root.
-  
+  create a new branch for active development.   
   once in a while continue to populate `tester.cpp` with tests to make sure your
   code works. please do not merge into `master` without making sure your code works.
   
@@ -82,4 +89,5 @@ workflow is split between
   
 - **pull requests**
 
-  pull requests should be used to propose merges
+  pull requests should be created to propose merges which would then be reviewed
+  for correctness

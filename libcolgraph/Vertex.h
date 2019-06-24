@@ -28,7 +28,7 @@ class BaseVertexNeighborIterator : public VertexNeighborIterator<BaseVertex>
         std::unordered_set<long>::iterator it;
         long len;
 
-        BaseVertexNeighborIterator() {};
+        BaseVertexNeighborIterator() : len(0) {};
         BaseVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_);
 
         long next();
@@ -193,7 +193,7 @@ class MetaVertex : public Vertex
 
         // deconstructor
         ~MetaVertex() {};
-        
+
         // returns the size in terms of how many vertices this
         // metavertex contains
         int size();

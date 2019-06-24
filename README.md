@@ -47,9 +47,8 @@ for questions, reach out.
 
   basic usage:
   ```
-    colgraphplot [PATH_TO_FILE] [-k COLORS]
+    colgraphplot [INPUT_GRAPH]
     ---
-    options:
       usage: colgraphplot [-h] [-k COLORS] [-v] [--no-bg] [--no-cg] [--no-mbg]
                      [--no-mcg]
                      INPUT_GRAPH
@@ -60,7 +59,7 @@ for questions, reach out.
       optional arguments:
         -h, --help            show this help message and exit
         -k COLORS, --colors COLORS
-                              number of colors to use to create ColoringGraph
+                              number of colors to use to create ColoringGraph [default: 3]
         -v, --verbosity       set output verbosity
         --no-bg               hide BaseGraph?
         --no-cg               hide ColoringGraph?
@@ -68,11 +67,22 @@ for questions, reach out.
         --no-mcg              hide meta ColoringGraph?
   ```
 
-  launch web GUI [WIP]:
+  launch web GUI:
   ```
-    colgraphweb [OPTIONS]
+    colgraphweb
+    ---
+      usage: colgraphweb [-h] [-i INPUT_FILE] [-k COLORS] [-n] [-v] [-p PORT]
+
+      optional arguments:
+      -h, --help            show this help message and exit
+      -i INPUT_FILE, --input-file INPUT_FILE
+                            read in BaseGraph from adjacency matrix file
+      -k COLORS, --colors COLORS
+                            number of colors to use to create ColoringGraph [default: 3]
+      -n, --new             open a blank canvas?
+      -v, --verbosity       set output verbosity
+      -p PORT, --port PORT  port on localhost to launch GUI on [default: 5000]
   ```
-  currently under development.
 
 
 
