@@ -25,7 +25,7 @@ def to_pyvis_network(g, *args, **kwargs):
     return net
 
 
-def to_visjs(g, *args, **kwargs):
+def to_visjs(g, force_type=None, *args, **kwargs):
     '''
     takes in a graph which is a subclass of Graph<> (see GraphTemplates.h)
     and produces a json object that specifies how the graph should be plotted
@@ -37,9 +37,12 @@ def to_visjs(g, *args, **kwargs):
     prefix = ''
     typestr = str(type(g))
     # print(typestr)
-    if 'Base' in typestr: prefix = 'bg'
-    elif 'Coloring' in typestr: prefix = 'cg'
-    else: prefix = 'mcg'
+    if not force_type:
+        if 'Base' in typestr: prefix = 'bg'
+        elif 'Coloring' in typestr: prefix = 'cg'
+        else: prefix = 'mcg'
+    else:
+        prefix=force_type
 
     data = {prefix+'nodes': json.dumps(nodes),
             prefix+'edges': json.dumps(edges)}

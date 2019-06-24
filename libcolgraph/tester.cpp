@@ -17,7 +17,8 @@ int main(int argc, char *argv[])
     // char* testpath = "../in/3ring.in";
     // char* testpath = "../in/3star.in";
     // char* testpath = "../in/polypbg.in";
-    char* testpath = "../in/polypbgtriangle.in";
+    // char* testpath = "../in/polypbgtriangle.in";
+    char* testpath = "../in/floatingedge.in";
 
 
     BaseGraph* bg = new BaseGraph();
@@ -37,11 +38,11 @@ int main(int argc, char *argv[])
 
     cout << "reached EOF tester" << endl;
 
-    MetaGraph* mg = bg->tarjans();
+    MetaGraph* mbg = bg->tarjans();
 
-    cout << "metagraph size: " << mg->size() << endl;
+    cout << "metagraph size: " << mbg->size() << endl;
 
-    for (auto& p : mg->vertices)
+    for (auto& p : mbg->vertices)
     {
         MetaVertex* mv = p.second;
         std::cout << "\nmetavertex " << mv->get_name()

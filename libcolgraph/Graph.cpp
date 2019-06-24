@@ -249,7 +249,7 @@ V
 GraphVertexIterator<V>::
 next()
 {
-    if (this->len--)
+    if (this->len-- > 0)
         return *(this->it++->second);
 
     throw std::out_of_range("");
@@ -372,7 +372,7 @@ Graph<V>::tarjans()
 
     MetaGraph* mg =  new MetaGraph();
 
-    // std::cerr << "INFO: initialized empty metagraph" << std::endl;
+    std::cerr << "INFO: initialized empty metagraph" << std::endl;
 
     long next, root, child;
     typename std::list<long>::iterator current, found_cut_vertex;
@@ -380,7 +380,7 @@ Graph<V>::tarjans()
     typename std::stack<MetaVertex*> cut_vertex_stack;
     typename std::set<MetaVertex*> cut_vertex_set;
 
-    // std::cerr << "INFO: initialized local variables" << std::endl;
+    std::cerr << "INFO: initialized local variables" << std::endl;
 
     //*****************************
     // Main body of the method
@@ -391,8 +391,8 @@ Graph<V>::tarjans()
     // graph is disconnected
     for (auto& v : this->vertices)
     {
-        // std::cerr << std::endl << "INFO: processing vertex " << v.first
-        //           << " at line " << __LINE__ << std::endl;
+        std::cerr << std::endl << "INFO: processing vertex " << v.first
+                  << " at line " << __LINE__ << std::endl;
 
         next = v.first;
         list.clear();
@@ -411,19 +411,29 @@ Graph<V>::tarjans()
             list.push_back(next);
             current = list.begin();
 
-            
+            std::cerr << "INFO: vertices[root]->nt->hasnext()="
+                      << vertices[root]->nt->hasnext() << " for root="
+                      << *current
+                      << "so entering block to create standalone MV "
+                      << std::endl;
+                      
             if (!vertices[root]->nt->hasnext())
             {
+                std::cerr << "INFO: !vertices[root]->nt->hasnext() "
+                          << "so creating standalone MV " << root << std::endl;
                 MetaVertex* rootmv = mg->add_vertex();
                 rootmv->identity = root;
                 rootmv->depth = vertices[root]->depth;
                 rootmv->vertices.insert(root);
                 continue;
-            }
-            
+                std::cerr << "INFO: SHOULD NEVER SEE THIS!!! PAST CONTINUE "
+                          << std::endl;
 
-            // std::cerr << "INFO: vertices[next]->depth == -1 "
-            //           << "so adding to the current state list" << std::endl;
+            }
+
+
+            std::cerr << "INFO: vertices[next]->depth == -1 "
+                      << "so adding to the current state list" << std::endl;
         }
         else
             continue;
@@ -431,24 +441,24 @@ Graph<V>::tarjans()
 
         while (true)
         {
-            // std::cerr << std::endl << "INFO: top of while loop; current="
-            //           << vertices[*current]->get_name() << '\t' << __LINE__
-            //           << std::endl;
+            std::cerr << std::endl << "INFO: top of while loop; current="
+                      << vertices[*current]->get_name() << '\t' << __LINE__
+                      << std::endl;
 
             bool execif = true;
             try
             {
-                // std::cerr << "DEBUG: try to get next neighbor of "
-                //           << vertices[*current]->name
-                //           << " at line " << __LINE__ << "\n";
+                std::cerr << "DEBUG: try to get next neighbor of "
+                          << vertices[*current]->name
+                          << " at line " << __LINE__ << "\n";
                 child = vertices.find(vertices[*current]->get_next_neighbor())->first;
             }
             catch (std::out_of_range& e)
             {
                 execif = false;
-                // std::cerr << "DEBUG: no more neighbors of "
-                //           << vertices[*current]->name
-                //           << " at line " << __LINE__ << "\n";
+                std::cerr << "DEBUG: no more neighbors of "
+                          << vertices[*current]->name
+                          << " at line " << __LINE__ << "\n";
             }
 
 
@@ -460,10 +470,10 @@ Graph<V>::tarjans()
                 vertices[child]->parent = current;
                 vertices[child]->depth = vertices[*current]->depth + 1;
 
-                // std::cerr << "INFO: new child " << child << " of vertex "
-                //           << vertices[*current]->get_name()
-                //           << ". depth of child set to "
-                //           << vertices[child]->depth << std::endl;
+                std::cerr << "INFO: new child " << child << " of vertex "
+                          << vertices[*current]->get_name()
+                          << ". depth of child set to "
+                          << vertices[child]->depth << std::endl;
 
                 current = list.end();
                 current--;
@@ -478,11 +488,11 @@ Graph<V>::tarjans()
 
                 if (vertices[*current]->nt->hasnext())
                 {
-                    // std::cerr << "INFO: " << vertices[*current]->name
-                    //           << " might have more children; continue "
-                    //           << " lowpoint set to "
-                    //           << vertices[*current]->lowpoint
-                    //           << " at line " << __LINE__ << "\n";
+                    std::cerr << "INFO: " << vertices[*current]->name
+                              << " might have more children; continue "
+                              << " lowpoint set to "
+                              << vertices[*current]->lowpoint
+                              << " at line " << __LINE__ << "\n";
                     continue;
                 }
 
@@ -496,11 +506,11 @@ Graph<V>::tarjans()
                         vertices[*current]->lowpoint
                     );
 
-                // std::cerr << "`current` stats: "
-                //           << vertices[*current]->name << "\n"
-                //           << "\tlowpoint=" << vertices[*current]->lowpoint
-                //           << "\tdepth=" << vertices[*current]->depth
-                //           << std::endl;
+                std::cerr << "`current` stats: "
+                          << vertices[*current]->name << "\n"
+                          << "\tlowpoint=" << vertices[*current]->lowpoint
+                          << "\tdepth=" << vertices[*current]->depth
+                          << std::endl;
 
                 if (vertices[*vertices[*current]->parent] == vertices[root]
                     or vertices[*current]->lowpoint
@@ -526,8 +536,8 @@ Graph<V>::tarjans()
                     // This MetaVertex will store all vertices
                     // in the biconnected component
 
-                    // std::cerr << "DEBUG: constructing a blank metavertex at "
-                    //           << __LINE__ << "\n";
+                    std::cerr << "DEBUG: constructing a blank metavertex at "
+                              << __LINE__ << "\n";
                     MetaVertex* main = mg->add_vertex();
 
                     // Splice the vertices from the DFS list
@@ -539,9 +549,9 @@ Graph<V>::tarjans()
                     //                       list.end());
                     main->vertices.insert(current, list.end());
                     // Also add the cut vertex itself
-                    // std::cerr << "DEBUG: add cut vertex " << *found_cut_vertex
-                    //           << "to metavertex " << main->name << "at line "
-                    //           << __LINE__ << "\n";
+                    std::cerr << "DEBUG: add cut vertex " << *found_cut_vertex
+                              << "to metavertex " << main->name << "at line "
+                              << __LINE__ << "\n";
                     main->vertices.insert(*found_cut_vertex);
 
 
@@ -555,12 +565,12 @@ Graph<V>::tarjans()
                     // So we connect them to the component.
 
                     if (!cut_vertex_stack.empty())
-                        // std::cerr << "DEBUG: cut vertex stack top depth="
-                        //           << cut_vertex_stack.top()->depth
-                        //           << ", found cut vertex depth="
-                        //           << vertices[*found_cut_vertex]->depth
-                        //           << " before while loop at " << __LINE__
-                        //           << "\n";
+                        std::cerr << "DEBUG: cut vertex stack top depth="
+                                  << cut_vertex_stack.top()->depth
+                                  << ", found cut vertex depth="
+                                  << vertices[*found_cut_vertex]->depth
+                                  << " before while loop at " << __LINE__
+                                  << "\n";
                     while (!cut_vertex_stack.empty() and
                            // cut_vertex_stack.top()->depth
                            // > vertices[*found_cut_vertex]->depth)// and
@@ -568,9 +578,9 @@ Graph<V>::tarjans()
                            != main->vertices.end())
                     {
                         main->connect(cut_vertex_stack.top());
-                        // std::cerr << "INFO: connecting " << main->name
-                        //           << " and " << cut_vertex_stack.top()->name
-                        //           << "\n";
+                        std::cerr << "INFO: connecting " << main->name
+                                  << " and " << cut_vertex_stack.top()->name
+                                  << "\n";
 
                         if (cut_vertex_stack.top()->identity
                             != *found_cut_vertex)
@@ -578,7 +588,7 @@ Graph<V>::tarjans()
                         else
                             break;
 
-                        // std::cerr << "INFO: info: popping stuff from stack.\n";
+                        std::cerr << "INFO: info: popping stuff from stack.\n";
                     }
 
 
@@ -602,8 +612,8 @@ Graph<V>::tarjans()
                         main->connect(cut);
 
                         // Add the cut vertex to the stack
-                        // std::cerr << "INFO: adding MetaVertex " << cut->name
-                        //           << "to the stack at " << __LINE__ << "\n";
+                        std::cerr << "INFO: adding MetaVertex " << cut->name
+                                  << "to the stack at " << __LINE__ << "\n";
                         cut_vertex_stack.push(cut);
                     }
 
@@ -648,26 +658,26 @@ Graph<V>::tarjans()
 
         if (count < 2 and size() > 1)
         {
-            // std::cerr << "INFO: count < 2" << std::endl;
+            std::cerr << "INFO: count < 2" << std::endl;
             if (!cut_vertex_stack.empty())
             {
                 MetaVertex* mv = cut_vertex_stack.top();
-                // std::cerr << "INFO: got metavrtx from cutvertex stack" << std::endl;
+                std::cerr << "INFO: got metavrtx from cutvertex stack" << std::endl;
 
                 cut_vertex_stack.pop();
 
-                // std::cerr << "INFO: trying to remove" << std::endl;
+                std::cerr << "INFO: trying to remove" << std::endl;
 
                 mg->remove_vertex(mv);
 
-                // std::cerr << "INFO: done processing count < 2 case" << std::endl;
+                std::cerr << "INFO: done processing count < 2 case" << std::endl;
             }
 
         }
 
     } // end of main for-loop
 
-    // std::cerr << "INFO: about to return now" << std::endl;
+    std::cerr << "INFO: about to return now" << std::endl;
 
     return mg;
 }
