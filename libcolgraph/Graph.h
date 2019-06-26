@@ -93,11 +93,11 @@ class BaseGraph : public Graph<BaseVertex>
         ColoringGraph* build_coloring_graph(int k);
 
         void find_all_colorings(int current, int k, ColoringGraph* cg,
-                                std::vector<int> coloring);
+                                std::vector<int>& coloring);
 
-        void get_next_coloring(int current, int k, std::vector<int> coloring);
+        void get_next_coloring(int current, int k, std::vector<int>& coloring);
 
-        int encode(int k, std::vector<int> coloring);
+        int encode(int k, std::vector<int>& coloring);
 
         // returns an iterator object pointer over this graph's vertices
         const BaseGraphVertexIterator* __iter__();
@@ -136,7 +136,7 @@ class MetaGraph : public Graph<MetaVertex>
         int colors;
         // stores a pointer to the graph that this graph was constructed from
         BaseGraph* base;
-        
+
         // default constructor
         MetaGraph();
 
