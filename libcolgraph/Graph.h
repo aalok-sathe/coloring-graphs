@@ -92,13 +92,12 @@ class BaseGraph : public Graph<BaseVertex>
         // builds a coloring graph with k colors for this graph
         ColoringGraph* build_coloring_graph(int k);
 
-        void all_colorings(int current_vertex, int k, ColoringGraph* cg, int colorSequence[],
-                        std::unordered_map<long, BaseVertex*> vertices);
+        void find_all_colorings(int current, int k, ColoringGraph* cg,
+                                std::vector<int> coloring);
 
-        void next_color(int current_vertex, int k, int colorSequence[],
-                        std::unordered_map<long, BaseVertex*> vertices);
+        void get_next_coloring(int current, int k, std::vector<int> coloring);
 
-        int encode(int k, int colorSequence[]);
+        int encode(int k, std::vector<int> coloring);
 
         // returns an iterator object pointer over this graph's vertices
         const BaseGraphVertexIterator* __iter__();
