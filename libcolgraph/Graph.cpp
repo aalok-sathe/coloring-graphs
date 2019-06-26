@@ -157,78 +157,72 @@ ColoringGraph*
 BaseGraph::
 build_coloring_graph(int k)
 {
+    std::cout << "called build_coloring_graph" << std::endl;
 
-    std::cout << "called build_coloring_graph" << std::endl << std::endl;
-    int colorSequence[size()];
-    for (int i = 0; i < size(); i++)
-        colorSequence[i] = -1;
+    std::vector<int> coloring(size(), -1);
 
     ColoringGraph* cg = new ColoringGraph(k, this);
 
+    std::cout << "calling all_colorings if 1==" << size()
+              << std::endl;
 
-    std::cout << "calling all_colorings" << std::endl << std::endl;
+    if (size())
+        find_all_colorings(0, k, cg, coloring);
 
-    all_colorings(0, k, cg, colorSequence, vertices);
-
-    std::cout << "returning a completed coloring graph" << std::endl << std::endl;
+    std::cout << "returning a completed coloring graph" << std::endl;
 
     return cg;
 }
 
 void
 BaseGraph::
-all_colorings(int current_vertex, int k, ColoringGraph* cg, int colorSequence[],
-            std::unordered_map<long, BaseVertex*> vertices)
+find_all_colorings(int current, int k, ColoringGraph* cg, std::vector<int> coloring)
 {
-    std::cout << "top of all_colorings" << std::endl << std::endl;
+    std::cout << std::endl << "top of find_all_colorings" << std::endl;
     while(true)
     {
-
         //std::cout << "top of all_colorings while loop" << std::endl << std::endl;
 
-        next_color(current_vertex, k, colorSequence, vertices);
+        get_next_coloring(current, k, coloring);
 
-        if (colorSequence[current_vertex] == k)
+        if (coloring.at(current) == k)
             break;
 
-        if (current_vertex == size() - 1)
+        if (current == size()-1)
         {
-            cg->add_vertex(encode(k, colorSequence));
+            cg->add_vertex(encode(k, coloring));
         }
         else
         {
-            all_colorings(current_vertex + 1, k, cg, colorSequence, vertices);
-        } 
+            find_all_colorings(current+1, k, cg, coloring);
+        }
     }
-    
+
 }
 
 void
 BaseGraph::
-next_color(int current_vertex, int k, int colorSequence[],
-        std::unordered_map<long, BaseVertex*> vertices)
+get_next_coloring(int current, int k, std::vector <int> coloring)
 {
-
     std::cout << "top of next_color" << std::endl << std::endl;
     while (true)
     {
-
         //std::cout << "top of next_color while loop" << std::endl << std::endl;
-        colorSequence[current_vertex]++;
-        if (colorSequence[current_vertex] == k)
+        coloring[current]++;
+        if (coloring.at(current) == k)
         {
-            std::cout << "no possible coloring. backtracking" << std::endl << std::endl;
+            std::cout << "no possible coloring. backtracking" << std::endl
+                      << std::endl;
             return;
         }
 
         int i = 0;
-        while (i < size())
+        for (; i<size(); i++)
         {
-            if (vertices.find(current_vertex)->second->neighbors.find(i) !=
-                vertices.find(current_vertex)->second->neighbors.end() &&
-                colorSequence[current_vertex] == colorSequence[i])
+            if (vertices.find(current)->second->neighbors.find(i)
+                != vertices.find(current)->second->neighbors.end()
+                && coloring.at(current) == coloring.at(i))
                 break;
-            i++;
         }
 
         if (i == size())
@@ -239,11 +233,12 @@ next_color(int current_vertex, int k, int colorSequence[],
 
 int
 BaseGraph::
-encode(int k, int colorSequence[])
+encode(int k, std::vector<int> coloring)
 {
     long value = 0;
-    for (int i = 0; i < size(); i++)
-        value = value * k + colorSequence[i];
+    for (int i=0; i < size(); i++)
+        value = value*k + coloring.at(i);
+
     return value;
 }
 
@@ -511,7 +506,7 @@ Graph<V>::tarjans()
                       << *current
                       << "so entering block to create standalone MV "
                       << std::endl;
-                      
+
             if (!vertices[root]->nt->hasnext())
             {
                 std::cerr << "INFO: !vertices[root]->nt->hasnext() "

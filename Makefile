@@ -38,5 +38,8 @@ clean: FORCE
 	python3 setup.py clean
 	rm -rf build dist *.egg-info
 
+uninstall: FORCE 
+	echo "uninstalling"
+	python3 -m pip uninstall libcolgraph
 
 FORCE: ;
