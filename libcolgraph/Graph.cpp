@@ -453,15 +453,65 @@ __iter__()
 }
 
 
+ColoringGraph*
+MetaGraph::
+rebuild_partial_graph()
+{
+    ColoringGraph* cg = new ColoringGraph(colors, base);
+
+    // first, survey metavertices to find out
+    // 1. the largest sized vertex and
+    // 2. if there are at least two distinct sizes of vertices
+    
+    // keep track of the largest (maximal) sized metavertex, this would
+    // be the mothership
+    int largest = get_some_vertex().size();
+    // are there even two different vertices with not the same size?
+    bool distinctsizes = false;
+    for (auto& p : vertices)
+    {
+        MetaVertex* v = p.second;
+        distinctsizes = (v->size() == largest) ? distinctsizes : true;
+        largest = (v->size() > largest) ? v->size() : largest;
+    }
+
+    if (distinctsizes)
+        for (auto& p : vertices)
+        {
+            MetaVertex* mv = p.second;
+            if (mv->size() == largest)
+                continue;
+            for (const long& v : mv->vertices)
+                cg->add_vertex(v);
+        } 
+
+    return cg;
+}
+
+
 
 /*******************************************************************************
 ******************************** ALGORITHMS ************************************
 *******************************************************************************/
 
 
+
+MetaGraph*
+ColoringGraph::
+tarjans()
+{
+    MetaGraph* mg = Graph<ColoringVertex>::tarjans();
+    mg->colors = colors;
+    mg->base = base;
+    
+    return mg;
+}
+
+
 template <typename V>
 MetaGraph*
-Graph<V>::tarjans()
+Graph<V>::
+tarjans()
 {
     //*****************************
     // Declare helper variables and structures
