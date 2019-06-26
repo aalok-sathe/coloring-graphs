@@ -70,9 +70,17 @@ class MetaVertexNeighborIterator : public VertexNeighborIterator<MetaVertex>
         MetaVertexNeighborIterator() {};
         MetaVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_);
 
-        long next();
+        virtual long next();
 
-        bool hasnext();
+        virtual bool hasnext();
+};
+
+
+class MetaVertexStoredVerticesIterator : public MetaVertexNeighborIterator
+{
+    public:
+        MetaVertexStoredVerticesIterator(std::unordered_set<long>::iterator it_, long len_)
+            : MetaVertexNeighborIterator(it_, len_) {};
 };
 
 
@@ -215,7 +223,7 @@ class MetaVertex : public Vertex
         MetaVertexNeighborIterator* __iter__();
         MetaVertexNeighborIterator* get_neighbors();
 
-
+        MetaVertexStoredVerticesIterator* get_vertices();
 };
 
 

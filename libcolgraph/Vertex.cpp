@@ -377,12 +377,12 @@ get_neighbors()
 }
 
 
-// MetaGraphVertexIterator*
-// MetaVertex::
-// get_vertices()
-// {
-//     return new //TODO;
-// }
+MetaVertexStoredVerticesIterator*
+MetaVertex::
+get_vertices()
+{
+    return new MetaVertexStoredVerticesIterator(vertices.begin(), size());
+}
 
 
 #endif

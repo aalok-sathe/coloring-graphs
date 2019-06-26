@@ -118,12 +118,18 @@ class ColoringGraph : public Graph<ColoringVertex>
         const ColoringGraphVertexIterator* __iter__();
         const ColoringGraphVertexIterator* get_vertices();
 
+        MetaGraph* tarjans();
 };
 
 
 class MetaGraph : public Graph<MetaVertex>
 {
     public:
+        // private constant, the number of colors this coloring graph has
+        int colors;
+        // stores a pointer to the graph that this graph was constructed from
+        BaseGraph* base;
+        
         // default constructor
         MetaGraph();
 
@@ -137,6 +143,8 @@ class MetaGraph : public Graph<MetaVertex>
         const MetaGraphVertexIterator* __iter__();
         const MetaGraphVertexIterator* get_vertices();
 
+        // TODO
+        ColoringGraph* rebuild_partial_graph();
 };
 
 

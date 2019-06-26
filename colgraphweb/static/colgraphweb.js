@@ -42,7 +42,7 @@ options = {
 
 
 // same options for now
-bgoptions = mcgoptions = cgoptions = options;
+bgoptions = mcgoptions = cgoptions = pcgoptions = options;
 
 
 function makebg() {
@@ -99,10 +99,21 @@ function makemcg() {
     return metacoloringgraph;
 }
 
+function makepcg() {
+    pcgcontainer = document.getElementById('pcgcontainer');
+    pcgdata = {
+        nodes: pcgnodes,
+        edges: pcgedges
+    };
+    // create a metagraph
+    partialcoloringgraph = new vis.Network(pcgcontainer, pcgdata, pcgoptions);
+    return partialcoloringgraph;
+}
+
 basegraph = makebg();
 coloringgraph = makecg();
 metacoloringgraph = makemcg();
-
+partialcoloringgraph = makepcg();
 
 function objectToArray(obj) {
     return Object.keys(obj).map(function (key) {
@@ -147,6 +158,9 @@ function generate(e) {
             var mcgcontainer = $('#mcgcontainer');
             mcgcontainer.html(response['mcgcontainer']);
             makemcg();
+            var pcgcontainer = $('#pcgcontainer');
+            pcgcontainer.html(response['pcgcontainer']);
+            makepcg();
         },
         error: function (response) {
             alert('ERROR', response);
