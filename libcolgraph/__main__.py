@@ -146,17 +146,19 @@ def main():
 
 if __name__ == '__main__':
     helptxt = '''
-        Hi. Welcome to libcolgraph!
+        Hi there, welcome to libcolgraph!
         (C) 2017-2019 Coloring Graphs lab, University of Richmond.
+        GNU Lesser General Public License (LGPL) version 3 or later.
         Multiple contributors.
+        
         Homepage: https://github.com/aalok-sathe/coloring-graphs
 
         To plot a graph formatted in an adjacency matrix text file, use our
         CLI plotting utility, `colgraphplot`. For help, type `colgraphplot -h`
         in your terminal window.
 
-        To launch the interactive web interface, use `colgraphplot`.
+        To launch the interactive web interface, use `colgraphweb [-h]`.
     '''
-    print()
+    print(helptxt)
     # main()
     # plotfromfile()
