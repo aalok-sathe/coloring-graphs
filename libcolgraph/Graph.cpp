@@ -168,6 +168,8 @@ build_coloring_graph(int k)
 
     if (size())
         find_all_colorings(0, k, cg, coloring);
+    else
+        cg->add_vertex(0);
 
     std::cout << "returning a completed coloring graph" << std::endl;
 
@@ -207,6 +209,10 @@ get_next_coloring(int current, int k, std::vector<int>& coloring)
     std::cout << "top of next_color" << std::endl << std::endl;
     while (true)
     {
+        for (int c : coloring)
+            std::cout << c << ' ';
+        std::cout << std::endl;
+
         //std::cout << "top of next_color while loop" << std::endl << std::endl;
         coloring[current]++;
         if (coloring.at(current) == k)
