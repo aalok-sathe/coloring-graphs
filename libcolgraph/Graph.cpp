@@ -187,7 +187,7 @@ find_all_colorings(int current, int k, ColoringGraph* cg, std::vector<int>& colo
 
         get_next_coloring(current, k, coloring);
 
-        if (coloring.at(current) == k)
+        if (coloring.at(current) >= k)
             break;
 
         if (current == size()-1)
@@ -215,7 +215,7 @@ get_next_coloring(int current, int k, std::vector<int>& coloring)
 
         //std::cout << "top of next_color while loop" << std::endl << std::endl;
         coloring[current]++;
-        if (coloring.at(current) == k)
+        if (coloring.at(current) >= k)
         {
             std::cout << "no possible coloring. backtracking" << std::endl
                       << std::endl;
