@@ -168,7 +168,8 @@ build_coloring_graph(int k)
 
     std::cout << "calling all_colorings" << std::endl << std::endl;
 
-    all_colorings(0, k, cg, colorSequence, vertices);
+    if (size())
+        all_colorings(0, k, cg, colorSequence, vertices);
 
     std::cout << "returning a completed coloring graph" << std::endl << std::endl;
 
