@@ -166,8 +166,6 @@ build_coloring_graph(int k)
 
     if (size())
         find_all_colorings(0, k, cg, coloring);
-    else
-        cg->add_vertex(0);
 
     return cg;
 }
@@ -453,7 +451,9 @@ rebuild_partial_graph()
 
     // keep track of the largest (maximal) sized metavertex, this would
     // be the mothership
-    int largest = get_some_vertex().size();
+    int largest = 1;
+    if (size())
+        largest = get_some_vertex().size();
     // are there even two different vertices with not the same size?
     bool distinctsizes = false;
     for (auto& p : vertices)
