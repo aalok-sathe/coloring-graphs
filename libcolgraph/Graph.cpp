@@ -166,10 +166,12 @@ build_coloring_graph(int k)
     ColoringGraph* cg = new ColoringGraph(k, this);
 
 
-    std::cout << "calling all_colorings" << std::endl << std::endl;
 
     if (size())
+    {
+        std::cout << "calling all_colorings" << std::endl << std::endl;
         all_colorings(0, k, cg, colorSequence, vertices);
+    }
 
     std::cout << "returning a completed coloring graph" << std::endl << std::endl;
 
