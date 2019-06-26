@@ -137,6 +137,8 @@ load_txt(char* path)
 }
 
 
+// DEPRECATED!
+//
 // ColoringGraph*
 // BaseGraph::
 // build_coloring_graph(int k)
@@ -157,89 +159,75 @@ ColoringGraph*
 BaseGraph::
 build_coloring_graph(int k)
 {
-    std::cout << "called build_coloring_graph" << std::endl;
+    std::cerr << "generating ColoringGraph with k=" << k << std::endl;
 
     std::vector<int> coloring(size(), -1);
-
     ColoringGraph* cg = new ColoringGraph(k, this);
-
-    std::cout << "calling all_colorings if 1==" << size()
-              << std::endl;
 
     if (size())
         find_all_colorings(0, k, cg, coloring);
     else
         cg->add_vertex(0);
 
-    std::cout << "returning a completed coloring graph" << std::endl;
-
     return cg;
 }
 
 void
 BaseGraph::
-find_all_colorings(int current, int k, ColoringGraph* cg, std::vector<int>& coloring)
+find_all_colorings(int current, int k, ColoringGraph* cg,
+                   std::vector<int> coloring)
 {
-    std::cout << std::endl << "top of find_all_colorings" << std::endl;
     while(true)
     {
-        //std::cout << "top of all_colorings while loop" << std::endl << std::endl;
+        load_next_coloring(current, k, coloring);
 
-        get_next_coloring(current, k, coloring);
-
-        if (coloring.at(current) >= k)
+        if (coloring.at(current) >= k or current >= size())
             break;
 
         if (current == size()-1)
-        {
-            cg->add_vertex(encode(k, coloring));
-        }
+            cg->add_vertex(encode(coloring, k));
         else
-        {
             find_all_colorings(current+1, k, cg, coloring);
-        }
     }
 
 }
 
 void
 BaseGraph::
-get_next_coloring(int current, int k, std::vector<int>& coloring)
+load_next_coloring(int current, int k, std::vector<int>& coloring)
 {
-    std::cout << "top of next_color" << std::endl << std::endl;
     while (true)
     {
-        for (int c : coloring)
-            std::cout << c << ' ';
-        std::cout << std::endl;
-
-        //std::cout << "top of next_color while loop" << std::endl << std::endl;
         coloring[current]++;
-        if (coloring.at(current) >= k)
-        {
-            std::cout << "no possible coloring. backtracking" << std::endl
-                      << std::endl;
+
+        if (coloring.at(current) > k)
             return;
-        }
 
         int i = 0;
-        for (; i<size(); i++)
+        while(i<size())
         {
             if (vertices.find(current)->second->neighbors.find(i)
                 != vertices.find(current)->second->neighbors.end()
                 && coloring.at(current) == coloring.at(i))
-                break;
+                {
+                    break;
+                    // std::cout << "conflict for current=" << current
+                    //           << " with color=" << coloring[current]
+                    //           << " and neighbor=" << i
+                    //           << " with color=" << coloring.at(i) << '\n';
+                }
+            i++;
         }
 
-        if (i == size())
-            std::cout << "valid coloring found for one vertex" << std::endl << std::endl;
+        if (i >= size())
             return;
     }
 }
 
-int
+
+long
 BaseGraph::
-encode(int k, std::vector<int>& coloring)
+encode(std::vector<int>& coloring, int k)
 {
     long value = 0;
     for (int i=0; i < size(); i++)
