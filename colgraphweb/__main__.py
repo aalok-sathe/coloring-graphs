@@ -69,7 +69,9 @@ def index():
             'cgcontainer': render_template('graphcontainer.html',
                                            container_type='cg', **data),
             'mcgcontainer': render_template('graphcontainer.html',
-                                            container_type='mcg', **data)
+                                            container_type='mcg', **data),
+            'pcgcontainer': render_template('graphcontainer.html',
+                                            container_type='pcg', **data)
                     }
 
         response = app.response_class(status=200, response=json.dumps(rettuple),
