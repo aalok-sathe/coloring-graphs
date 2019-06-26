@@ -137,19 +137,92 @@ load_txt(char* path)
 }
 
 
+// ColoringGraph*
+// BaseGraph::
+// build_coloring_graph(int k)
+// {
+//     // TODO: make recursive backtracking based search
+//     ColoringGraph* cg = new ColoringGraph(k, this);
+//     for (long coloring=0; coloring<pow(k, size()); coloring++)
+//         if (is_valid_coloring(coloring, k))
+//             cg->add_vertex(coloring);
+//         else
+//             continue;
+
+//     return cg;
+// }
+
+
 ColoringGraph*
 BaseGraph::
 build_coloring_graph(int k)
 {
-    // TODO: make recursive backtracking based search
+
+    int colorSequence[size()];
+    for (int i = 0; i < colorSequence.size(), i++)
+        colorSequence[i] = -1;
+
     ColoringGraph* cg = new ColoringGraph(k, this);
-    for (long coloring=0; coloring<pow(k, size()); coloring++)
-        if (is_valid_coloring(coloring, k))
-            cg->add_vertex(coloring);
-        else
-            continue;
+
+    all_colorings(0, k, cg, colorSequence, vertices);
 
     return cg;
+}
+
+void
+BaseGraph::
+all_colorings(int current_vertex, int k, ColoringGraph* cg, int colorSequence[],
+            std::unordered_map<long, V*> vertices)
+{
+    nextColor(current_vertex, k, colorSequence, vertices);
+
+    if (colorSequence[current_vertex] == k)
+        break;
+
+    if (current_vertex == size() - 1)
+    {
+        cg->add_vertex(encode(k, colorSequence))
+    }
+    else
+    {
+        all_colorings(current_vertex + 1, k, cg, colorSequence, vertices);
+    }
+}
+
+void
+BaseGraph::
+nextColor(int current_vertex, int k, int colorSequence[],
+        std::unordered_map<long, V*> vertices)
+{
+    while (true)
+    {
+        colorSequence[current_vertex]++;
+        if (colorSequence[current_vertex] == k)
+            return;
+
+        int i = 0;
+        while (i < colorSequence.size())
+        {
+            if (vertices.find(current_vertex).second->neighbors.find(i) !=
+                vertices.find(current_vertex).second->neighbors.end() &&
+                colorSequence[current_vertex] == colorSequence[i])
+                break;
+            i++;
+        }
+
+        if (i == colorSequence.size())
+            return;
+    }
+}
+
+static void
+BaseGraph::
+encode(int k, int colorSequence[])
+{
+    long value = 0;
+    for (int i = 0; i < colorSequence.size(); i++)
+        value = value * k + colorSequence[i];
+    return value;
 }
 
 
