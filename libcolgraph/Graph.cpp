@@ -176,7 +176,7 @@ build_coloring_graph(int k)
 
 void
 BaseGraph::
-find_all_colorings(int current, int k, ColoringGraph* cg, std::vector<int> coloring)
+find_all_colorings(int current, int k, ColoringGraph* cg, std::vector<int>& coloring)
 {
     std::cout << std::endl << "top of find_all_colorings" << std::endl;
     while(true)
@@ -202,7 +202,7 @@ find_all_colorings(int current, int k, ColoringGraph* cg, std::vector<int> color
 
 void
 BaseGraph::
-get_next_coloring(int current, int k, std::vector <int> coloring)
+get_next_coloring(int current, int k, std::vector<int>& coloring)
 {
     std::cout << "top of next_color" << std::endl << std::endl;
     while (true)
@@ -233,7 +233,7 @@ get_next_coloring(int current, int k, std::vector <int> coloring)
 
 int
 BaseGraph::
-encode(int k, std::vector<int> coloring)
+encode(int k, std::vector<int>& coloring)
 {
     long value = 0;
     for (int i=0; i < size(); i++)
