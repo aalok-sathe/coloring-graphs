@@ -3,7 +3,6 @@
 
 #include "Graph.h"
 
-
 /*******************************************************************************
 ***************************** GRAPH ********************************************
 *******************************************************************************/
@@ -714,12 +713,11 @@ tarjans()
                 MetaVertex* mv = cut_vertex_stack.top();
                 std::cerr << "INFO: got metavrtx from cutvertex stack" << std::endl;
 
-                cut_vertex_stack.pop();
-
                 std::cerr << "INFO: trying to remove" << std::endl;
 
                 mg->remove_vertex(mv);
 
+                cut_vertex_stack.pop();
                 std::cerr << "INFO: done processing count < 2 case" << std::endl;
             }
 

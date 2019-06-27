@@ -5,7 +5,6 @@
 #include <sstream>
 #include "Vertex.h"
 
-
 /*******************************************************************************
 ***************************** VERTEX *******************************************
 *******************************************************************************/
@@ -342,8 +341,13 @@ void
 MetaVertex::
 disconnect(MetaVertex* v)
 {
-    // std::cerr << "DISCONNECT" << "\n";
-    // return;
+    std::cerr << "DISCONNECT called with " << v << "\n";
+    
+    if (v == NULL)
+    {
+        std::cerr << "encountered NULL ptr\n";
+        return;
+    }
 
     // std::unordered_set<long>::iterator it;
     if (this->neighbors.find(v->name) != this->neighbors.end())
