@@ -136,19 +136,101 @@ load_txt(char* path)
 }
 
 
+// DEPRECATED!
+//
+// ColoringGraph*
+// BaseGraph::
+// build_coloring_graph(int k)
+// {
+//     // TODO: make recursive backtracking based search
+//     ColoringGraph* cg = new ColoringGraph(k, this);
+//     for (long coloring=0; coloring<pow(k, size()); coloring++)
+//         if (is_valid_coloring(coloring, k))
+//             cg->add_vertex(coloring);
+//         else
+//             continue;
+
+//     return cg;
+// }
+
+
 ColoringGraph*
 BaseGraph::
 build_coloring_graph(int k)
 {
-    // TODO: make recursive backtracking based search
+    std::cerr << "generating ColoringGraph with k=" << k << std::endl;
+
+    std::vector<int> coloring(size(), -1);
     ColoringGraph* cg = new ColoringGraph(k, this);
-    for (long coloring=0; coloring<pow(k, size()); coloring++)
-        if (is_valid_coloring(coloring, k))
-            cg->add_vertex(coloring);
-        else
-            continue;
+
+    if (size())
+        find_all_colorings(0, k, cg, coloring);
 
     return cg;
+}
+
+void
+BaseGraph::
+find_all_colorings(int current, int k, ColoringGraph* cg,
+                   std::vector<int> coloring)
+{
+    while(true)
+    {
+        load_next_coloring(current, k, coloring);
+
+        if (coloring.at(current) >= k or current >= size())
+            break;
+
+        if (current == size()-1)
+            cg->add_vertex(encode(coloring, k));
+        else
+            find_all_colorings(current+1, k, cg, coloring);
+    }
+
+}
+
+void
+BaseGraph::
+load_next_coloring(int current, int k, std::vector<int>& coloring)
+{
+    while (true)
+    {
+        coloring[current]++;
+
+        if (coloring.at(current) > k)
+            return;
+
+        int i = 0;
+        while(i<size())
+        {
+            if (vertices.find(current)->second->neighbors.find(i)
+                != vertices.find(current)->second->neighbors.end()
+                && coloring.at(current) == coloring.at(i))
+                {
+                    break;
+                    // std::cout << "conflict for current=" << current
+                    //           << " with color=" << coloring[current]
+                    //           << " and neighbor=" << i
+                    //           << " with color=" << coloring.at(i) << '\n';
+                }
+            i++;
+        }
+
+        if (i >= size())
+            return;
+    }
+}
+
+
+long
+BaseGraph::
+encode(std::vector<int>& coloring, int k)
+{
+    long value = 0;
+    for (int i=0; i < size(); i++)
+        value = value*k + coloring.at(i);
+
+    return value;
 }
 
 
@@ -365,10 +447,12 @@ rebuild_partial_graph()
     // first, survey metavertices to find out
     // 1. the largest sized vertex and
     // 2. if there are at least two distinct sizes of vertices
-    
+
     // keep track of the largest (maximal) sized metavertex, this would
     // be the mothership
-    int largest = get_some_vertex().size();
+    int largest = 1;
+    if (size())
+        largest = get_some_vertex().size();
     // are there even two different vertices with not the same size?
     bool distinctsizes = false;
     for (auto& p : vertices)
@@ -386,7 +470,7 @@ rebuild_partial_graph()
                 continue;
             for (const long& v : mv->vertices)
                 cg->add_vertex(v);
-        } 
+        }
 
     return cg;
 }
@@ -406,7 +490,7 @@ tarjans()
     MetaGraph* mg = Graph<ColoringVertex>::tarjans();
     mg->colors = colors;
     mg->base = base;
-    
+
     return mg;
 }
 
@@ -465,7 +549,7 @@ tarjans()
                       << *current
                       << "so entering block to create standalone MV "
                       << std::endl;
-                      
+
             if (!vertices[root]->nt->hasnext())
             {
                 std::cerr << "INFO: !vertices[root]->nt->hasnext() "
