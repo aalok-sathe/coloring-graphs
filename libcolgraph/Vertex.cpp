@@ -329,7 +329,8 @@ void
 MetaVertex::
 connect(MetaVertex* v)
 {
-    // std::cerr << "CONNECT" << "\n";
+    std::cerr << "CONNECT called with " 
+              << v << " on " << this << "\n";
     // return;
     add_neighbor(*v);
     v->add_neighbor(*this);

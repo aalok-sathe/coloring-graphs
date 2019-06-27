@@ -721,7 +721,7 @@ tarjans()
                         else
                             break;
 
-                        std::cerr << "INFO: info: popping stuff from stack.\n";
+                        std::cerr << "INFO: popping stuff from stack.\n";
                     }
 
 
@@ -792,16 +792,16 @@ tarjans()
         if (count < 2 and size() > 1)
         {
             std::cerr << "INFO: count < 2" << std::endl;
-            if (!cut_vertex_stack.empty())
+            if (true or !cut_vertex_stack.empty())
             {
                 MetaVertex* mv = cut_vertex_stack.top();
                 std::cerr << "INFO: got metavrtx from cutvertex stack" << std::endl;
 
                 std::cerr << "INFO: trying to remove" << std::endl;
 
+                cut_vertex_stack.pop();
                 mg->remove_vertex(mv);
 
-                cut_vertex_stack.pop();
                 std::cerr << "INFO: done processing count < 2 case" << std::endl;
             }
 
