@@ -527,7 +527,7 @@ rebuild_partial_graph()
         unique_cut_vertices.insert(candidate);
         for (auto& vname : unique_cut_vertices)
         {
-            if (cg->is_isomorphic(candidate, vname))
+            if (candidate != vname and cg->is_isomorphic(candidate, vname))
             {
                 std::cerr << "turns out " << candidate << " was isomorphic"
                           << " to " << vname << "already in the set\n";
