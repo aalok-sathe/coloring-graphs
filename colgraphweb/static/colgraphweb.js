@@ -161,6 +161,7 @@ function generate(e) {
             var pcgcontainer = $('#pcgcontainer');
             pcgcontainer.html(response['pcgcontainer']);
             makepcg();
+            //var stats = $('#topstatsdisplay');
         },
         error: function (response) {
             alert('ERROR', response);
