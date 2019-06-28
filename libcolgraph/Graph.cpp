@@ -478,6 +478,15 @@ __iter__()
 }
 
 
+const MetaGraphCutVertexIterator*
+MetaGraph::
+get_cut_vertices()
+{
+    return new MetaGraphCutVertexIterator(cut_vertices.begin(),
+                                          cut_vertices.size());
+}
+
+
 // helper method for the rebuild_partial_graph method
 void
 MetaGraph::
@@ -513,17 +522,15 @@ rebuild_partial_graph()
     // gather all the unique cut vertices, i.e., no two cut
     // vertices from the same isomorphism class should be allowed
     // to be picked together
-    std::unordered_set<long> unique_cut_vertices;
-    for (auto& p : vertices)
+    unique_cut_vertices.clear();
+    for (const long& candidate : cut_vertices)
     {
-        MetaVertex* v = p.second;
-        if (v->size() != 1)
-            continue;
+        // MetaVertex* v = p.second;
+        // if (v->size() != 1)
+        //     continue;
        
-        std::cerr << "found potential cut vertex " << *(v->vertices.begin()) 
-                  << std::endl;
+        std::cerr << "found potential cut vertex " << candidate << std::endl;
 
-        long candidate = *(v->vertices.begin());
         unique_cut_vertices.insert(candidate);
         for (auto& vname : unique_cut_vertices)
         {
@@ -627,7 +634,7 @@ tarjans()
     typename std::list<long>::iterator current, found_cut_vertex;
     typename std::list<long> list;
     typename std::stack<MetaVertex*> cut_vertex_stack;
-    typename std::set<MetaVertex*> cut_vertex_set;
+    typename std::unordered_set<MetaVertex*> cut_vertex_set;
 
     std::cerr << "INFO: initialized local variables" << std::endl;
 
@@ -925,7 +932,13 @@ tarjans()
 
     } // end of main for-loop
 
+    // update metagraph's known cut vertices set
+    for (auto& pair : mg->vertices)
+        if (pair.second->size() == 1)
+            mg->cut_vertices.insert(*pair.second->vertices.begin());
+    
     std::cerr << "INFO: about to return now" << std::endl;
+
 
     return mg;
 }

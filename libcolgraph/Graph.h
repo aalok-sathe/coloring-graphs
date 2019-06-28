@@ -24,6 +24,7 @@ class BaseGraph;
 class ColoringGraph;
 class MetaGraph;
 
+class MetaGraphCutVertexIterator;
 
 // an iterator class subclassed from GraphVertexIterator to specifically
 // support iteration over a BaseGraph's Vertices, i.e., BaseVertex objects
@@ -56,7 +57,10 @@ class MetaGraphVertexIterator : public GraphVertexIterator<MetaVertex>
 {
     public:
         MetaGraphVertexIterator() {};
-        MetaGraphVertexIterator(typename std::unordered_map<long, MetaVertex*>::iterator it_, long len_)
+        MetaGraphVertexIterator(
+                typename std::unordered_map<long, MetaVertex*>::iterator it_,
+                long len_
+            )
             : GraphVertexIterator<MetaVertex>(it_, len_) {};
 
         // MetaGraphVertexIterator* __iter__();
@@ -147,6 +151,11 @@ class MetaGraph : public Graph<MetaVertex>
         int colors;
         // stores a pointer to the graph that this graph was constructed from
         BaseGraph* base;
+        // stores found cut vertices
+        std::unordered_set<long> cut_vertices;
+        // stores unique cut vertices each representative of an isomorphism
+        // class of cut vertices
+        std::unordered_set<long> unique_cut_vertices;
 
         // default constructor
         MetaGraph();
@@ -161,6 +170,9 @@ class MetaGraph : public Graph<MetaVertex>
         const MetaGraphVertexIterator* __iter__();
         const MetaGraphVertexIterator* get_vertices();
 
+        // iterator over cut vertices found by the metagraph
+        const MetaGraphCutVertexIterator* get_cut_vertices();
+        
         void _DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
                           std::unordered_set<long>& mothership);
 

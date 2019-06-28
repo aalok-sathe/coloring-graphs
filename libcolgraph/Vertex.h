@@ -68,11 +68,26 @@ class MetaVertexNeighborIterator : public VertexNeighborIterator<MetaVertex>
         long len;
 
         MetaVertexNeighborIterator() {};
-        MetaVertexNeighborIterator(std::unordered_set<long>::iterator it_, long len_);
+        MetaVertexNeighborIterator(std::unordered_set<long>::iterator it_, 
+                                   long len_);
 
         virtual long next();
 
         virtual bool hasnext();
+};
+
+
+// an iterator class subclassed from GraphVertexIterator to specifically
+// support iteration over a MetaGraph's Vertices, i.e., MetaVertex
+// TODO
+class MetaGraphCutVertexIterator : public MetaVertexNeighborIterator
+{
+    public:
+        MetaGraphCutVertexIterator() {};
+        MetaGraphCutVertexIterator(std::unordered_set<long>::iterator it_,
+                                   long len_)
+            : MetaVertexNeighborIterator(it_, len_) {};
+
 };
 
 
