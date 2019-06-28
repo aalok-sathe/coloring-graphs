@@ -306,6 +306,14 @@ MetaVertex(long name_)
 {}
 
 
+MetaVertex::
+~MetaVertex()
+{
+    std::cerr << "DEBUG: ~destructor called on " << name
+              << " with identity " << identity << std::endl;
+}
+
+
 int
 MetaVertex::
 size()
@@ -331,7 +339,9 @@ connect(MetaVertex* v)
 {
     std::cerr << "CONNECT called with " 
               << v << " on " << this << "\n";
-    // return;
+    
+    if (v == NULL)
+        return;
     add_neighbor(*v);
     v->add_neighbor(*this);
 }

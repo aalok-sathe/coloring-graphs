@@ -391,6 +391,9 @@ add_vertex()
 {
     long name = size();
     add_vertex(name);
+
+    std::cerr << "!!added vertex with name " << name << " and returning "
+              << vertices[name] << std::endl;
     return vertices[name];
 }
 
@@ -413,7 +416,8 @@ remove_vertex(MetaVertex* m)
     std::unordered_set<long>::iterator it;
 	for (it = m->neighbors.begin(); it != m->neighbors.end(); it++)
 	{
-        // std::cerr << "disconn. " << "\n";
+        std::cerr << "!!!disconn. " << ' ' << *it << ' '
+                  << vertices[*it] << "\n";
 		m->disconnect(vertices[*it]);
 	}
     // std::cerr << "done removing all nbrs" << "\n";
