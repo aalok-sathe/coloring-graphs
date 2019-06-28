@@ -9,6 +9,7 @@
 #include <vector>
 #include <list>
 #include <stack>
+#include "progress_bar.hpp"
 #include "GraphTemplates.h"
 #include "Vertex.h"
 
@@ -127,6 +128,10 @@ class ColoringGraph : public Graph<ColoringVertex>
         // adds a vertex with given name to this graph
         void add_vertex(long name);
 
+        // determines whether two colorings belong to the same
+        // isomorphism class in this coloring graph
+        bool is_isomorphic(long a, long b);
+
         // returns an iterator object pointer over this graph's vertices
         const ColoringGraphVertexIterator* __iter__();
         const ColoringGraphVertexIterator* get_vertices();
@@ -155,6 +160,9 @@ class MetaGraph : public Graph<MetaVertex>
         // returns an iterator object pointer over this graph's vertices
         const MetaGraphVertexIterator* __iter__();
         const MetaGraphVertexIterator* get_vertices();
+
+        void _DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
+                          std::unordered_set<long>& mothership);
 
         // TODO
         ColoringGraph* rebuild_partial_graph();
