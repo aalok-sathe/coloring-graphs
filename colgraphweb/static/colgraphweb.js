@@ -65,7 +65,7 @@ function makecg() {
     };
     // create a coloringgraph
     coloringgraph = new vis.Network(cgcontainer, cgdata, cgoptions);
-    
+
     /*
     coloringgraph.on("stabilizationProgress", function(params) {
             document.getElementById('loadingBar').removeAttribute("style");
@@ -154,14 +154,20 @@ function generate(e) {
             // alert('RESPONSE OK');
             var cgcontainer = $('#cgcontainer');
             cgcontainer.html(response['cgcontainer']);
-            makecg();
+            if (Number(response['size']) <= 512) {
+                $('force-cg-button').hide();
+                makecg();
+            } else {
+                $('force-cg-button').show();
+            }
             var mcgcontainer = $('#mcgcontainer');
             mcgcontainer.html(response['mcgcontainer']);
             makemcg();
             var pcgcontainer = $('#pcgcontainer');
             pcgcontainer.html(response['pcgcontainer']);
             makepcg();
-            //var stats = $('#topstatsdisplay');
+            cgstats = response['cgstats'];
+            $('#topstatsdisplay').text(cgstats);
         },
         error: function (response) {
             alert('ERROR', response);
@@ -173,4 +179,7 @@ function generate(e) {
 
 function refresh_page(e) {
     location.reload();
+    $(document).ready( function() {
+        generate();
+    });
 }
