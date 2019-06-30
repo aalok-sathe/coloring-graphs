@@ -328,7 +328,7 @@ is_isomorphic(long a, long b)
         int bcol = base->get_vertex_color(b, i, colors);
 
         std::unordered_map<int, int>::iterator it;
-        
+
         // check if acol is already mapped to something, and if that is
         // something other than bcol
         it = to.find(acol);
@@ -490,11 +490,11 @@ get_cut_vertices()
 // helper method for the rebuild_partial_graph method
 void
 MetaGraph::
-_DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name, 
+_DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
              std::unordered_set<long>& mothership)
 {
     ColoringVertex* v = itercg->vertices[name];
-    
+
     std::cerr << "DFSing on " << name << std::endl;
 
     while (v->nt->hasnext())
@@ -528,7 +528,7 @@ rebuild_partial_graph()
         // MetaVertex* v = p.second;
         // if (v->size() != 1)
         //     continue;
-       
+
         std::cerr << "found potential cut vertex " << candidate << std::endl;
 
         bool insert = true;
@@ -588,7 +588,7 @@ rebuild_partial_graph()
             for (const long& v : mv->vertices)
                 itercg->add_vertex(v);
         }
- 
+
         for (long cutv : unique_cut_vertices)
         {
             std::cerr << "adding cut vertex " << cutv << " to cg\n";
@@ -596,7 +596,7 @@ rebuild_partial_graph()
             _DFS_and_add(cg, itercg, cutv, mothervertices);
         }
     }
-   
+
     return cg;
 }
 
@@ -647,6 +647,7 @@ tarjans()
     // For loop ensures all vertices
     // will be processed in case the
     // graph is disconnected
+    int numcomponents = 0;
     for (auto& v : this->vertices)
     {
         std::cerr << std::endl << "INFO: processing vertex " << v.first
@@ -661,6 +662,8 @@ tarjans()
 
         if (vertices[next]->depth == -1)
         {
+            if (++numcomponents >= 2)
+                connected = false;
             // If vertex has not been
             // visited, set up that
             // vertex as a root for DFS
@@ -934,16 +937,19 @@ tarjans()
 
     } // end of main for-loop
 
+    // check if the underlying graph was biconnected or not
+    biconnected = (mg->size() <= 1);
+
     // update metagraph's known cut vertices set
     for (auto& pair : mg->vertices)
         if (pair.second->size() == 1)
             mg->cut_vertices.insert(*pair.second->vertices.begin());
-    
-    std::cerr << "INFO: about to return now" << std::endl;
 
+    std::cerr << "INFO: about to return now" << std::endl;
 
     return mg;
 }
+
 
 
 #endif

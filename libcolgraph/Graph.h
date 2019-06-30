@@ -172,7 +172,7 @@ class MetaGraph : public Graph<MetaVertex>
 
         // iterator over cut vertices found by the metagraph
         const MetaGraphCutVertexIterator* get_cut_vertices();
-        
+
         void _DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
                           std::unordered_set<long>& mothership);
 
