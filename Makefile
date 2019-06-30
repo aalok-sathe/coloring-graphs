@@ -40,6 +40,6 @@ clean: FORCE
 
 uninstall: FORCE 
 	echo "uninstalling"
-	python3 -m pip uninstall libcolgraph
+	pip3 uninstall libcolgraph
 
 FORCE: ;
