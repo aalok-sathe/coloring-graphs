@@ -31,6 +31,7 @@ def to_visjs(g, force_type=None, *args, **kwargs):
     and produces a json object that specifies how the graph should be plotted
     in a way that VisJS can use
     '''
+    print('DEBUG: called to_visjs on', g)
     net = to_pyvis_network(g)
     nodes, edges, height, width, options = net.get_network_data()
 
