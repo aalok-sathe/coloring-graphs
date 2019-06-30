@@ -531,17 +531,19 @@ rebuild_partial_graph()
        
         std::cerr << "found potential cut vertex " << candidate << std::endl;
 
-        unique_cut_vertices.insert(candidate);
+        bool insert = true;
         for (auto& vname : unique_cut_vertices)
         {
             if (candidate != vname and cg->is_isomorphic(candidate, vname))
             {
-                std::cerr << "turns out " << candidate << " was isomorphic"
+                std::cerr << "INFO: turns out " << candidate << " is isomorphic"
                           << " to " << vname << "already in the set\n";
-                unique_cut_vertices.erase(candidate);
+                insert = false;
                 break;
             }
         }
+        if (insert)
+            unique_cut_vertices.insert(candidate);
     }
 
     std::cerr << "found " << unique_cut_vertices.size() << " cut verts\n";
