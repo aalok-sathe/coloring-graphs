@@ -25,19 +25,57 @@ def to_pyvis_network(g, *args, **kwargs):
     return net
 
 
-def to_visjs(g, force_type=None, *args, **kwargs):
+def _to_visjs(g, colordict={1: '#039be5', 0: '#ef5350'},
+             colorfn=None, *args, **kwargs):
+    '''
+    '''
+    nodes = {}
+    edges = {}
+
+    for v in g.get_vertices():
+        name = v.get_name()
+        nodes[name] = {
+                        'id': name,
+                        'label': str(name),
+                        'size': 32*math.pow(len(v), 1/3),
+                        'group': str(len(v)),
+                        'shape': 'dot',
+                      }
+        if colorfn(v):
+            nodes[name]['color'] = colordict[colorfn(v)]
+
+        for n in v.get_neighbors():
+            edge = tuple(sorted([name, n]))
+            if edge in edges:
+                continue
+
+            edges[edge] = {
+                            'from': edge[0],
+                            'to': edge[1],
+                            'color': {'inherit': 'both'},
+                          }
+
+    nodes = [v for k,v in nodes.items()]
+    edges = [v for k,v in edges.items()]
+
+    return nodes, edges
+
+
+def to_visjs(g, force_type=None, colordict={1: '#039be5', 2: '#ef5350'},
+             colorfn=lambda v: 1+int(len(v)==1), pyvis=False, *args, **kwargs):
     '''
     takes in a graph which is a subclass of Graph<> (see GraphTemplates.h)
     and produces a json object that specifies how the graph should be plotted
     in a way that VisJS can use
     '''
     print('DEBUG: called to_visjs on', g)
-    # net = to_pyvis_network(g)
-    # nodes, edges, height, width, options = net.get_network_data()
-    nodes = {}
-    edges = {}
 
-    # nodes[i] = {'id': i, 'label': str(i)}
+    if pyvis:
+        net = to_pyvis_network(g)
+        nodes, edges, height, width, options = net.get_network_data()
+    else:
+        nodes, edges = _to_visjs(g, colordict=colordict, colorfn=colorfn,
+                                 **kwargs)
 
     prefix = ''
     typestr = str(type(g))

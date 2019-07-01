@@ -9,6 +9,7 @@ from pathlib import Path
 from flask import Flask, url_for, request, render_template, json
 from collections import defaultdict
 import webbrowser
+import random
 
 import libcolgraph as lcg
 
@@ -20,7 +21,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--input-file', type=str,
                     help='read in BaseGraph from adjacency matrix file',
                     default=expanduser('~')
-                            + '/code/coloring-graphs/in/hexmodsegfault.in')
+                            + '/code/coloring-graphs/in/hexmod.in')
 parser.add_argument('-k', '--colors', type=int, default=3,
                     help='number of colors to use to create ColoringGraph')
 parser.add_argument('-n', '--new', default=False, action='store_true',
@@ -35,9 +36,21 @@ global data
 data = dict()
 
 
-# def preprequest():
-#     '''
-#     '''
+colors = {
+            'red': '#ef5350',
+            'blue': '#039be5',
+            'green': '#4caf50',
+            'yellow': '#ffee58',
+            'pink': '#f48fb1',
+            # 'purple': '#673ab7',
+            'brown': '#795548',
+            'white': 'white',#'#f5f5f5',
+         }
+
+randomcolors = {}
+randomcolors.update(colors)
+randomcolors.pop('red')
+randomcolors = [*randomcolors.keys()]
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -60,14 +73,21 @@ def index():
         data.update(dict(colors=args.colors))
 
         bg = lcg.viz.from_visjs(graphdata)
+        data.update(lcg.viz.to_visjs(bg, pyvis=True))
+
         cg = bg.build_coloring_graph(args.colors)
         mcg = cg.tarjans()
-        pcg = mcg.rebuild_partial_graph()
-
-        data.update(lcg.viz.to_visjs(bg))
-        data.update(lcg.viz.to_visjs(cg))
+        cut_verts = [*mcg.get_cut_vertices()]
         data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
-        data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
+
+        random.shuffle(randomcolors)
+        def cvcolor(v):
+            return 'red' if v.get_name() in cut_verts else None
+        data.update(lcg.viz.to_visjs(cg, colordict=colors, colorfn=cvcolor))
+
+        pcg = mcg.rebuild_partial_graph()
+        data.update(lcg.viz.to_visjs(pcg, force_type='pcg', colordict=colors,
+                                     colorfn=cvcolor))
 
         statsdict = dict(
                 size=len(cg),
@@ -112,7 +132,7 @@ def flaskgui(url='http://localhost', port='5000'):
 
 
     global data
-    data.update(lcg.viz.to_visjs(bg))
+    data.update(lcg.viz.to_visjs(bg, pyvis=True))
     # data.update(lcg.viz.to_visjs(cg))
     # data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
     # data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
