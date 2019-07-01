@@ -32,8 +32,12 @@ def to_visjs(g, force_type=None, *args, **kwargs):
     in a way that VisJS can use
     '''
     print('DEBUG: called to_visjs on', g)
-    net = to_pyvis_network(g)
-    nodes, edges, height, width, options = net.get_network_data()
+    # net = to_pyvis_network(g)
+    # nodes, edges, height, width, options = net.get_network_data()
+    nodes = {}
+    edges = {}
+
+    # nodes[i] = {'id': i, 'label': str(i)}
 
     prefix = ''
     typestr = str(type(g))
