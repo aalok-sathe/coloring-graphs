@@ -312,6 +312,46 @@ get_vertices()
 }
 
 
+bool
+ColoringGraph::
+is_isomorphic(long a, long b)
+{
+    // in order to detemrine whether a and b are of the same isomorphic
+    // class, we will start with the assumption that every color in `a`
+    // gets mapped to the color of the corresponding position in `b`, and
+    // start tabulating the result
+    std::unordered_map<int, int> to, from;
+
+    for (int i=0; i < base->size(); i++)
+    {
+        int acol = base->get_vertex_color(a, i, colors);
+        int bcol = base->get_vertex_color(b, i, colors);
+
+        std::unordered_map<int, int>::iterator it;
+
+        // check if acol is already mapped to something, and if that is
+        // something other than bcol
+        it = to.find(acol);
+        if (it == to.end() or it->second == bcol)
+            to.insert(std::pair<int, int>(acol, bcol));
+        else
+            return false;
+
+        // check if bcol is already mapped from something else
+        // because that's not possible: this needs to be a one-one
+        // correspondence to be a valid isomorphism, and if that is
+        // something other than acol, we know it is invalid
+        it = from.find(bcol);
+        if (it == from.end() or it->second == acol)
+            from.insert(std::pair<int, int>(bcol, acol));
+        else
+            return false;
+    }
+
+    return true;
+}
+
+
 const ColoringGraphVertexIterator*
 ColoringGraph::
 __iter__()
@@ -438,18 +478,81 @@ __iter__()
 }
 
 
+const MetaGraphCutVertexIterator*
+MetaGraph::
+get_cut_vertices()
+{
+    return new MetaGraphCutVertexIterator(cut_vertices.begin(),
+                                          cut_vertices.size());
+}
+
+
+// helper method for the rebuild_partial_graph method
+void
+MetaGraph::
+_DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
+             std::unordered_set<long>& mothership)
+{
+    ColoringVertex* v = itercg->vertices[name];
+
+    std::cerr << "DFSing on " << name << std::endl;
+
+    while (v->nt->hasnext())
+    {
+        long nbr = v->get_next_neighbor();
+        if (cg->vertices.find(nbr) == cg->vertices.end())
+        {
+            std::cerr << "found unvisited neighbor " << nbr << std::endl;
+            cg->add_vertex(nbr);
+            _DFS_and_add(cg, itercg, nbr, mothership);
+        }
+    }
+}
+
+
 ColoringGraph*
 MetaGraph::
 rebuild_partial_graph()
 {
-    ColoringGraph* cg = new ColoringGraph(colors, base);
+    std::cerr << "rebuild_partial_graph called\n";
 
-    // first, survey metavertices to find out
+    ColoringGraph* cg = new ColoringGraph(colors, base);
+    ColoringGraph* itercg = new ColoringGraph(colors, base);
+
+    // gather all the unique cut vertices, i.e., no two cut
+    // vertices from the same isomorphism class should be allowed
+    // to be picked together
+    unique_cut_vertices.clear();
+    for (const long& candidate : cut_vertices)
+    {
+        // MetaVertex* v = p.second;
+        // if (v->size() != 1)
+        //     continue;
+
+        std::cerr << "found potential cut vertex " << candidate << std::endl;
+
+        bool insert = true;
+        for (auto& vname : unique_cut_vertices)
+        {
+            if (candidate != vname and cg->is_isomorphic(candidate, vname))
+            {
+                std::cerr << "INFO: turns out " << candidate << " is isomorphic"
+                          << " to " << vname << "already in the set\n";
+                insert = false;
+                break;
+            }
+        }
+        if (insert)
+            unique_cut_vertices.insert(candidate);
+    }
+
+    std::cerr << "found " << unique_cut_vertices.size() << " cut verts\n";
+
+    // survey the metavertices to find out
     // 1. the largest sized vertex and
     // 2. if there are at least two distinct sizes of vertices
-
     // keep track of the largest (maximal) sized metavertex, this would
-    // be the mothership
+    // be the mothership or set of motherships (for a disconnected graph)
     int largest = 1;
     if (size())
         largest = get_some_vertex().size();
@@ -462,15 +565,37 @@ rebuild_partial_graph()
         largest = (v->size() > largest) ? v->size() : largest;
     }
 
+    // make a set of all vertices belonging to any of the maximal sized
+    // vertex to exclude from DFSing later
+    std::unordered_set<long> mothervertices;
     if (distinctsizes)
+    {
+        for (auto& p : vertices)
+            if (p.second->size() == largest)
+                for (const long& vname : p.second->vertices)
+                    mothervertices.insert(vname);
+            else
+                continue;
+    }
+
+    if (distinctsizes)
+    {
         for (auto& p : vertices)
         {
             MetaVertex* mv = p.second;
             if (mv->size() == largest)
                 continue;
             for (const long& v : mv->vertices)
-                cg->add_vertex(v);
+                itercg->add_vertex(v);
         }
+
+        for (long cutv : unique_cut_vertices)
+        {
+            std::cerr << "adding cut vertex " << cutv << " to cg\n";
+            cg->add_vertex(cutv);
+            _DFS_and_add(cg, itercg, cutv, mothervertices);
+        }
+    }
 
     return cg;
 }
@@ -511,7 +636,7 @@ tarjans()
     typename std::list<long>::iterator current, found_cut_vertex;
     typename std::list<long> list;
     typename std::stack<MetaVertex*> cut_vertex_stack;
-    typename std::set<MetaVertex*> cut_vertex_set;
+    typename std::unordered_set<MetaVertex*> cut_vertex_set;
 
     std::cerr << "INFO: initialized local variables" << std::endl;
 
@@ -522,6 +647,7 @@ tarjans()
     // For loop ensures all vertices
     // will be processed in case the
     // graph is disconnected
+    int numcomponents = 0;
     for (auto& v : this->vertices)
     {
         std::cerr << std::endl << "INFO: processing vertex " << v.first
@@ -536,6 +662,8 @@ tarjans()
 
         if (vertices[next]->depth == -1)
         {
+            if (++numcomponents >= 2)
+                connected = false;
             // If vertex has not been
             // visited, set up that
             // vertex as a root for DFS
@@ -809,10 +937,19 @@ tarjans()
 
     } // end of main for-loop
 
+    // check if the underlying graph was biconnected or not
+    biconnected = (mg->size() <= 1);
+
+    // update metagraph's known cut vertices set
+    for (auto& pair : mg->vertices)
+        if (pair.second->size() == 1)
+            mg->cut_vertices.insert(*pair.second->vertices.begin());
+
     std::cerr << "INFO: about to return now" << std::endl;
 
     return mg;
 }
+
 
 
 #endif

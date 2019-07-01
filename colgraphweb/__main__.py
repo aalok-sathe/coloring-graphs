@@ -9,6 +9,7 @@ from pathlib import Path
 from flask import Flask, url_for, request, render_template, json
 from collections import defaultdict
 import webbrowser
+import random
 
 import libcolgraph as lcg
 
@@ -35,6 +36,23 @@ global data
 data = dict()
 
 
+colors = {
+            'red': '#ef5350',
+            'blue': '#039be5',
+            'green': '#4caf50',
+            'yellow': '#ffee58',
+            'pink': '#f48fb1',
+            # 'purple': '#673ab7',
+            'brown': '#795548',
+            'white': 'white',#'#f5f5f5',
+         }
+
+randomcolors = {}
+randomcolors.update(colors)
+randomcolors.pop('red')
+randomcolors = [*randomcolors.keys()]
+
+
 @app.route('/', methods=['POST', 'GET'])
 def index():
     '''
@@ -48,55 +66,52 @@ def index():
     elif request.method == 'POST':
         requestdata = request.get_json()
         # print(requestdata)
+        print('handling POST on index!')
 
         graphdata = requestdata[0]
         args.colors = int(requestdata[1])
         data.update(dict(colors=args.colors))
 
         bg = lcg.viz.from_visjs(graphdata)
+        data.update(lcg.viz.to_visjs(bg, pyvis=True))
+
         cg = bg.build_coloring_graph(args.colors)
         mcg = cg.tarjans()
-        pcg = mcg.rebuild_partial_graph()
-
-        data.update(lcg.viz.to_visjs(bg))
-        data.update(lcg.viz.to_visjs(cg))
+        cut_verts = [*mcg.get_cut_vertices()]
         data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
-        data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
 
-        print('handling POST on index!')
+        random.shuffle(randomcolors)
+        def cvcolor(v):
+            return 'red' if v.get_name() in cut_verts else None
+        data.update(lcg.viz.to_visjs(cg, colordict=colors, colorfn=cvcolor))
 
-        rettuple = {
+        pcg = mcg.rebuild_partial_graph()
+        data.update(lcg.viz.to_visjs(pcg, force_type='pcg', colordict=colors,
+                                     colorfn=cvcolor))
+
+        statsdict = dict(
+                size=len(cg),
+                is_connected=cg.is_connected(),
+                is_biconnected=cg.is_biconnected(),
+            )
+
+        retdict = {
             'cgcontainer': render_template('graphcontainer.html',
                                            container_type='cg', **data),
             'mcgcontainer': render_template('graphcontainer.html',
                                             container_type='mcg', **data),
             'pcgcontainer': render_template('graphcontainer.html',
-                                            container_type='pcg', **data)
+                                            container_type='pcg', **data),
+            'cgstats': ' '.join(['{}: {},'.format(k, v)
+                                 for k, v in statsdict.items()]),
+            'size': statsdict['size']
                     }
 
-        response = app.response_class(status=200, response=json.dumps(rettuple),
+        response = app.response_class(status=200, response=json.dumps(retdict),
                                       mimetype='application/json')
 
         return response
 
-
-def djangogui():
-    '''
-    launcher for the web webgui
-    '''
-
-    raise DeprecationWarning
-
-    command = ['python3', str(Path(__file__).parent/'manage.py'), 'runserver', '3142']
-    proc = subprocess.Popen(command, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
-    stdout, stderr = proc.communicate()
-
-    if args.verbosity:
-        print(stdout, file=sys.stdout)
-        print(stderr, file=sys.stderr)
-
-    webbrowser.open_new('http://localhost:3142')
 
 
 def flaskgui(url='http://localhost', port='5000'):
@@ -107,19 +122,20 @@ def flaskgui(url='http://localhost', port='5000'):
     app.config['TESTING'] = True
 
     bg = lcg.BaseGraph()
-    if not args.new:
-        bg.load_txt(args.input_file)
-        #mbg = bg.tarjans()
-
     cg = bg.build_coloring_graph(args.colors)
     mcg = cg.tarjans()
     pcg = mcg.rebuild_partial_graph()
 
+    if not args.new:
+        bg.load_txt(args.input_file)
+        #mbg = bg.tarjans()
+
+
     global data
-    data.update(lcg.viz.to_visjs(bg))
-    data.update(lcg.viz.to_visjs(cg))
-    data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
-    data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
+    data.update(lcg.viz.to_visjs(bg, pyvis=True))
+    # data.update(lcg.viz.to_visjs(cg))
+    # data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
+    # data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
 
     app.run(port=port)
 

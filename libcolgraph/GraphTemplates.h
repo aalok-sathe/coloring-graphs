@@ -81,6 +81,9 @@ class Graph
 {
     public:
         std::unordered_map<long, V*> vertices;
+        //
+        bool connected = true;
+        bool biconnected = true;
 
         Graph();
         virtual ~Graph();
@@ -94,6 +97,11 @@ class Graph
 
         // returns the size of the graph in terms of the number of vertices
         virtual long size();
+
+        // getter methods for connected and biconnectedness
+        // only valid after a run of Tarjans
+        virtual bool is_connected() { return connected; };
+        virtual bool is_biconnected() { return biconnected; };
 
         // adds a vertex with name `name` to Graph's vertices
         virtual void add_vertex(long name) = 0;
