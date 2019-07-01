@@ -2,7 +2,10 @@
    <div id="optionsbar">
       <button id="generate-button" onclick="generate(basegraph)">Generate</button>
       <input id="numcolors-textfield" type="text" name="k" value="{{ colors }}">
-      <button id="refresh-button" onclick="refresh_page()">Refresh (if laggy)</button>
+      <button id="refresh-button" onclick="refresh_page()">Refresh cache (if laggy)</button>
+      <button id="force-cg-button" onclick="makecg()">ColoringGraph may be hidden if size >512. Force (re)generate?</button>
+      <p style="display:inline"> STATS: </p>
+      <p style="display:inline" id="topstatsdisplay">[empty]</p>
    </div>
    <div class="parent grid-parent">
 
