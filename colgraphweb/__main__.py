@@ -10,6 +10,7 @@ from flask import Flask, url_for, request, render_template, json
 from collections import defaultdict
 import webbrowser
 import random
+import PySimpleGUI as sg
 
 import libcolgraph as lcg
 
@@ -20,16 +21,20 @@ global args
 parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--input-file', type=str,
                     help='read in BaseGraph from adjacency matrix file',
-                    default=expanduser('~')
-                            + '/code/coloring-graphs/in/hexmod.in')
+                    default=None)
+                    # default=str(Path(__file__).parent/'../in/hexmod.in'))
+parser.add_argument('-n', '--new', default=True, action='store_true',
+                    help='open a blank canvas?')
+parser.add_argument('-s', '--select_file', default=False, action='store_true',
+                    help='open a blank canvas?')
 parser.add_argument('-k', '--colors', type=int, default=3,
                     help='number of colors to use to create ColoringGraph')
-parser.add_argument('-n', '--new', default=False, action='store_true',
-                    help='open a blank canvas?')
 parser.add_argument('-v', '--verbosity', action='count', default=0,
                     help='set output verbosity')
 parser.add_argument('-p', '--port', default='5000', type=str,
                     help='port to launch GUI on')
+parser.add_argument('-w', '--webbrowser', default=False, action='store_true',
+                    help='open app in default web browser window?')
 args = parser.parse_args()
 
 global data
@@ -42,7 +47,7 @@ colors = {
             'green': '#4caf50',
             'yellow': '#ffee58',
             'pink': '#f48fb1',
-            # 'purple': '#673ab7',
+            'purple': '#673ab7',
             'brown': '#795548',
             'white': 'white',#'#f5f5f5',
          }
@@ -50,71 +55,154 @@ colors = {
 randomcolors = {}
 randomcolors.update(colors)
 randomcolors.pop('red')
+randomcolors.pop('blue')
 randomcolors = [*randomcolors.keys()]
 
 
-@app.route('/', methods=['POST', 'GET'])
+
+@app.route('/', methods=['GET'])
 def index():
     '''
     '''
-    if request.method == 'GET':
-        global data
-        print('handling GET on index!')
-        data.update(dict(colors=str(args.colors)))
-        return render_template('defaultview.html', **data)
+    # if request.method != 'GET':
+    #     raise RuntimeError
 
-    elif request.method == 'POST':
-        requestdata = request.get_json()
-        # print(requestdata)
-        print('handling POST on index!')
+    global data
+    print('handling GET on index!')
+    data.update(dict(colors=str(args.colors)))
 
-        graphdata = requestdata[0]
-        args.colors = int(requestdata[1])
-        data.update(dict(colors=args.colors))
+    app.cghtml = None
+    app.statsdict = defaultdict(None)
 
-        bg = lcg.viz.from_visjs(graphdata)
-        data.update(lcg.viz.to_visjs(bg, pyvis=True))
-
-        cg = bg.build_coloring_graph(args.colors)
-        mcg = cg.tarjans()
-        cut_verts = [*mcg.get_cut_vertices()]
-        data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
-
-        random.shuffle(randomcolors)
-        def cvcolor(v):
-            return 'red' if v.get_name() in cut_verts else None
-        data.update(lcg.viz.to_visjs(cg, colordict=colors, colorfn=cvcolor))
-
-        pcg = mcg.rebuild_partial_graph()
-        data.update(lcg.viz.to_visjs(pcg, force_type='pcg', colordict=colors,
-                                     colorfn=cvcolor))
-
-        statsdict = dict(
-                size=len(cg),
-                is_connected=cg.is_connected(),
-                is_biconnected=cg.is_biconnected(),
-            )
-
-        retdict = {
-            'cgcontainer': render_template('graphcontainer.html',
-                                           container_type='cg', **data),
-            'mcgcontainer': render_template('graphcontainer.html',
-                                            container_type='mcg', **data),
-            'pcgcontainer': render_template('graphcontainer.html',
-                                            container_type='pcg', **data),
-            'cgstats': ' '.join(['{}: {},'.format(k, v)
-                                 for k, v in statsdict.items()]),
-            'size': statsdict['size']
-                    }
-
-        response = app.response_class(status=200, response=json.dumps(retdict),
-                                      mimetype='application/json')
-
-        return response
+    return render_template('defaultview.html', **data)
 
 
 
-def flaskgui(url='http://localhost', port='5000'):
+@app.route('/generate', methods=['POST'])
+def generate():
+    '''
+    '''
+    # if request.method != 'POST':
+    #     raise RuntimeError
+
+    requestdata = request.get_json()
+    # print(requestdata)
+    print('handling POST on generate!')
+
+    global data
+
+    graphdata = requestdata[0]
+    args.colors = int(requestdata[1])
+    data.update(dict(colors=args.colors))
+
+    app.bg = bg = lcg.viz.from_visjs(graphdata)
+    data.update(lcg.viz.to_visjs(bg, pyvis=True))
+
+    app.cg = cg = bg.build_coloring_graph(args.colors)
+    app.mcg = mcg = cg.tarjans()
+    app.cut_verts = cut_verts = [*mcg.get_cut_vertices()]
+    data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
+
+    # random.shuffle(randomcolors)
+    def cvcolor(v):
+        return 'red' if v.get_name() in cut_verts else None
+    data.update(lcg.viz.to_visjs(cg, colordict=colors, colorfn=cvcolor))
+
+    app.pcg = pcg = mcg.rebuild_partial_graph()
+    data.update(lcg.viz.to_visjs(pcg, force_type='pcg', colordict=colors,
+                                 colorfn=cvcolor))
+
+    app.statsdict = statsdict = dict(
+            cgsize=len(cg),
+            is_connected=cg.is_connected(),
+            is_biconnected=cg.is_biconnected(),
+        )
+
+    retdict = {
+        'mcgcontainer': render_template('graphcontainer.html',
+                                        container_type='mcg', **data),
+        'pcgcontainer': render_template('graphcontainer.html',
+                                        container_type='pcg', **data),
+        'cgsize': app.statsdict['cgsize'],
+                }
+    app.cghtml = render_template('graphcontainer.html',
+                                 container_type='cg', **data)
+
+    if len(cg) <= 512:
+        retdict.update({'cgcontainer': app.cghtml})
+
+    response = app.response_class(status=200, response=json.dumps(retdict),
+                                  mimetype='application/json')
+
+    return response
+
+
+@app.route('/cgdata', methods=['POST'])
+def get_cg_data():
+    '''
+    '''
+    requestdata = request.get_json()
+    # print(requestdata)
+    print('handling POST on get_cg_data!')
+
+    retdict = {'cgcontainer': app.cghtml}
+
+    response = app.response_class(status=200, response=json.dumps(retdict),
+                                  mimetype='application/json')
+
+    return response
+
+
+@app.route('/cgstats', methods=['POST'])
+def get_stats():
+    '''
+    '''
+    requestdata = request.get_json()
+    # print(requestdata)
+    print('handling POST on get_stats!')
+
+
+
+    retdict = {
+        'cgstats': render_template('graphcontainer.html',
+                                   container_type='bg', **data)
+              }
+
+    response = app.response_class(status=200, response=json.dumps(retdict),
+                                  mimetype='application/json')
+
+    return response
+
+
+# @app.route('/colorbg', methods=['POST'])
+# def colorbg():
+#     '''
+#     '''
+#     requestdata = request.get_json()
+#     print(requestdata)
+#
+#
+#     # data.update(lcg.viz.to_visjs(bg, colordict=colors, colorfn=))
+#
+#     # retdict = {
+#     #     'bgcontainer': ' ' + ' '.join(['{}: {},'.format(k, v)
+#     #                               for k, v in sorted(app.statsdict.items())])
+#     #           }
+#
+#     response = app.response_class(status=200, response=json.dumps(retdict),
+#                                   mimetype='application/json')
+#
+#     return response
+
+
+@app.route('/save', methods=['POST'])
+def save_graphs():
+    '''
+    '''
+    raise NotImplementedError
+
+
+def runflaskgui(url='http://localhost', port='5000'):
     '''
     '''
     app.config['ENV'] = 'development'
@@ -122,20 +210,15 @@ def flaskgui(url='http://localhost', port='5000'):
     app.config['TESTING'] = True
 
     bg = lcg.BaseGraph()
-    cg = bg.build_coloring_graph(args.colors)
-    mcg = cg.tarjans()
-    pcg = mcg.rebuild_partial_graph()
+    # cg = bg.build_coloring_graph(args.colors)
+    # mcg = cg.tarjans()
+    # pcg = mcg.rebuild_partial_graph()
 
-    if not args.new:
+    if args.input_file:
         bg.load_txt(args.input_file)
-        #mbg = bg.tarjans()
-
 
     global data
     data.update(lcg.viz.to_visjs(bg, pyvis=True))
-    # data.update(lcg.viz.to_visjs(cg))
-    # data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
-    # data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
 
     app.run(port=port)
 
@@ -145,8 +228,24 @@ def main():
     '''
     url = 'http://localhost'
     port = args.port
-    # webbrowser.open_new(url + ':{port}'.format(port=port))
-    flaskgui(url, port)
+    if args.webbrowser:
+        webbrowser.open_new(url + ':{port}'.format(port=port))
+
+    if args.select_file:
+        # resp = sg.PopupGetFile('Choose a file if you\'d like to load a graph. '
+        #                        'To open a blank canvas, click cancel.',
+        #                        title='Load graph from a file?')
+        w = sg.Window('Get filename example').Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
+        event, values = w.Read()
+        w.Close()
+        if event == 'OK':
+            resp = values[0]
+            if resp and Path(resp).exists():
+                args.input_file = resp
+            else:
+                print('Unable to load file. Opening blank canvas')
+
+    runflaskgui(url, port)
 
 
 if __name__ == '__main__':

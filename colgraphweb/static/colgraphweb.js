@@ -1,7 +1,6 @@
 /* colgraphweb.js */
 
 options = {
-    "interaction": {"hover": true},
 	"manipulation": {"enabled": false},
     "configure": {"enabled": false},
     "edges": {
@@ -65,6 +64,7 @@ function makecg() {
     };
     // create a coloringgraph
     coloringgraph = new vis.Network(cgcontainer, cgdata, cgoptions);
+    coloringgraph.setOptions({"interaction": {"hideEdgesOnDrag": true}});
 
     /*
     coloringgraph.on("stabilizationProgress", function(params) {
@@ -96,6 +96,28 @@ function makemcg() {
     };
     // create a metagraph
     metacoloringgraph = new vis.Network(mcgcontainer, mcgdata, mcgoptions);
+
+    // metacoloringgraph.on("click", function (params) {
+    //     if (params.nodes.length > 0) {
+    //         var value = JSON.stringify(params.nodes, undefined, 2);
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "/colorbg",
+    //             data: value,
+    //             contentType: "application/json; charset=utf-8",
+    //             dataType: "json",
+    //             success: function (response) {
+    //                 var bgcontainer = document.getElementById('pcgcontainer');
+    //                 bgcontainer.html(response['bgcontainer']);
+    //                 makebg();
+    //             },
+    //             error: function (response) {
+    //                 alert('ERROR', response);
+    //             }
+    //         });
+    //     }
+    // });
+
     return metacoloringgraph;
 }
 
@@ -146,7 +168,7 @@ function generate(e) {
     var value = exportNetwork(basegraph);
     $.ajax({
         type: "POST",
-        url: "/",
+        url: "/generate",
         data: value,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -154,11 +176,11 @@ function generate(e) {
             // alert('RESPONSE OK');
             var cgcontainer = $('#cgcontainer');
             cgcontainer.html(response['cgcontainer']);
-            if (Number(response['size']) <= 512) {
-                $('force-cg-button').hide();
+            if (Number(response['cgsize']) <= 512) {
+                $('#force-cg-button').hide();
                 makecg();
             } else {
-                $('force-cg-button').show();
+                $('#force-cg-button').show();
             }
             var mcgcontainer = $('#mcgcontainer');
             mcgcontainer.html(response['mcgcontainer']);
@@ -166,8 +188,7 @@ function generate(e) {
             var pcgcontainer = $('#pcgcontainer');
             pcgcontainer.html(response['pcgcontainer']);
             makepcg();
-            cgstats = response['cgstats'];
-            $('#topstatsdisplay').text(cgstats);
+            get_stats();
         },
         error: function (response) {
             alert('ERROR', response);
@@ -177,9 +198,56 @@ function generate(e) {
 }
 
 
+
+function get_cg_data(e) {
+    var value = exportNetwork(basegraph);
+    $.ajax({
+        type: "POST",
+        url: "/cgdata",
+        data: value,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            // alert('RESPONSE OK');
+            var cgcontainer = $('#cgcontainer');
+            cgcontainer.html(response['cgcontainer']);
+            makecg();
+            get_stats();
+        },
+        error: function (response) {
+            alert('ERROR', response);
+        }
+    });
+}
+
+
+
+function get_stats(e) {
+    var value = exportNetwork(basegraph);
+    $.ajax({
+        type: "POST",
+        url: "/cgstats",
+        data: value,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            // alert('RESPONSE OK');
+            cgstats = response['cgstats'];
+            $('#topstatsdisplay').html(cgstats);
+        },
+        error: function (response) {
+            alert('ERROR', response);
+        }
+    });
+}
+
+
 function refresh_page(e) {
     location.reload();
-    $(document).ready( function() {
-        generate();
-    });
+    // $(document).ready( function() {
+    //     generate();
+    //     get_stats();
+    // });
+    generate();
+    get_stats();
 }
