@@ -97,26 +97,26 @@ function makemcg() {
     // create a metagraph
     metacoloringgraph = new vis.Network(mcgcontainer, mcgdata, mcgoptions);
 
-    // metacoloringgraph.on("click", function (params) {
-    //     if (params.nodes.length > 0) {
-    //         var value = JSON.stringify(params.nodes, undefined, 2);
-    //         $.ajax({
-    //             type: "POST",
-    //             url: "/colorbg",
-    //             data: value,
-    //             contentType: "application/json; charset=utf-8",
-    //             dataType: "json",
-    //             success: function (response) {
-    //                 var bgcontainer = document.getElementById('pcgcontainer');
-    //                 bgcontainer.html(response['bgcontainer']);
-    //                 makebg();
-    //             },
-    //             error: function (response) {
-    //                 alert('ERROR', response);
-    //             }
-    //         });
-    //     }
-    // });
+    metacoloringgraph.on("click", function (params) {
+        if (params.nodes.length > 0) {
+            var value = JSON.stringify(params.nodes, undefined, 2);
+            $.ajax({
+                type: "POST",
+                url: "/colorbg",
+                data: value,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var bgcontainer = document.getElementById('bgcontainer');
+                    bgcontainer.html(response['bgcontainer']);
+                    makebg();
+                },
+                error: function (response) {
+                    alert('ERROR', response);
+                }
+            });
+        }
+    });
 
     return metacoloringgraph;
 }
@@ -233,7 +233,7 @@ function get_stats(e) {
         success: function (response) {
             // alert('RESPONSE OK');
             cgstats = response['cgstats'];
-            $('#topstatsdisplay').html(cgstats);
+            $('#topstatsdisplay').text(cgstats);
         },
         error: function (response) {
             alert('ERROR', response);

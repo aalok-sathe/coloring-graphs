@@ -161,11 +161,9 @@ def get_stats():
     # print(requestdata)
     print('handling POST on get_stats!')
 
-
-
     retdict = {
-        'cgstats': render_template('graphcontainer.html',
-                                   container_type='bg', **data)
+        'cgstats': ' '.join(['{}: {},'.format(k, v)
+                             for k, v in app.statsdict.items()]),
               }
 
     response = app.response_class(status=200, response=json.dumps(retdict),
@@ -174,25 +172,25 @@ def get_stats():
     return response
 
 
-# @app.route('/colorbg', methods=['POST'])
-# def colorbg():
-#     '''
-#     '''
-#     requestdata = request.get_json()
-#     print(requestdata)
-#
-#
-#     # data.update(lcg.viz.to_visjs(bg, colordict=colors, colorfn=))
-#
-#     # retdict = {
-#     #     'bgcontainer': ' ' + ' '.join(['{}: {},'.format(k, v)
-#     #                               for k, v in sorted(app.statsdict.items())])
-#     #           }
-#
-#     response = app.response_class(status=200, response=json.dumps(retdict),
-#                                   mimetype='application/json')
-#
-#     return response
+@app.route('/colorbg', methods=['POST'])
+def colorbg():
+    '''
+    '''
+    requestdata = request.get_json()
+    clicked = requestdata[0]
+
+    # vertices = [*app.mcg.get_vertex(cli)] # TODO
+    # data.update(lcg.viz.to_visjs(bg, colordict=colors, colorfn=))
+
+    retdict = {
+        'bgcontainer': render_template('graphcontainer.html',
+                                        container_type='bg', **data),
+              }
+
+    response = app.response_class(status=200, response=json.dumps(retdict),
+                                  mimetype='application/json')
+
+    return response
 
 
 @app.route('/save', methods=['POST'])
