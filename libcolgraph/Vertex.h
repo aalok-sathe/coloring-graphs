@@ -215,7 +215,7 @@ class MetaVertex : public Vertex
         MetaVertex(long name_);
 
         // deconstructor
-        ~MetaVertex() {};
+        ~MetaVertex();// {};
 
         // returns the size in terms of how many vertices this
         // metavertex contains

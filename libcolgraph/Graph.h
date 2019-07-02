@@ -9,7 +9,6 @@
 #include <vector>
 #include <list>
 #include <stack>
-#include "progress_bar.hpp"
 #include "GraphTemplates.h"
 #include "Vertex.h"
 

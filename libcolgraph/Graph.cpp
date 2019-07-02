@@ -431,6 +431,9 @@ add_vertex()
 {
     long name = size();
     add_vertex(name);
+
+    std::cerr << "!!added vertex with name " << name << " and returning "
+              << vertices[name] << std::endl;
     return vertices[name];
 }
 
@@ -451,10 +454,12 @@ MetaGraph::
 remove_vertex(MetaVertex* m)
 {
     std::unordered_set<long>::iterator it;
-	for (it = m->neighbors.begin(); it != m->neighbors.end(); it++)
+    while (!m->neighbors.empty())
 	{
-        // std::cerr << "disconn. " << "\n";
-		m->disconnect(vertices[*it]);
+        it = m->neighbors.begin();
+        std::cerr << "!!!disconn. " << ' ' << *it << ' '
+                  << vertices[*it] << "\n";
+        m->disconnect(vertices[*it]);
 	}
     // std::cerr << "done removing all nbrs" << "\n";
 
@@ -916,6 +921,15 @@ tarjans()
                 break;
             }
         }
+        for (auto& p : mg->vertices)
+        {
+            MetaVertex* mv = p.second;
+            std::cout << "\nmetavertex " << mv->get_name() << ' ' << mv
+                      << " neighbors: " << "\t";
+            for (long v : mv->neighbors)
+                std::cout << v << ',' << mg->vertices[v] << ' ';
+        }
+        std::cout << "\n";
 
         if (count < 2 and size() > 1)
         {
@@ -923,7 +937,8 @@ tarjans()
             if (true or !cut_vertex_stack.empty())
             {
                 MetaVertex* mv = cut_vertex_stack.top();
-                std::cerr << "INFO: got metavrtx from cutvertex stack" << std::endl;
+                std::cerr << "INFO: got metavrtx " 
+                          << mv << " from cutvertex stack" << std::endl;
 
                 std::cerr << "INFO: trying to remove" << std::endl;
 
