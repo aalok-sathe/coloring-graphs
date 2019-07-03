@@ -7,6 +7,7 @@
 ***************************** GRAPH ********************************************
 *******************************************************************************/
 
+
 template <typename V>
 Graph<V>::
 Graph() {}
@@ -66,6 +67,7 @@ __iter__()
         throw std::logic_error("not implemented");
     return new GraphVertexIterator<V>({ vertices.begin(), size() });
 }
+
 
 /*******************************************************************************
 ***************************** BASEGRAPH ****************************************
@@ -169,6 +171,7 @@ build_coloring_graph(int k)
     return cg;
 }
 
+
 void
 BaseGraph::
 find_all_colorings(int current, int k, ColoringGraph* cg,
@@ -188,6 +191,7 @@ find_all_colorings(int current, int k, ColoringGraph* cg,
     }
 
 }
+
 
 void
 BaseGraph::
