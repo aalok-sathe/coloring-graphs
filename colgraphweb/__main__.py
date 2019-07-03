@@ -97,7 +97,7 @@ def generate():
     data.update(dict(colors=args.colors))
 
     app.bg = bg = lcg.viz.from_visjs(graphdata)
-    data.update(lcg.viz.to_visjs(bg, pyvis=True))
+    data.update(lcg.viz.to_visjs(bg, colordict=colors, colorfn=lambda v: None))
 
     app.cg = cg = bg.build_coloring_graph(args.colors)
     app.mcg = mcg = cg.tarjans()
@@ -120,6 +120,8 @@ def generate():
         )
 
     retdict = {
+        'bgcontainer': render_template('graphcontainer.html',
+                                        container_type='bg', **data),
         'mcgcontainer': render_template('graphcontainer.html',
                                         container_type='mcg', **data),
         'pcgcontainer': render_template('graphcontainer.html',
@@ -186,7 +188,6 @@ def colorbg_from_mcg():
     selected_vertex = requestdata[0]
 
     vertices = [*app.mcg.get_vertex(selected_vertex).get_vertices()]
-    print('DEBUG:', vertices)
     vname = vertices[0]
     coloring = [app.bg.get_vertex_color(vname, i, app.mcg.colors)
                 for i in range(len(app.bg))]
@@ -231,16 +232,12 @@ def colorbg(coloring_list=None):
 
     def color_from_coloring_list(v):
         name = v.get_name()
-        print('DEBUG: trying to color vertex {} in bg {}'.format(name, app.bg))
         if coloring_list[name] >= 0:
             return colorarray[coloring_list[name]]
         return None
 
     data.update(lcg.viz.to_visjs(app.bg, colordict=colors,
                                  colorfn=color_from_coloring_list))
-
-    print('DEBUG: coloredbg:', lcg.viz.to_visjs(app.bg, colordict=colors,
-                                                colorfn=color_from_coloring_list))
 
     retdict = {
         'bgcontainer': render_template('graphcontainer.html',

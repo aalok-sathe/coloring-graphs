@@ -29,6 +29,7 @@ options = {
             "springLength": 250
         },
         "enabled": true,
+        "adaptiveTimestep": true,
         "stabilization": {
             "enabled": false,//true,
             "fit": true,
@@ -53,6 +54,11 @@ function makebg() {
     // create a basegraph
     basegraph = new vis.Network(bgcontainer, bgdata, bgoptions);
     basegraph.setOptions({"manipulation": {"enabled": true}});
+    basegraph.setOptions({"physics": {"stabilization": {"enabled": true}}});
+    basegraph.on("stabilizationIterationsDone", function (params) {
+        basegraph.fit();
+    });
+    basegraph.stabilize();
     return basegraph;
 }
 
@@ -66,24 +72,27 @@ function makecg() {
     coloringgraph = new vis.Network(cgcontainer, cgdata, cgoptions);
     coloringgraph.setOptions({"interaction": {"hideEdgesOnDrag": true}});
 
-    /*
-    coloringgraph.on("stabilizationProgress", function(params) {
-            document.getElementById('loadingBar').removeAttribute("style");
-            var maxWidth = cgcontainer.width;
-            var minWidth = 1;
-            var widthFactor = params.iterations/params.total;
-            var width = Math.max(minWidth,maxWidth * widthFactor);
+    // coloringgraph.on("stabilizationProgress", function(params) {
+    //         document.getElementById('loadingBar').removeAttribute("style");
+    //         var maxWidth = cgcontainer.width;
+    //         var minWidth = 1;
+    //         var widthFactor = params.iterations/params.total;
+    //         var width = Math.max(minWidth,maxWidth * widthFactor);
+    //
+    //         document.getElementById('bar').style.width = width + 'px';
+    //         document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+    //     });
+    // coloringgraph.once("stabilizationIterationsDone", function() {
+    //         document.getElementById('text').innerHTML = '100%';
+    //         document.getElementById('bar').style.width = cgcontainer.width;//'496px';
+    //         document.getElementById('loadingBar').style.opacity = 0;
+    //         // really clean the dom element
+    //         setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+    // });
 
-            document.getElementById('bar').style.width = width + 'px';
-            document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
-        });
-    coloringgraph.once("stabilizationIterationsDone", function() {
-            document.getElementById('text').innerHTML = '100%';
-            document.getElementById('bar').style.width = cgcontainer.width;//'496px';
-            document.getElementById('loadingBar').style.opacity = 0;
-            // really clean the dom element
-            setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
-    });*/
+    // coloringgraph.on("stabilizationIterationsDone", function (params) {
+        coloringgraph.fit();
+    // });
 
     coloringgraph.on("click", function (params) {
         if (params.nodes.length > 0) {
@@ -117,7 +126,13 @@ function makemcg() {
     };
     // create a metagraph
     metacoloringgraph = new vis.Network(mcgcontainer, mcgdata, mcgoptions);
+    metacoloringgraph.setOptions({"physics": {"stabilization": {"enabled": true}}});
+    metacoloringgraph.on("stabilizationIterationsDone", function (params) {
+        metacoloringgraph.fit();
+    });
+    metacoloringgraph.stabilize();
 
+    // listener to color the BaseGraph
     metacoloringgraph.on("click", function (params) {
         if (params.nodes.length > 0) {
             var value = JSON.stringify(params.nodes, undefined, 2);
@@ -150,6 +165,33 @@ function makepcg() {
     };
     // create a metagraph
     partialcoloringgraph = new vis.Network(pcgcontainer, pcgdata, pcgoptions);
+    partialcoloringgraph.setOptions({"physics": {"stabilization": {"enabled": true}}});
+    partialcoloringgraph.on("stabilizationIterationsDone", function (params) {
+        partialcoloringgraph.fit();
+    });
+    partialcoloringgraph.stabilize();
+
+    partialcoloringgraph.on("click", function (params) {
+        if (params.nodes.length > 0) {
+            var value = JSON.stringify(params.nodes, undefined, 2);
+            $.ajax({
+                type: "POST",
+                url: "/colorbg_from_cg",
+                data: value,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var bgcontainer = $('#bgcontainer');
+                    bgcontainer.html(response['bgcontainer']);
+                    makebg();
+                },
+                error: function (response) {
+                    alert('ERROR', response);
+                }
+            });
+        }
+    });
+
     return partialcoloringgraph;
 }
 
@@ -195,12 +237,18 @@ function generate(e) {
         dataType: "json",
         success: function (response) {
             // alert('RESPONSE OK');
+            var bgcontainer = $('#bgcontainer');
+            bgcontainer.html(response['bgcontainer']);
+            makebg();
             var cgcontainer = $('#cgcontainer');
             cgcontainer.html(response['cgcontainer']);
             if (Number(response['cgsize']) <= 512) {
                 $('#force-cg-button').hide();
                 makecg();
+                coloringgraph.stabilize();
+                coloringgraph.fit();
             } else {
+                alert('coloringgraph not loaded due to size. you can choose to display it anyway.');
                 $('#force-cg-button').show();
             }
             var mcgcontainer = $('#mcgcontainer');

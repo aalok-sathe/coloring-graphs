@@ -43,6 +43,8 @@ def _to_visjs(g, colordict={1: '#039be5', 0: '#ef5350'},
                       }
         if colorfn and colorfn(v):
             nodes[name]['color'] = colordict[colorfn(v)]
+        if hasattr(g, 'locations'):
+            nodes[name]['x'], nodes[name]['y'] = g.locations[name]
 
         for n in v.get_neighbors():
             edge = tuple(sorted([name, n]))
@@ -108,5 +110,9 @@ def from_visjs(data, *args, **kwargs):
     for node in data:
         for nbr in node['connections']:
             g.make_edge(lookup[node['id']], lookup[str(nbr)])
+
+    g.locations = dict()
+    for node in data:
+        g.locations[lookup[node['id']]] = (node['x'], node['y'])
 
     return g
