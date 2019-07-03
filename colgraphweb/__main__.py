@@ -51,6 +51,7 @@ colors = {
             'brown': '#795548',
             'white': 'white',#'#f5f5f5',
          }
+colorarray = ['yellow', 'green', 'purple', 'white', 'pink', 'brown']
 
 randomcolors = {}
 randomcolors.update(colors)
@@ -172,15 +173,74 @@ def get_stats():
     return response
 
 
-@app.route('/colorbg', methods=['POST'])
-def colorbg():
+
+@app.route('/colorbg_from_mcg', methods=['POST'])
+def colorbg_from_mcg():
     '''
+    returns a coloring specification to pass to the graph drawing utility
+    using a vertex of the meta coloring graph. the important thing to note is
+    that a MetaVertex can represent multiple colorings, so only the fixed
+    coloring positions will be so colored in the basegraph
     '''
     requestdata = request.get_json()
-    clicked = requestdata[0]
+    selected_vertex = requestdata[0]
 
-    # vertices = [*app.mcg.get_vertex(cli)] # TODO
-    # data.update(lcg.viz.to_visjs(bg, colordict=colors, colorfn=))
+    vertices = [*app.mcg.get_vertex(selected_vertex).get_vertices()]
+    print('DEBUG:', vertices)
+    vname = vertices[0]
+    coloring = [app.bg.get_vertex_color(vname, i, app.mcg.colors)
+                for i in range(len(app.bg))]
+
+    for vname in vertices:
+        altcoloring = [app.bg.get_vertex_color(vname, i, app.mcg.colors)
+                       for i in range(len(app.bg))]
+        for i, (a, b) in enumerate(zip(coloring, altcoloring)):
+            if a != b:
+                coloring[i] = -1
+
+    return colorbg(coloring)
+
+
+@app.route('/colorbg_from_cg', methods=['POST'])
+def colorbg_from_cg():
+    '''
+    returns a colorfn to pass to the graph drawing utility. a single coloring
+    vertex fully specifies the coloring of the basegraph, and so the basegraph
+    will be fully colored based on the output of this method
+    '''
+    requestdata = request.get_json()
+    selected_vertex = requestdata[0]
+
+    coloring = [app.bg.get_vertex_color(selected_vertex, i, app.cg.colors)
+                for i in range(len(app.bg))]
+
+    return colorbg(coloring)
+
+
+@app.route('/colorbg', methods=['POST'])
+def colorbg(coloring_list=None):
+    '''
+    given a list of colors (or indetermined colors) for the basegraph, with
+    each position in the list corresponding to a vertex, returns a colored
+    view of the basegraphbased on that coloring. this function defines the
+    colorfn based on supplied coloring_list
+    '''
+    if not coloring_list:
+        requestdata = request.get_json()
+        coloring_list = requestdata[0]
+
+    def color_from_coloring_list(v):
+        name = v.get_name()
+        print('DEBUG: trying to color vertex {} in bg {}'.format(name, app.bg))
+        if coloring_list[name] >= 0:
+            return colorarray[coloring_list[name]]
+        return None
+
+    data.update(lcg.viz.to_visjs(app.bg, colordict=colors,
+                                 colorfn=color_from_coloring_list))
+
+    print('DEBUG: coloredbg:', lcg.viz.to_visjs(app.bg, colordict=colors,
+                                                colorfn=color_from_coloring_list))
 
     retdict = {
         'bgcontainer': render_template('graphcontainer.html',
@@ -191,6 +251,7 @@ def colorbg():
                                   mimetype='application/json')
 
     return response
+
 
 
 @app.route('/save', methods=['POST'])

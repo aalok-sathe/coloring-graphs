@@ -41,7 +41,7 @@ def _to_visjs(g, colordict={1: '#039be5', 0: '#ef5350'},
                         'group': str(len(v)),
                         'shape': 'dot',
                       }
-        if colorfn(v):
+        if colorfn and colorfn(v):
             nodes[name]['color'] = colordict[colorfn(v)]
 
         for n in v.get_neighbors():

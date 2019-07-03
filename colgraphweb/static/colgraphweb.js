@@ -85,6 +85,27 @@ function makecg() {
             setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
     });*/
 
+    coloringgraph.on("click", function (params) {
+        if (params.nodes.length > 0) {
+            var value = JSON.stringify(params.nodes, undefined, 2);
+            $.ajax({
+                type: "POST",
+                url: "/colorbg_from_cg",
+                data: value,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var bgcontainer = $('#bgcontainer');
+                    bgcontainer.html(response['bgcontainer']);
+                    makebg();
+                },
+                error: function (response) {
+                    alert('ERROR', response);
+                }
+            });
+        }
+    });
+
     return coloringgraph;
 }
 
@@ -102,12 +123,12 @@ function makemcg() {
             var value = JSON.stringify(params.nodes, undefined, 2);
             $.ajax({
                 type: "POST",
-                url: "/colorbg",
+                url: "/colorbg_from_mcg",
                 data: value,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    var bgcontainer = document.getElementById('bgcontainer');
+                    var bgcontainer = $('#bgcontainer');
                     bgcontainer.html(response['bgcontainer']);
                     makebg();
                 },
