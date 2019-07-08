@@ -11,6 +11,8 @@
 #include <stack>
 #include "GraphTemplates.h"
 #include "Vertex.h"
+#include <boost/multiprecision/cpp_int.hpp>
+using namespace boost::multiprecision;
 
 
 // forward declarations
@@ -89,6 +91,8 @@ class BaseGraph : public Graph<BaseVertex>
         // encoding
         int get_vertex_color(long coloring, long name, int k);
 
+        void setup_recursion_matrix(int k);
+
         // builds a coloring graph with k colors for this graph
         ColoringGraph* build_coloring_graph(int k);
 
@@ -108,6 +112,8 @@ class BaseGraph : public Graph<BaseVertex>
         // returns an iterator object pointer over this graph's vertices
         const BaseGraphVertexIterator* __iter__();
         const BaseGraphVertexIterator* get_vertices();
+
+        std::vector<int128_t> recursion_matrix;
 };
 
 

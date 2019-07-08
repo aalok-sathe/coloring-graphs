@@ -11,6 +11,9 @@
 #include "Graph.h"
 #include "GraphTemplates.h"
 
+#include <boost/multiprecision/cpp_int.hpp>
+using namespace boost::multiprecision;
+
 // forward declarations
 class Vertex;
 class BaseVertex;
@@ -148,6 +151,9 @@ class BaseVertex : public Vertex
         // support iteration over its neighbors
         BaseVertexNeighborIterator* __iter__();
         BaseVertexNeighborIterator* get_neighbors();
+
+        int128_t block_bits;
+        int128_t adjacency_bits;
 };
 
 
