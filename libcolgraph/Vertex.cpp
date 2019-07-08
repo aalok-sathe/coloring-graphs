@@ -73,6 +73,14 @@ reset_neighbor_track()
 }
 
 
+bool
+BaseVertex::
+has_next_neighbor()
+{
+    return nt->hasnext();
+}
+
+
 BaseVertexNeighborIterator*
 BaseVertex::
 get_neighbors()
@@ -108,6 +116,14 @@ ColoringVertex::
 get_next_neighbor()
 {
     return nt->next();
+}
+
+
+bool
+ColoringVertex::
+has_next_neighbor()
+{
+    return nt->hasnext();
 }
 
 
@@ -323,9 +339,10 @@ void
 MetaVertex::
 add_neighbor(MetaVertex& other)
 {
-    // std::cout << "ADD_NBR" << "\n";
-    // return;
     neighbors.insert(other.name);
+    delete nt;
+    nt = new MetaVertexNeighborIterator(neighbors.begin(),
+                                        (long)neighbors.size());
 }
 
 
@@ -356,6 +373,24 @@ MetaVertex::
 get_next_neighbor()
 {
     return nt->next();
+}
+
+
+bool
+MetaVertex::
+has_next_neighbor()
+{
+    return nt->hasnext();
+}
+
+
+void
+MetaVertex::
+reset_neighbor_track()
+{
+    delete nt;
+    nt = new MetaVertexNeighborIterator(neighbors.begin(),
+                                        (long)neighbors.size());
 }
 
 

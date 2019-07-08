@@ -491,6 +491,15 @@ get_cut_vertices()
 }
 
 
+const MetaGraphCutVertexIterator*
+MetaGraph::
+get_mothership_cut_vertices()
+{
+    return new MetaGraphCutVertexIterator(mothership_cut_vertices.begin(),
+                                          mothership_cut_vertices.size());
+}
+
+
 // helper method for the rebuild_partial_graph method
 void
 MetaGraph::
@@ -498,11 +507,11 @@ _DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
              std::unordered_set<long>& mothership)
 {
     bool verbose = false;
-    char* verbosityptr = std::getenv("VERBOSE");  
+    char* verbosityptr = std::getenv("VERBOSE");
     if (verbosityptr != NULL)
         if (std::string(verbosityptr) == "1")
             verbose = true;
-    
+
     ColoringVertex* v = itercg->vertices[name];
 
     if (verbose)
@@ -515,7 +524,7 @@ _DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
         {
             if (verbose)
             std::cerr << "found unvisited neighbor " << nbr << std::endl;
-            
+
             cg->add_vertex(nbr);
             _DFS_and_add(cg, itercg, nbr, mothership);
         }
@@ -528,30 +537,32 @@ MetaGraph::
 rebuild_partial_graph()
 {
     bool verbose = false;
-    char* verbosityptr = std::getenv("VERBOSE");  
+    char* verbosityptr = std::getenv("VERBOSE");
     if (verbosityptr != NULL)
         if (std::string(verbosityptr) == "1")
             verbose = true;
-    
+
     if (verbose)
     std::cerr << "rebuild_partial_graph called\n";
 
+    // create a cg to return
     ColoringGraph* cg = new ColoringGraph(colors, base);
+    // another copy of the coloring graph used only for iteration, so any
+    // updated state of cg doesn't affect the DFS in ways it shouldn't
     ColoringGraph* itercg = new ColoringGraph(colors, base);
 
     // gather all the unique cut vertices, i.e., no two cut
     // vertices from the same isomorphism class should be allowed
     // to be picked together
+    mothership_cut_vertices.clear();
     unique_cut_vertices.clear();
     for (const long& candidate : cut_vertices)
     {
-        // MetaVertex* v = p.second;
-        // if (v->size() != 1)
-        //     continue;
-
         if (verbose)
         std::cerr << "found potential cut vertex " << candidate << std::endl;
 
+        // if the current candidate vertex is part of the same isomorphism
+        // class then do not include it
         bool insert = true;
         for (auto& vname : unique_cut_vertices)
         {
@@ -591,32 +602,55 @@ rebuild_partial_graph()
     // make a set of all vertices belonging to any of the maximal sized
     // vertex to exclude from DFSing later
     std::unordered_set<long> mothervertices;
-    if (distinctsizes)
-    {
-        for (auto& p : vertices)
-            if (p.second->size() == largest)
-                for (const long& vname : p.second->vertices)
-                    mothervertices.insert(vname);
-            else
-                continue;
-    }
 
+    // construct 'itercg', a graph of only the coloring vertices that are not
+    // in the mothership or are cut vertices
     if (distinctsizes)
     {
         for (auto& p : vertices)
         {
             MetaVertex* mv = p.second;
             if (mv->size() == largest)
-                continue;
-            for (const long& v : mv->vertices)
-                itercg->add_vertex(v);
+            {
+                for (const long& vname : mv->vertices)
+                {
+                    if (cut_vertices.find(vname) != cut_vertices.end())
+                    {
+                        if (verbose)
+                        std::cerr << "inserting " << vname
+                                  << " into mothership_cut_vertices" << "\n";
+                        // mothership_cut_vertices.insert(vname);
+                    }
+                }
+            }
+            else
+            {
+                for (const long& vname : mv->vertices)
+                    itercg->add_vertex(vname);
+            }
+        }
+
+        for (const long& cutv : cut_vertices)
+        {
+            bool present = false;
+            for (auto& iterpair : itercg->vertices)
+            {
+                if (iterpair.first == cutv)
+                {
+                    present = true;
+                    break;
+                }
+            }
+
+            if (not present)
+                mothership_cut_vertices.insert(cutv);
         }
 
         for (long cutv : unique_cut_vertices)
         {
             if (verbose)
             std::cerr << "adding cut vertex " << cutv << " to cg\n";
-            
+
             cg->add_vertex(cutv);
             _DFS_and_add(cg, itercg, cutv, mothervertices);
         }
@@ -651,7 +685,7 @@ Graph<V>::
 tarjans()
 {
     bool verbose = false;
-    char* verbosityptr = std::getenv("VERBOSE");  
+    char* verbosityptr = std::getenv("VERBOSE");
     if (verbosityptr != NULL)
         if (std::string(verbosityptr) == "1")
             verbose = true;
@@ -722,7 +756,7 @@ tarjans()
                 rootmv->depth = vertices[root]->depth;
                 rootmv->vertices.insert(root);
                 continue;
-        
+
                 if (verbose)
                 std::cerr << "INFO: SHOULD NEVER SEE THIS!!! PAST CONTINUE "
                           << std::endl;
@@ -985,7 +1019,7 @@ tarjans()
             {
                 MetaVertex* mv = cut_vertex_stack.top();
                 if (verbose)
-                std::cerr << "INFO: got metavrtx " 
+                std::cerr << "INFO: got metavrtx "
                           << mv << " from cutvertex stack" << std::endl;
 
                 if (verbose)
