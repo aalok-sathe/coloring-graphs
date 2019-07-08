@@ -7,7 +7,7 @@ variables:
 stages:
     - deploy
     - status
-    
+
 build:
     image: "quay.io/pypa/manylinux1_x86_64"
     stage: deploy
@@ -57,6 +57,11 @@ pages:
         - build
     script:
         - mkdir -p public
+        - apt install wget
+        - make install
+        - colgraphweb -p 5000 -i in/hexmod.in -k4
+        - wget -E -k -p http://localhost:5000
+        - mv localhost*/* public/
     artifacts:
         paths:
             - public/
