@@ -52,13 +52,16 @@ build:
         name: dev
 
 pages:
+    image: python:3.6
     stage: status
     dependencies:
         - build
-    script:
+    before_script:
         - mkdir -p public
         - apt install wget
+        - apt install python3-pip
         - make install
+    script:
         - colgraphweb -p 5000 -i in/hexmod.in -k4
         - wget -E -k -p http://localhost:5000
         - mv localhost*/* public/
