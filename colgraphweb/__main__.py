@@ -56,12 +56,12 @@ def index():
         bg = lcg.viz.from_visjs(graphdata)
         cg = bg.build_coloring_graph(args.colors)
         mcg = cg.tarjans()
-        pcg = mcg.rebuild_partial_graph()
+        #pcg = mcg.rebuild_partial_graph()
 
         data.update(lcg.viz.to_visjs(bg))
         data.update(lcg.viz.to_visjs(cg))
         data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
-        data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
+        # data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
 
         print('handling POST on index!')
 
@@ -113,13 +113,13 @@ def flaskgui(url='http://localhost', port='5000'):
 
     cg = bg.build_coloring_graph(args.colors)
     mcg = cg.tarjans()
-    pcg = mcg.rebuild_partial_graph()
+    # pcg = mcg.rebuild_partial_graph()
 
     global data
     data.update(lcg.viz.to_visjs(bg))
     data.update(lcg.viz.to_visjs(cg))
     data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
-    data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
+    # data.update(lcg.viz.to_visjs(pcg, force_type='pcg'))
 
     app.run(port=port)
 
