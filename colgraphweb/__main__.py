@@ -26,7 +26,7 @@ parser.add_argument('-i', '--input-file', type=str,
 parser.add_argument('-n', '--new', default=True, action='store_true',
                     help='open a blank canvas?')
 parser.add_argument('-s', '--select_file', default=False, action='store_true',
-                    help='open a blank canvas?')
+                    help='open file choosing gui dialogue?')
 parser.add_argument('-k', '--colors', type=int, default=3,
                     help='number of colors to use to create ColoringGraph')
 parser.add_argument('-v', '--verbosity', action='count', default=0,
@@ -35,6 +35,11 @@ parser.add_argument('-p', '--port', default='5000', type=str,
                     help='port to launch GUI on')
 parser.add_argument('-w', '--webbrowser', default=False, action='store_true',
                     help='open app in default web browser window?')
+parser.add_argument('-r', '--render_on_launch', default=False, 
+                    action='store_true', help='render to-generate componenets '
+                                              'on initial launch?')
+parser.add_argument('-d', '--debug', default=False, action='store_true',
+                    help='launch Flask app in debug mode?')
 args = parser.parse_args()
 
 global data
@@ -78,14 +83,44 @@ def index():
     return render_template('defaultview.html', **data)
 
 
+def cvcolorfngen(cut_verts):
+    return lambda v: 'red' if v.get_name() in cut_verts else None
+
+
+def update_bg_data(bg):
+    '''
+    '''
+    global data
+    data.update(lcg.viz.to_visjs(bg, colordict=colors, colorfn=lambda v: None))
+
+
+def update_cg_data(cg):
+    '''
+    '''
+    global data
+    data.update(lcg.viz.to_visjs(cg, colordict=colors,
+                                 colorfn=cvcolorfngen(app.cut_verts)))
+
+
+def update_mcg_data(mcg):
+    '''
+    '''
+    global data
+    data.update(lcg.viz.to_visjs(mcg))
+
+
+def update_pcg_data(pcg):
+    '''
+    '''
+    global data
+    data.update(lcg.viz.to_visjs(pcg, force_type='pcg', colordict=colors,
+                                 colorfn=cvcolorfngen(app.cut_verts)))
+
 
 @app.route('/generate', methods=['POST'])
 def generate():
     '''
     '''
-    # if request.method != 'POST':
-    #     raise RuntimeError
-
     requestdata = request.get_json()
     # print(requestdata)
     print('handling POST on generate!')
@@ -97,21 +132,15 @@ def generate():
     data.update(dict(colors=args.colors))
 
     app.bg = bg = lcg.viz.from_visjs(graphdata)
-    data.update(lcg.viz.to_visjs(bg, colordict=colors, colorfn=lambda v: None))
+    update_bg_data(bg)
 
     app.cg = cg = bg.build_coloring_graph(args.colors)
     app.mcg = mcg = cg.tarjans()
     app.cut_verts = cut_verts = [*mcg.get_cut_vertices()]
-    data.update(lcg.viz.to_visjs(mcg, force_type='mcg'))
-
-    # random.shuffle(randomcolors)
-    def cvcolor(v):
-        return 'red' if v.get_name() in cut_verts else None
-    data.update(lcg.viz.to_visjs(cg, colordict=colors, colorfn=cvcolor))
+    update_mcg_data(mcg)
 
     app.pcg = pcg = mcg.rebuild_partial_graph()
-    data.update(lcg.viz.to_visjs(pcg, force_type='pcg', colordict=colors,
-                                 colorfn=cvcolor))
+    update_pcg_data(pcg)
 
     app.statsdict = statsdict = dict(
             cgsize=len(cg),
@@ -128,10 +157,12 @@ def generate():
                                         container_type='pcg', **data),
         'cgsize': app.statsdict['cgsize'],
                 }
-    app.cghtml = render_template('graphcontainer.html',
-                                 container_type='cg', **data)
+    
 
     if len(cg) <= 512:
+        update_cg_data(cg)
+        app.cghtml = render_template('graphcontainer.html',
+                                 container_type='cg', **data)
         retdict.update({'cgcontainer': app.cghtml})
 
     response = app.response_class(status=200, response=json.dumps(retdict),
@@ -148,6 +179,9 @@ def get_cg_data():
     # print(requestdata)
     print('handling POST on get_cg_data!')
 
+    update_cg_data(app.cg)
+    app.cghtml = render_template('graphcontainer.html',
+                                 container_type='cg', **data)
     retdict = {'cgcontainer': app.cghtml}
 
     response = app.response_class(status=200, response=json.dumps(retdict),
@@ -262,19 +296,33 @@ def runflaskgui(url='http://localhost', port='5000'):
     '''
     '''
     app.config['ENV'] = 'development'
-    app.config['DEBUG'] = True
+    app.config['DEBUG'] = args.debug
     app.config['TESTING'] = True
 
     bg = lcg.BaseGraph()
-    # cg = bg.build_coloring_graph(args.colors)
-    # mcg = cg.tarjans()
-    # pcg = mcg.rebuild_partial_graph()
-
     if args.input_file:
         bg.load_txt(args.input_file)
 
-    global data
-    data.update(lcg.viz.to_visjs(bg, pyvis=True))
+    update_bg_data(bg)
+
+    if args.render_on_launch:
+        app.cg = cg = bg.build_coloring_graph(args.colors)
+        app.mcg = mcg = cg.tarjans()
+        app.pcg = pcg = mcg.rebuild_partial_graph()
+        app.cut_verts = cut_verts = [*mcg.get_cut_vertices()]
+        app.pcg = pcg = mcg.rebuild_partial_graph()
+        
+        update_mcg_data(mcg)
+        update_cg_data(cg)
+        update_pcg_data(pcg)
+
+        app.statsdict = statsdict = dict(
+            cgsize=len(cg),
+            is_connected=cg.is_connected(),
+            is_biconnected=cg.is_biconnected(),
+        )
+        data.update({'cgstats': ' '.join(['{}: {},'.format(k, v)
+                                for k, v in app.statsdict.items()])}) 
 
     app.run(port=port)
 
