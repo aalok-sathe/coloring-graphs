@@ -11,7 +11,7 @@
 #include "Graph.h"
 #include "GraphTemplates.h"
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include <./boost/cpp_int.hpp>
 using namespace boost::multiprecision;
 
 // forward declarations
