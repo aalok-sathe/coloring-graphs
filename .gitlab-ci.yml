@@ -58,9 +58,9 @@ pages:
         - build
     before_script:
         - mkdir -p public
-        - apt update && apt upgrade
-        - apt install wget
-        - apt install python3-pip
+        - apt update && apt upgrade -y
+        - apt install -y wget
+        - apt install -y python3-pip
         - make install
     script:
         - colgraphweb -p 5000 -i in/hexmod.in -k4
