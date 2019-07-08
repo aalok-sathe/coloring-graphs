@@ -308,10 +308,7 @@ MetaVertex(long name_)
 
 MetaVertex::
 ~MetaVertex()
-{
-    std::cerr << "DEBUG: ~destructor called on " << name
-              << " with identity " << identity << std::endl;
-}
+{}
 
 
 int
@@ -337,11 +334,6 @@ void
 MetaVertex::
 connect(MetaVertex* v)
 {
-    std::cerr << "CONNECT called with " 
-              << v << " on " << this << "\n";
-    
-    if (v == NULL)
-        return;
     add_neighbor(*v);
     v->add_neighbor(*this);
 }
@@ -352,15 +344,6 @@ void
 MetaVertex::
 disconnect(MetaVertex* v)
 {
-    std::cerr << "DISCONNECT called with " << v << "\n";
-    
-    if (v == NULL)
-    {
-        std::cerr << "encountered NULL ptr\n";
-        return;
-    }
-
-    // std::unordered_set<long>::iterator it;
     if (this->neighbors.find(v->name) != this->neighbors.end())
 	    this->neighbors.erase(v->name);
     if (v->neighbors.find(this->name) != v->neighbors.end())

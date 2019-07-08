@@ -436,8 +436,6 @@ add_vertex()
     long name = size();
     add_vertex(name);
 
-    std::cerr << "!!added vertex with name " << name << " and returning "
-              << vertices[name] << std::endl;
     return vertices[name];
 }
 
@@ -461,11 +459,8 @@ remove_vertex(MetaVertex* m)
     while (!m->neighbors.empty())
 	{
         it = m->neighbors.begin();
-        std::cerr << "!!!disconn. " << ' ' << *it << ' '
-                  << vertices[*it] << "\n";
         m->disconnect(vertices[*it]);
 	}
-    // std::cerr << "done removing all nbrs" << "\n";
 
 	vertices.erase(m->name);
 }
@@ -502,8 +497,15 @@ MetaGraph::
 _DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
              std::unordered_set<long>& mothership)
 {
+    bool verbose = false;
+    char* verbosityptr = std::getenv("VERBOSE");  
+    if (verbosityptr != NULL)
+        if (std::string(verbosityptr) == "1")
+            verbose = true;
+    
     ColoringVertex* v = itercg->vertices[name];
 
+    if (verbose)
     std::cerr << "DFSing on " << name << std::endl;
 
     while (v->nt->hasnext())
@@ -511,7 +513,9 @@ _DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
         long nbr = v->get_next_neighbor();
         if (cg->vertices.find(nbr) == cg->vertices.end())
         {
+            if (verbose)
             std::cerr << "found unvisited neighbor " << nbr << std::endl;
+            
             cg->add_vertex(nbr);
             _DFS_and_add(cg, itercg, nbr, mothership);
         }
@@ -523,6 +527,13 @@ ColoringGraph*
 MetaGraph::
 rebuild_partial_graph()
 {
+    bool verbose = false;
+    char* verbosityptr = std::getenv("VERBOSE");  
+    if (verbosityptr != NULL)
+        if (std::string(verbosityptr) == "1")
+            verbose = true;
+    
+    if (verbose)
     std::cerr << "rebuild_partial_graph called\n";
 
     ColoringGraph* cg = new ColoringGraph(colors, base);
@@ -538,6 +549,7 @@ rebuild_partial_graph()
         // if (v->size() != 1)
         //     continue;
 
+        if (verbose)
         std::cerr << "found potential cut vertex " << candidate << std::endl;
 
         bool insert = true;
@@ -545,6 +557,7 @@ rebuild_partial_graph()
         {
             if (candidate != vname and cg->is_isomorphic(candidate, vname))
             {
+                if (verbose)
                 std::cerr << "INFO: turns out " << candidate << " is isomorphic"
                           << " to " << vname << "already in the set\n";
                 insert = false;
@@ -555,6 +568,7 @@ rebuild_partial_graph()
             unique_cut_vertices.insert(candidate);
     }
 
+    if (verbose)
     std::cerr << "found " << unique_cut_vertices.size() << " cut verts\n";
 
     // survey the metavertices to find out
@@ -600,7 +614,9 @@ rebuild_partial_graph()
 
         for (long cutv : unique_cut_vertices)
         {
+            if (verbose)
             std::cerr << "adding cut vertex " << cutv << " to cg\n";
+            
             cg->add_vertex(cutv);
             _DFS_and_add(cg, itercg, cutv, mothervertices);
         }
@@ -634,11 +650,18 @@ MetaGraph*
 Graph<V>::
 tarjans()
 {
+    bool verbose = false;
+    char* verbosityptr = std::getenv("VERBOSE");  
+    if (verbosityptr != NULL)
+        if (std::string(verbosityptr) == "1")
+            verbose = true;
+
     //*****************************
     // Declare helper variables and structures
 
     MetaGraph* mg =  new MetaGraph();
 
+    if (verbose)
     std::cerr << "INFO: initialized empty metagraph" << std::endl;
 
     long next, root, child;
@@ -647,11 +670,11 @@ tarjans()
     typename std::stack<MetaVertex*> cut_vertex_stack;
     typename std::unordered_set<MetaVertex*> cut_vertex_set;
 
+    if (verbose)
     std::cerr << "INFO: initialized local variables" << std::endl;
 
     //*****************************
     // Main body of the method
-
 
     // For loop ensures all vertices
     // will be processed in case the
@@ -659,6 +682,7 @@ tarjans()
     int numcomponents = 0;
     for (auto& v : this->vertices)
     {
+        if (verbose)
         std::cerr << std::endl << "INFO: processing vertex " << v.first
                   << " at line " << __LINE__ << std::endl;
 
@@ -681,6 +705,7 @@ tarjans()
             list.push_back(next);
             current = list.begin();
 
+            if (verbose)
             std::cerr << "INFO: vertices[root]->nt->hasnext()="
                       << vertices[root]->nt->hasnext() << " for root="
                       << *current
@@ -689,6 +714,7 @@ tarjans()
 
             if (!vertices[root]->nt->hasnext())
             {
+                if (verbose)
                 std::cerr << "INFO: !vertices[root]->nt->hasnext() "
                           << "so creating standalone MV " << root << std::endl;
                 MetaVertex* rootmv = mg->add_vertex();
@@ -696,12 +722,15 @@ tarjans()
                 rootmv->depth = vertices[root]->depth;
                 rootmv->vertices.insert(root);
                 continue;
+        
+                if (verbose)
                 std::cerr << "INFO: SHOULD NEVER SEE THIS!!! PAST CONTINUE "
                           << std::endl;
 
             }
 
 
+            if (verbose)
             std::cerr << "INFO: vertices[next]->depth == -1 "
                       << "so adding to the current state list" << std::endl;
         }
@@ -711,6 +740,7 @@ tarjans()
 
         while (true)
         {
+            if (verbose)
             std::cerr << std::endl << "INFO: top of while loop; current="
                       << vertices[*current]->get_name() << '\t' << __LINE__
                       << std::endl;
@@ -718,6 +748,7 @@ tarjans()
             bool execif = true;
             try
             {
+                if (verbose)
                 std::cerr << "DEBUG: try to get next neighbor of "
                           << vertices[*current]->name
                           << " at line " << __LINE__ << "\n";
@@ -726,6 +757,7 @@ tarjans()
             catch (std::out_of_range& e)
             {
                 execif = false;
+                if (verbose)
                 std::cerr << "DEBUG: no more neighbors of "
                           << vertices[*current]->name
                           << " at line " << __LINE__ << "\n";
@@ -740,6 +772,7 @@ tarjans()
                 vertices[child]->parent = current;
                 vertices[child]->depth = vertices[*current]->depth + 1;
 
+                if (verbose)
                 std::cerr << "INFO: new child " << child << " of vertex "
                           << vertices[*current]->get_name()
                           << ". depth of child set to "
@@ -758,6 +791,7 @@ tarjans()
 
                 if (vertices[*current]->nt->hasnext())
                 {
+                    if (verbose)
                     std::cerr << "INFO: " << vertices[*current]->name
                               << " might have more children; continue "
                               << " lowpoint set to "
@@ -776,6 +810,7 @@ tarjans()
                         vertices[*current]->lowpoint
                     );
 
+                if (verbose)
                 std::cerr << "`current` stats: "
                           << vertices[*current]->name << "\n"
                           << "\tlowpoint=" << vertices[*current]->lowpoint
@@ -806,6 +841,7 @@ tarjans()
                     // This MetaVertex will store all vertices
                     // in the biconnected component
 
+                    if (verbose)
                     std::cerr << "DEBUG: constructing a blank metavertex at "
                               << __LINE__ << "\n";
                     MetaVertex* main = mg->add_vertex();
@@ -819,6 +855,7 @@ tarjans()
                     //                       list.end());
                     main->vertices.insert(current, list.end());
                     // Also add the cut vertex itself
+                    if (verbose)
                     std::cerr << "DEBUG: add cut vertex " << *found_cut_vertex
                               << "to metavertex " << main->name << "at line "
                               << __LINE__ << "\n";
@@ -835,6 +872,7 @@ tarjans()
                     // So we connect them to the component.
 
                     if (!cut_vertex_stack.empty())
+                        if (verbose)
                         std::cerr << "DEBUG: cut vertex stack top depth="
                                   << cut_vertex_stack.top()->depth
                                   << ", found cut vertex depth="
@@ -848,6 +886,7 @@ tarjans()
                            != main->vertices.end())
                     {
                         main->connect(cut_vertex_stack.top());
+                        if (verbose)
                         std::cerr << "INFO: connecting " << main->name
                                   << " and " << cut_vertex_stack.top()->name
                                   << "\n";
@@ -858,6 +897,7 @@ tarjans()
                         else
                             break;
 
+                        if (verbose)
                         std::cerr << "INFO: popping stuff from stack.\n";
                     }
 
@@ -882,6 +922,7 @@ tarjans()
                         main->connect(cut);
 
                         // Add the cut vertex to the stack
+                        if (verbose)
                         std::cerr << "INFO: adding MetaVertex " << cut->name
                                   << "to the stack at " << __LINE__ << "\n";
                         cut_vertex_stack.push(cut);
@@ -928,10 +969,12 @@ tarjans()
         for (auto& p : mg->vertices)
         {
             MetaVertex* mv = p.second;
-            std::cout << "\nmetavertex " << mv->get_name() << ' ' << mv
+            if (verbose)
+            std::cerr << "\nmetavertex " << mv->get_name() << ' ' << mv
                       << " neighbors: " << "\t";
+            if (verbose)
             for (long v : mv->neighbors)
-                std::cout << v << ',' << mg->vertices[v] << ' ';
+                std::cerr << v << ',' << mg->vertices[v] << ' ';
         }
         std::cout << "\n";
 
@@ -941,14 +984,17 @@ tarjans()
             if (true or !cut_vertex_stack.empty())
             {
                 MetaVertex* mv = cut_vertex_stack.top();
+                if (verbose)
                 std::cerr << "INFO: got metavrtx " 
                           << mv << " from cutvertex stack" << std::endl;
 
+                if (verbose)
                 std::cerr << "INFO: trying to remove" << std::endl;
 
                 cut_vertex_stack.pop();
                 mg->remove_vertex(mv);
 
+                if (verbose)
                 std::cerr << "INFO: done processing count < 2 case" << std::endl;
             }
 
@@ -964,6 +1010,7 @@ tarjans()
         if (pair.second->size() == 1)
             mg->cut_vertices.insert(*pair.second->vertices.begin());
 
+    if (verbose)
     std::cerr << "INFO: about to return now" << std::endl;
 
     return mg;
