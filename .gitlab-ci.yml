@@ -58,6 +58,7 @@ pages:
         - build
     before_script:
         - mkdir -p public
+        - apt update && apt upgrade
         - apt install wget
         - apt install python3-pip
         - make install
