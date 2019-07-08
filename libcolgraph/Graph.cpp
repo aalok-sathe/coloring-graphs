@@ -2,6 +2,8 @@
 #define __GRAPH_CPP__
 
 #include "Graph.h"
+#include <cmath>
+
 
 
 /*******************************************************************************
@@ -154,6 +156,38 @@ load_txt(char* path)
 //     return cg;
 // }
 
+void BaseGraph::setup_recursion_matrix(int k)
+{
+    vertices.find(0)->second->block_bits = (1 << k) - 1;
+    for (int i = 1; i < vertices.size(); i++)
+    {
+        vertices.find(i)->second->block_bits = (vertices.find(i-1)->second->block_bits << k);
+    }
+
+    int128_t temp = 1;
+    for (int i = 0; i < vertices.size(); i++)
+    {
+        BaseVertex* current = vertices.find(i)->second;
+        for (long name : current->neighbors)
+        {
+            current->adjacency_bits |= (temp << (name * k));
+        }
+        current->adjacency_bits |= (temp << (current->name * k));
+    }
+
+
+    for (int i = 0; i < vertices.size(); i++)
+    {
+        BaseVertex* current = vertices.find(i)->second;
+        temp = current->adjacency_bits;
+
+        for (int j = 0; j < k; j++)
+        {
+            recursion_matrix[k * i + j] = (temp | current->block_bits);
+            temp << 1;
+        }
+    }
+}
 
 ColoringGraph*
 BaseGraph::
