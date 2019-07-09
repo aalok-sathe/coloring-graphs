@@ -36,6 +36,8 @@ build:
         - if /opt/python/cp35-cp35m/bin/python -m twine upload dist/*.tar.gz  --verbose && /opt/python/cp35-cp35m/bin/python -m twine upload dist/*manylinux*.whl --verbose; then echo "PASSED JOB" && /opt/python/cp35-cp35m/bin/python -m anybadge --label=pipeline --value=passing --file=build.svg passing=green failing=red; else echo "FAILED JOB" && /opt/python/cp35-cp35m/bin/python -m anybadge --label=pipeline --value=failing --file=build.svg passing=green  failing=red; fi
         - mkdir -p public; mv build.svg public/build.svg
     after_script:
+        - alias python3=/opt/python/cp35-cp35m/bin/python
+        - sed -i "s/python3/$PYBIN/g" Makefile
         - make && make install
         - /opt/python/cp35-cp35m/bin/python colgraphweb/__main__.py -p 5000 -i in/hexmod.in -k4 -r
         - wget -E -k -p http://localhost:5000
