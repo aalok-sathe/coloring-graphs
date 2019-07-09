@@ -1009,7 +1009,9 @@ tarjans()
 
         if (count < 2 and size() > 1)
         {
+            if (verbose)
             std::cerr << "INFO: count < 2" << std::endl;
+            
             if (true or !cut_vertex_stack.empty())
             {
                 MetaVertex* mv = cut_vertex_stack.top();
