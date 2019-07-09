@@ -3,6 +3,13 @@
 
 %import "GraphTemplates.h"
 
+%include "typemaps.i"
+%include "std_vector.i"
+
+%template(IntVector) std::vector<int>;
+%template(LongVector) std::vector<long>;
+%template(IntVectorVector) std::vector<std::vector<int> >;
+
 %template(GBVIt) GraphVertexIterator<BaseVertex>;
 %template(GCVIt) GraphVertexIterator<ColoringVertex>;
 %template(GMVIt) GraphVertexIterator<MetaVertex>;
