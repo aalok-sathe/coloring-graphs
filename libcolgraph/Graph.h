@@ -11,7 +11,7 @@
 #include <stack>
 #include "GraphTemplates.h"
 #include "Vertex.h"
-#include <./boost/cpp_int.hpp>
+#include <cpp_int.hpp>
 using namespace boost::multiprecision;
 
 
