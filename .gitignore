@@ -1,6 +1,7 @@
 libcolgraph.py
 
 # MISC
+*/libcolgraph/boost_1_68_0/*
 *.swp
 
 # PY
