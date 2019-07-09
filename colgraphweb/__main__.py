@@ -232,21 +232,24 @@ def colorbg_from_mcg():
     coloring positions will be so colored in the basegraph
     '''
     requestdata = request.get_json()
-    selected_vertex = requestdata[0]
+    whatclicked = requestdata[1]
 
-    vertices = [*app.mcg.get_vertex(selected_vertex).get_vertices()]
-    vname = vertices[0]
-    coloring = [app.bg.get_vertex_color(vname, i, app.mcg.colors)
-                for i in range(len(app.bg))]
+    if requestdata[1] == 'node':
+        selected_vertex = requestdata[0][0]
 
-    for vname in vertices:
-        altcoloring = [app.bg.get_vertex_color(vname, i, app.mcg.colors)
-                       for i in range(len(app.bg))]
-        for i, (a, b) in enumerate(zip(coloring, altcoloring)):
-            if a != b:
-                coloring[i] = -1
+        vertices = [*app.mcg.get_vertex(selected_vertex).get_vertices()]
+        vname = vertices[0]
+        coloring = [app.bg.get_vertex_color(vname, i, app.mcg.colors)
+                    for i in range(len(app.bg))]
 
-    return colorbg(coloring)
+        for vname in vertices:
+            altcoloring = [app.bg.get_vertex_color(vname, i, app.mcg.colors)
+                           for i in range(len(app.bg))]
+            for i, (a, b) in enumerate(zip(coloring, altcoloring)):
+                if a != b:
+                    coloring[i] = -1
+
+        return colorbg(coloring)
 
 
 @app.route('/colorbg_from_cg', methods=['POST'])
@@ -256,14 +259,25 @@ def colorbg_from_cg():
     vertex fully specifies the coloring of the basegraph, and so the basegraph
     will be fully colored based on the output of this method
     '''
+    # print(requestdata)
     requestdata = request.get_json()
-    selected_vertex = requestdata[0]
+    whatclicked = requestdata[1]
 
-    coloring = [app.bg.get_vertex_color(selected_vertex, i, app.cg.colors)
-                for i in range(len(app.bg))]
+    if whatclicked == 'node':
+        selected_vertex = requestdata[0][0]
 
-    return colorbg(coloring)
+        coloring = [app.bg.get_vertex_color(selected_vertex, i, app.cg.colors)
+                    for i in range(len(app.bg))]
 
+        return colorbg(coloring)
+
+    elif whatclicked == 'edge':
+        selected_edge = requestdata[0][0]
+        (a, b) = selected_edge.split()
+        print(a, b)
+
+    else:
+        raise RuntimeWarning
 
 @app.route('/colorbg', methods=['POST'])
 def colorbg(coloring_list=None):
