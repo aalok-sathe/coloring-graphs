@@ -234,23 +234,22 @@ def colorbg_from_mcg():
     requestdata = request.get_json()
     whatclicked = requestdata[1]
 
-    if requestdata[1] == 'node':
-        selected_vertex = requestdata[0][0]
+    if whatclicked == 'node':
+        selected_meta_vertex = requestdata[0][0]
 
-        vertices = [*app.mcg.get_vertex(selected_vertex).get_vertices()]
-        vname = vertices[0]
-        coloring = [app.bg.get_vertex_color(vname, i, app.mcg.colors)
-                    for i in range(len(app.bg))]
-
-        for vname in vertices:
-            altcoloring = [app.bg.get_vertex_color(vname, i, app.mcg.colors)
-                           for i in range(len(app.bg))]
-            for i, (a, b) in enumerate(zip(coloring, altcoloring)):
-                if a != b:
-                    coloring[i] = -1
+        vertices = [*app.mcg.get_vertex(selected_meta_vertex).get_vertices()]
+        coloring = app.cg.get_possible_colors(vertices)
 
         return colorbg(coloring)
 
+    elif whatclicked == 'edge':
+        selected_edge = requestdata[0][0]
+        (a, b) = selected_edge.split()
+        avertices = [*app.mcg.get_vertex(int(a)).get_vertices()]
+        bvertices = [*app.mcg.get_vertex(int(b)).get_vertices()]
+
+        coloring = app.cg.get_possible_colors(avertices+bvertices)
+        return colorbg(coloring)
 
 @app.route('/colorbg_from_cg', methods=['POST'])
 def colorbg_from_cg():
@@ -265,19 +264,20 @@ def colorbg_from_cg():
 
     if whatclicked == 'node':
         selected_vertex = requestdata[0][0]
-
-        coloring = [app.bg.get_vertex_color(selected_vertex, i, app.cg.colors)
-                    for i in range(len(app.bg))]
+        coloring = app.cg.get_possible_colors([selected_vertex])
 
         return colorbg(coloring)
 
     elif whatclicked == 'edge':
         selected_edge = requestdata[0][0]
         (a, b) = selected_edge.split()
-        print(a, b)
+
+        coloring = app.cg.get_possible_colors([int(a), int(b)])
+        return colorbg(coloring)
 
     else:
         raise RuntimeWarning
+
 
 @app.route('/colorbg', methods=['POST'])
 def colorbg(coloring_list=None):
@@ -293,8 +293,8 @@ def colorbg(coloring_list=None):
 
     def color_from_coloring_list(v):
         name = v.get_name()
-        if coloring_list[name] >= 0:
-            return colorarray[coloring_list[name]]
+        if len(coloring_list[name]) == 1:
+            return colorarray[list(coloring_list[name])[0]]
         return None
 
     data.update(lcg.viz.to_visjs(app.bg, colordict=colors,
@@ -363,6 +363,34 @@ def save_graph():
         response = app.response_class(status=200, mimetype='application/json',
                                       response=json.dumps({'status': 'OK'}))
 
+        return response
+    return None
+
+
+@app.route('/load', methods=['POST'])
+def load_grap_from_file():
+    '''
+    '''
+    w = sg.Window('Get filename').Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
+    event, values = w.Read()
+    w.Close()
+    if event == 'OK':
+        resp = values[0]
+        if resp and Path(resp).exists():
+            args.input_file = resp
+            bg = lcg.BaseGraph()
+            bg.load_txt(args.input_file)
+            app.bg = bg
+            update_bg_data(app.bg)
+        else:
+            raise ValueError
+
+    retdict = {
+        'bgcontainer': render_template('graphcontainer.html',
+                                        container_type='bg', **data),
+              }
+    response = app.response_class(status=200, response=json.dumps(retdict),
+                                  mimetype='application/json')
     return response
 
 
@@ -411,9 +439,6 @@ def main():
         webbrowser.open_new(url + ':{port}'.format(port=port))
 
     if args.select_file:
-        # resp = sg.PopupGetFile('Choose a file if you\'d like to load a graph. '
-        #                        'To open a blank canvas, click cancel.',
-        #                        title='Load graph from a file?')
         w = sg.Window('Get filename').Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
         event, values = w.Read()
         w.Close()
