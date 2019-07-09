@@ -566,6 +566,8 @@ rebuild_partial_graph()
         bool insert = true;
         for (auto& vname : unique_cut_vertices)
         {
+            // check for existing isomorphic vertex if any other existing
+            // vertex is isomorphic to it
             if (candidate != vname and cg->is_isomorphic(candidate, vname))
             {
                 if (verbose)
@@ -610,42 +612,35 @@ rebuild_partial_graph()
         for (auto& p : vertices)
         {
             MetaVertex* mv = p.second;
+            // if it's the mothership by our naive assumption
             if (mv->size() == largest)
             {
-                for (const long& vname : mv->vertices)
+                // find all neighbors of mothership of size 1, they must be
+                // the nearest cut vertices
+                for (const long& nbrname : mv->neighbors)
                 {
-                    if (cut_vertices.find(vname) != cut_vertices.end())
+                    MetaVertex* nbr = &get_vertex(nbrname);
+                    if (nbr->size() == 1)
                     {
                         if (verbose)
-                        std::cerr << "inserting " << vname
-                                  << " into mothership_cut_vertices" << "\n";
-                        // mothership_cut_vertices.insert(vname);
+                        std::cerr << "DEBUG: " << *nbr->vertices.begin()
+                                  << " is a neighbor of the Mship of size 1\n";
+                        // in that case, keep track of them by adding to
+                        // a set
+                        mothership_cut_vertices.insert(*nbr->vertices.begin());
                     }
                 }
             }
             else
             {
+                // anything not in the mothership goes into the itercg for
+                // DFSing and adding to the returnable cg
                 for (const long& vname : mv->vertices)
                     itercg->add_vertex(vname);
             }
         }
 
-        for (const long& cutv : cut_vertices)
-        {
-            bool present = false;
-            for (auto& iterpair : itercg->vertices)
-            {
-                if (iterpair.first == cutv)
-                {
-                    present = true;
-                    break;
-                }
-            }
-
-            if (not present)
-                mothership_cut_vertices.insert(cutv);
-        }
-
+        // for each cut vertex that is one of its isomorphism class, DFS on it
         for (long cutv : unique_cut_vertices)
         {
             if (verbose)

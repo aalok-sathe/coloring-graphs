@@ -122,9 +122,6 @@ def update_mcg_data(mcg):
 def update_pcg_data(pcg):
     '''
     '''
-    print('DEBUG!, mother verts', app.mother_verts)
-    print('DEBUG!, cut verts', app.cut_verts)
-    print('DEBUG!, intersection', set(app.cut_verts).intersection(set(app.mother_verts)))
     global data
     data.update(lcg.viz.to_visjs(pcg, force_type='pcg', colordict=colors,
                                  colorfn=cvcolorfngen(app.cut_verts,
