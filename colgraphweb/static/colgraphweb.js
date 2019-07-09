@@ -311,6 +311,24 @@ function get_stats(e) {
 }
 
 
+function save(e) {
+    var value = exportNetwork(basegraph);
+    $.ajax({
+        type: "POST",
+        url: "/save",
+        data: value,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            alert('saved OK');
+        },
+        error: function (response) {
+            alert('ERROR', response);
+        }
+    });
+}
+
+
 function refresh_page(e) {
     location.reload();
     // $(document).ready( function() {
