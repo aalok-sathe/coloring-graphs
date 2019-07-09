@@ -294,6 +294,26 @@ function save(e) {
 }
 
 
+function load_file(e) {
+    var value = exportNetwork(basegraph);
+    $.ajax({
+        type: "POST",
+        url: "/load",
+        data: value,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var bgcontainer = $('#bgcontainer');
+            bgcontainer.html(response['bgcontainer']);
+            makebg();
+        },
+        error: function (response) {
+            alert('ERROR', response);
+        }
+    });
+}
+
+
 function refresh_page(e) {
     location.reload();
     // $(document).ready( function() {
