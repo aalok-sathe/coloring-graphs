@@ -35,7 +35,7 @@ parser.add_argument('-p', '--port', default='5000', type=str,
                     help='port to launch GUI on')
 parser.add_argument('-w', '--webbrowser', default=False, action='store_true',
                     help='open app in default web browser window?')
-parser.add_argument('-r', '--render_on_launch', default=False, 
+parser.add_argument('-r', '--render_on_launch', default=False,
                     action='store_true', help='render to-generate componenets '
                                               'on initial launch?')
 parser.add_argument('-d', '--debug', default=False, action='store_true',
@@ -54,7 +54,7 @@ colors = {
             'pink': '#f48fb1',
             'purple': '#673ab7',
             'brown': '#795548',
-            'white': 'white',#'#f5f5f5',
+            'white': '#f5f5f5',
          }
 colorarray = ['yellow', 'green', 'purple', 'white', 'pink', 'brown']
 
@@ -83,8 +83,17 @@ def index():
     return render_template('defaultview.html', **data)
 
 
-def cvcolorfngen(cut_verts):
-    return lambda v: 'red' if v.get_name() in cut_verts else None
+def cvcolorfngen(cut_verts, mother_verts=[]):
+    '''
+    '''
+    def get_color(v):
+        if v.get_name() in mother_verts:
+            return 'red'
+        if v.get_name() in cut_verts:
+            return 'yellow'
+        return None
+
+    return get_color
 
 
 def update_bg_data(bg):
@@ -99,7 +108,8 @@ def update_cg_data(cg):
     '''
     global data
     data.update(lcg.viz.to_visjs(cg, colordict=colors,
-                                 colorfn=cvcolorfngen(app.cut_verts)))
+                                 colorfn=cvcolorfngen(app.cut_verts,
+                                                      app.mother_verts)))
 
 
 def update_mcg_data(mcg):
@@ -112,9 +122,13 @@ def update_mcg_data(mcg):
 def update_pcg_data(pcg):
     '''
     '''
+    print('DEBUG!, mother verts', app.mother_verts)
+    print('DEBUG!, cut verts', app.cut_verts)
+    print('DEBUG!, intersection', set(app.cut_verts).intersection(set(app.mother_verts)))
     global data
     data.update(lcg.viz.to_visjs(pcg, force_type='pcg', colordict=colors,
-                                 colorfn=cvcolorfngen(app.cut_verts)))
+                                 colorfn=cvcolorfngen(app.cut_verts,
+                                                      app.mother_verts)))
 
 
 @app.route('/generate', methods=['POST'])
@@ -140,6 +154,8 @@ def generate():
     update_mcg_data(mcg)
 
     app.pcg = pcg = mcg.rebuild_partial_graph()
+    print('DEBUG: pcg:', pcg)
+    app.mother_verts = mother_verts = [*mcg.get_mothership_cut_vertices()]
     update_pcg_data(pcg)
 
     app.statsdict = statsdict = dict(
@@ -157,7 +173,7 @@ def generate():
                                         container_type='pcg', **data),
         'cgsize': app.statsdict['cgsize'],
                 }
-    
+
 
     if len(cg) <= 512:
         update_cg_data(cg)
@@ -284,12 +300,59 @@ def colorbg(coloring_list=None):
     return response
 
 
+def to_matrix_str(g):
+    '''
+    '''
+    lookup = dict()
+    for i, v in enumerate(g.get_vertices()):
+        lookup[v.get_name()] = i
+
+    ret = '%d\n' % len(g)
+
+    mat = [['0' for _ in range(len(g))] for _ in range(len(g))]
+    for v in g.get_vertices():
+        for n in v.get_neighbors():
+            mat[lookup[v.get_name()]][lookup[n]] = '1'
+            mat[lookup[n]][lookup[v.get_name()]] = '1'
+
+    for line in mat:
+        ret += ' '.join(line) + '\n'
+
+    return ret
+
 
 @app.route('/save', methods=['POST'])
-def save_graphs():
+def save_graph():
     '''
     '''
-    raise NotImplementedError
+    requestdata = request.get_json()
+    # print(requestdata)
+    print('handling POST on save!')
+
+    global data
+    # graphdata = requestdata[0]
+    # app.bg = bg = lcg.viz.from_visjs(graphdata)
+
+    w = sg.Window('Save graph').Layout([[sg.Text('Filename')], [sg.Input(), sg.FileSaveAs()], [sg.OK(), sg.Cancel()] ])
+    event, values = w.Read()
+    w.Close()
+
+    if event == 'OK':
+        dest = Path(values[0])
+
+        bgmat = to_matrix_str(app.bg)
+        mcgmat = to_matrix_str(app.mcg)
+        # pcgmat = to_matrix_str(app.pcg)
+
+        with dest.open('w') as f:
+            f.write(bgmat)
+            f.write(mcgmat)
+            # f.write(pcgmat)
+
+        response = app.response_class(status=200, mimetype='application/json',
+                                      response=json.dumps({'status': 'OK'}))
+
+    return response
 
 
 def runflaskgui(url='http://localhost', port='5000'):
@@ -302,16 +365,17 @@ def runflaskgui(url='http://localhost', port='5000'):
     bg = lcg.BaseGraph()
     if args.input_file:
         bg.load_txt(args.input_file)
+    app.bg = bg
 
     update_bg_data(bg)
 
     if args.render_on_launch:
         app.cg = cg = bg.build_coloring_graph(args.colors)
         app.mcg = mcg = cg.tarjans()
-        app.pcg = pcg = mcg.rebuild_partial_graph()
         app.cut_verts = cut_verts = [*mcg.get_cut_vertices()]
         app.pcg = pcg = mcg.rebuild_partial_graph()
-        
+        app.mother_verts = mother_verts = [*mcg.get_mothership_cut_vertices()]
+
         update_mcg_data(mcg)
         update_cg_data(cg)
         update_pcg_data(pcg)
@@ -322,7 +386,7 @@ def runflaskgui(url='http://localhost', port='5000'):
             is_biconnected=cg.is_biconnected(),
         )
         data.update({'cgstats': ' '.join(['{}: {},'.format(k, v)
-                                for k, v in app.statsdict.items()])}) 
+                                for k, v in app.statsdict.items()])})
 
     app.run(port=port)
 
@@ -339,7 +403,7 @@ def main():
         # resp = sg.PopupGetFile('Choose a file if you\'d like to load a graph. '
         #                        'To open a blank canvas, click cancel.',
         #                        title='Load graph from a file?')
-        w = sg.Window('Get filename example').Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
+        w = sg.Window('Get filename').Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
         event, values = w.Read()
         w.Close()
         if event == 'OK':
