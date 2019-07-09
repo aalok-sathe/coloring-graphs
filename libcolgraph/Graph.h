@@ -136,6 +136,11 @@ class ColoringGraph : public Graph<ColoringVertex>
         // isomorphism class in this coloring graph
         bool is_isomorphic(long a, long b);
 
+        // given a list of vertices, for each base vertex computes the possible
+        // colors it can take in the list of coloring vertices
+        std::vector<std::vector<int> >
+            get_possible_colors(std::vector<long> vertexgroup);
+
         // returns an iterator object pointer over this graph's vertices
         const ColoringGraphVertexIterator* __iter__();
         const ColoringGraphVertexIterator* get_vertices();

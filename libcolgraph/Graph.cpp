@@ -655,6 +655,33 @@ rebuild_partial_graph()
 }
 
 
+std::vector<std::vector<int> >
+ColoringGraph::
+get_possible_colors(std::vector<long> vertexgroup)
+{
+    // initialize a container to hold possible colors foreach vertex of bg
+    std::vector<std::unordered_set<int> > coloring(base->size(),
+                                                   std::unordered_set<int>());
+
+    // populate it with colors from any, so first, vertex of the supplied
+    // for (int i=0; i < base->size(); i++)
+    //     coloring[i].insert(get_vertex_color(vertexgroup[0], i, colors));
+
+    // now populate all the colors seen into the set
+    for (const long& vname : vertexgroup)
+        for (int i=0; i < base->size(); i++)
+            coloring[i].insert(base->get_vertex_color(vname, i, colors));
+
+    std::vector<std::vector<int> > returnable;
+    for (int i=0; i < base->size(); i++)
+    {
+        returnable.push_back(std::vector<int>(coloring[i].begin(),
+                                              coloring[i].end()));
+    }
+
+    return returnable;
+}
+
 
 /*******************************************************************************
 ******************************** ALGORITHMS ************************************
@@ -1011,7 +1038,7 @@ tarjans()
         {
             if (verbose)
             std::cerr << "INFO: count < 2" << std::endl;
-            
+
             if (true or !cut_vertex_stack.empty())
             {
                 MetaVertex* mv = cut_vertex_stack.top();
