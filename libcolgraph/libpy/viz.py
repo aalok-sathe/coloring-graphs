@@ -59,8 +59,10 @@ def _to_visjs(g, colordict={1: '#039be5', 0: '#ef5350'},
                             'from': edge[0],
                             'to': edge[1],
                             'id': '%d %d' % edge,
-                            'howerWidth': 2,
-                            'color': {'inherit': 'both'},
+                            'hoverWidth': 5,
+                            'value': (len(g.get_vertex(edge[0]))
+                                      * len(g.get_vertex(edge[1]))) ** .5,
+                            'color': {'inherit': 'both', 'opacity': .95},
                           }
 
     nodes = [v for k, v in nodes.items()]
