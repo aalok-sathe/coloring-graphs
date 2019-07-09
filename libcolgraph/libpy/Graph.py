@@ -7,7 +7,7 @@ import typing
 from tqdm import tqdm
 import networkx as nx
 from utils import mathtools
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 
 
 class Graph(object):#(gt.Graph):
