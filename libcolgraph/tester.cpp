@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include "Graph.h"
 
+
+#include <boost/multiprecision/cpp_int.hpp>
+using namespace boost::multiprecision;
 using namespace std;
 
 int main(int argc, char *argv[])
