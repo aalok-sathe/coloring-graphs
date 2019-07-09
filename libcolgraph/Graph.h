@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include <vector>
 #include <list>
 #include <stack>
@@ -155,6 +156,10 @@ class MetaGraph : public Graph<MetaVertex>
         // stores unique cut vertices each representative of an isomorphism
         // class of cut vertices
         std::unordered_set<long> unique_cut_vertices;
+        // which of the unique (single isomorphism class) cut vertices are
+        // also in the mothership? useful for visualization to create a dummy
+        // mothership node
+        std::unordered_set<long> mothership_cut_vertices;
 
         // default constructor
         MetaGraph();
@@ -171,6 +176,8 @@ class MetaGraph : public Graph<MetaVertex>
 
         // iterator over cut vertices found by the metagraph
         const MetaGraphCutVertexIterator* get_cut_vertices();
+        // iterator over unique cut vertices that are in the mothership
+        const MetaGraphCutVertexIterator* get_mothership_cut_vertices();
 
         void _DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
                           std::unordered_set<long>& mothership);

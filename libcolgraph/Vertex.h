@@ -68,7 +68,7 @@ class MetaVertexNeighborIterator : public VertexNeighborIterator<MetaVertex>
         long len;
 
         MetaVertexNeighborIterator() {};
-        MetaVertexNeighborIterator(std::unordered_set<long>::iterator it_, 
+        MetaVertexNeighborIterator(std::unordered_set<long>::iterator it_,
                                    long len_);
 
         virtual long next();
@@ -129,6 +129,7 @@ class Vertex
         // helper methods to support state-preserving iteration
         virtual long get_next_neighbor() = 0;
         virtual void reset_neighbor_track() = 0;
+        virtual bool has_next_neighbor() = 0;
 
         // returns the identifier `name` of this vertex object
         virtual long get_name() const;
@@ -158,6 +159,7 @@ class BaseVertex : public Vertex
         // helper methods to support state-preserving iteration
         long get_next_neighbor();
         void reset_neighbor_track();
+        bool has_next_neighbor();
 
         // returns a pointer to a BaseVertexNeighborIterator object to
         // support iteration over its neighbors
@@ -186,6 +188,7 @@ class ColoringVertex : public Vertex
         // helper methods to support state-preserving iteration
         long get_next_neighbor();
         void reset_neighbor_track();
+        bool has_next_neighbor();
 
         // returns a pointer to a ColoringVertexNeighborIterator object to
         // support iteration over its neighbors
@@ -231,7 +234,8 @@ class MetaVertex : public Vertex
 
         // helper methods to support state-preserving iteration
         long get_next_neighbor();
-        void reset_neighbor_track() {};
+        void reset_neighbor_track();
+        bool has_next_neighbor();
 
         // returns a pointer to a MetaVertexNeighborIterator object to support
         // iteration over its neighbors
