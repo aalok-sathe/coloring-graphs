@@ -41,8 +41,12 @@ def _to_visjs(g, colordict={1: '#039be5', 0: '#ef5350'},
                         'group': str(len(v)),
                         'shape': 'dot',
                       }
+
         if colorfn and colorfn(v):
             nodes[name]['color'] = colordict[colorfn(v)]
+        elif 'Base' in str(type(g)):
+            nodes[name]['shape'] = 'triangle'
+
         if hasattr(g, 'locations'):
             nodes[name]['x'], nodes[name]['y'] = g.locations[name]
 
@@ -54,11 +58,13 @@ def _to_visjs(g, colordict={1: '#039be5', 0: '#ef5350'},
             edges[edge] = {
                             'from': edge[0],
                             'to': edge[1],
+                            'id': '%d %d' % edge,
+                            'howerWidth': 2,
                             'color': {'inherit': 'both'},
                           }
 
-    nodes = [v for k,v in nodes.items()]
-    edges = [v for k,v in edges.items()]
+    nodes = [v for k, v in nodes.items()]
+    edges = [v for k, v in edges.items()]
 
     return nodes, edges
 
