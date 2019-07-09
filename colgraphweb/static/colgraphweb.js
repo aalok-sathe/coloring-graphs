@@ -44,6 +44,49 @@ options = {
 // same options for now
 bgoptions = mcgoptions = cgoptions = pcgoptions = options;
 
+function color_on_click (requesturl) {
+    // creates a function based on passed param 'requesturl' and returns it
+    function _color_on_click (params) {
+        if (params.nodes.length > 0) {
+            var value = JSON.stringify([params.nodes, 'node'], undefined, 2);
+            $.ajax({
+                type: "POST",
+                url: requesturl,
+                data: value,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var bgcontainer = $('#bgcontainer');
+                    bgcontainer.html(response['bgcontainer']);
+                    makebg();
+                },
+                error: function (response) {
+                    alert('ERROR', response);
+                }
+            });
+        }
+        else if (params.edges.length == 1) {
+            var value = JSON.stringify([params.edges, 'edge'], undefined, 2);
+            $.ajax({
+                type: "POST",
+                url: requesturl,
+                data: value,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var bgcontainer = $('#bgcontainer');
+                    bgcontainer.html(response['bgcontainer']);
+                    makebg();
+                },
+                error: function (response) {
+                    alert('ERROR', response);
+                }
+            });
+        }
+    }
+    return _color_on_click;
+}
+
 
 function makebg() {
     bgcontainer = document.getElementById('bgcontainer');
@@ -71,49 +114,9 @@ function makecg() {
     // create a coloringgraph
     coloringgraph = new vis.Network(cgcontainer, cgdata, cgoptions);
     coloringgraph.setOptions({"interaction": {"hideEdgesOnDrag": true}});
+    coloringgraph.fit();
 
-    // coloringgraph.on("stabilizationProgress", function(params) {
-    //         document.getElementById('loadingBar').removeAttribute("style");
-    //         var maxWidth = cgcontainer.width;
-    //         var minWidth = 1;
-    //         var widthFactor = params.iterations/params.total;
-    //         var width = Math.max(minWidth,maxWidth * widthFactor);
-    //
-    //         document.getElementById('bar').style.width = width + 'px';
-    //         document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
-    //     });
-    // coloringgraph.once("stabilizationIterationsDone", function() {
-    //         document.getElementById('text').innerHTML = '100%';
-    //         document.getElementById('bar').style.width = cgcontainer.width;//'496px';
-    //         document.getElementById('loadingBar').style.opacity = 0;
-    //         // really clean the dom element
-    //         setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
-    // });
-
-    // coloringgraph.on("stabilizationIterationsDone", function (params) {
-        coloringgraph.fit();
-    // });
-
-    coloringgraph.on("click", function (params) {
-        if (params.nodes.length > 0) {
-            var value = JSON.stringify(params.nodes, undefined, 2);
-            $.ajax({
-                type: "POST",
-                url: "/colorbg_from_cg",
-                data: value,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var bgcontainer = $('#bgcontainer');
-                    bgcontainer.html(response['bgcontainer']);
-                    makebg();
-                },
-                error: function (response) {
-                    alert('ERROR', response);
-                }
-            });
-        }
-    });
+    coloringgraph.on("click", color_on_click("/colorbg_from_cg"));
 
     return coloringgraph;
 }
@@ -133,26 +136,7 @@ function makemcg() {
     metacoloringgraph.stabilize();
 
     // listener to color the BaseGraph
-    metacoloringgraph.on("click", function (params) {
-        if (params.nodes.length > 0) {
-            var value = JSON.stringify(params.nodes, undefined, 2);
-            $.ajax({
-                type: "POST",
-                url: "/colorbg_from_mcg",
-                data: value,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var bgcontainer = $('#bgcontainer');
-                    bgcontainer.html(response['bgcontainer']);
-                    makebg();
-                },
-                error: function (response) {
-                    alert('ERROR', response);
-                }
-            });
-        }
-    });
+    metacoloringgraph.on("click", color_on_click("/colorbg_from_mcg"));
 
     return metacoloringgraph;
 }
@@ -171,26 +155,7 @@ function makepcg() {
     });
     partialcoloringgraph.stabilize();
 
-    partialcoloringgraph.on("click", function (params) {
-        if (params.nodes.length > 0) {
-            var value = JSON.stringify(params.nodes, undefined, 2);
-            $.ajax({
-                type: "POST",
-                url: "/colorbg_from_cg",
-                data: value,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var bgcontainer = $('#bgcontainer');
-                    bgcontainer.html(response['bgcontainer']);
-                    makebg();
-                },
-                error: function (response) {
-                    alert('ERROR', response);
-                }
-            });
-        }
-    });
+    partialcoloringgraph.on("click", color_on_click("/colorbg_from_cg"));
 
     return partialcoloringgraph;
 }
@@ -335,6 +300,6 @@ function refresh_page(e) {
     //     generate();
     //     get_stats();
     // });
-    generate();
-    get_stats();
+    // generate();
+    // get_stats();
 }
