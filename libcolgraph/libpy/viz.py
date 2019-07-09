@@ -59,7 +59,6 @@ def _to_visjs(g, colordict={1: '#039be5', 0: '#ef5350'},
                             'from': edge[0],
                             'to': edge[1],
                             'id': '%d %d' % edge,
-                            'hoverWidth': 5,
                             'value': (len(g.get_vertex(edge[0]))
                                       * len(g.get_vertex(edge[1]))) ** .5,
                             'color': {'inherit': 'both', 'opacity': .95},
@@ -78,8 +77,6 @@ def to_visjs(g, force_type=None, colordict={1: '#039be5', 2: '#ef5350'},
     and produces a json object that specifies how the graph should be plotted
     in a way that VisJS can use
     '''
-    print('DEBUG: called to_visjs on', g)
-
     if pyvis:
         net = to_pyvis_network(g)
         nodes, edges, height, width, options = net.get_network_data()
