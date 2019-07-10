@@ -9,7 +9,7 @@
 ####   DEFS   ####
 
 DEBUG_FLAG= -g -Wall
-CFLAGS= -std=gnu++11 -g -Wall
+CFLAGS= -std=gnu++11 -g -Wall -I boost_1_68_0
 PYTHON = "python3"
 MODULE_TARGETS = $("PYTHON ./generate_targets.py")
 

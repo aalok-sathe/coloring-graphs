@@ -157,35 +157,49 @@ load_txt(char* path)
 
 void BaseGraph::setup_recursion_matrix(int k)
 {
+    std::cout << "method called" << std::endl;
     vertices.find(0)->second->block_bits = (1 << k) - 1;
+    std::cout << "base block: " << vertices.find(0)->second->block_bits << std::endl;
     for (int i = 1; i < vertices.size(); i++)
     {
+        std::cout << "for loop 1, iteration: " << i << std::endl;
         vertices.find(i)->second->block_bits = (vertices.find(i-1)->second->block_bits << k);
+        std::cout << vertices.find(i)->second->block_bits << std::endl;
     }
 
     int128_t temp = 1;
     for (int i = 0; i < vertices.size(); i++)
     {
+        std::cout << "for loop 2, iteration: " << i << std::endl;
         BaseVertex* current = vertices.find(i)->second;
         for (long name : current->neighbors)
         {
             current->adjacency_bits |= (temp << (name * k));
+            std::cout << current->adjacency_bits << std::endl;
         }
+        std::cout << "updating adjacency with self" << std::endl;
         current->adjacency_bits |= (temp << (current->name * k));
+        std::cout << current->adjacency_bits << std::endl;
     }
 
 
     for (int i = 0; i < vertices.size(); i++)
     {
+        // std::cout << "for loop 3, iteration: " << i << std::endl;
         BaseVertex* current = vertices.find(i)->second;
         temp = current->adjacency_bits;
 
         for (int j = 0; j < k; j++)
         {
-            recursion_matrix[k * i + j] = (temp | current->block_bits);
-            temp << 1;
+            // std::cout << "inner for loop 3, iteration: " << i << ", " << j << std::endl;
+            recursion_matrix.push_back(temp | current->block_bits);
+            std::cout << "getting added to matrix: " << (temp | current->block_bits) << std::endl;
+            std::cout << "temp before shift: " << temp << std::endl;
+            temp <<= 1;
+            std::cout << "temp after shift: " << temp << std::endl;
         }
     }
+    std::cout << "method returning" << std::endl;
 }
 
 ColoringGraph*

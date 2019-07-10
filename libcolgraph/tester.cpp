@@ -13,9 +13,9 @@ int main(int argc, char *argv[])
     cout << "before init!" << endl;
 
     // char* testpath = "../test/input/g1.in";
-    char* testpath = "../in/square.in";
+    // char* testpath = "../in/square.in";
     // char* testpath = "../in/smolgraph.in";
-    // char* testpath = "../in/hexmod.in";
+    char* testpath = "../in/hexmod.in";
     // char* testpath = "../in/line.in";
     // char* testpath = "../in/3ring.in";
     // char* testpath = "../in/3star.in";
@@ -35,9 +35,17 @@ int main(int argc, char *argv[])
     int k;
     cin >> k;
 
+    bg->setup_recursion_matrix(k);
+    int bitsize = 32;
     for (int i = 0; i < bg->vertices.size()*k; i++)
     {
-        cout << bg->recursion_matrix[i] << endl;
+        int128_t temp = bg->recursion_matrix[i];
+
+        for (int j = 0; j< bitsize; j++)
+        {
+            cout << (temp >> (bitsize-1-j)) % 2;
+        }
+        cout << endl;
     }
     cout << endl;
     // ColoringGraph* cg = bg->build_coloring_graph(k);
