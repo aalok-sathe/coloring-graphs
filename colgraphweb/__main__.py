@@ -55,15 +55,30 @@ colors = {
             'purple': '#673ab7',
             'brown': '#795548',
             'white': '#f5f5f5',
+            'cyan': '#18ffff',
+            'orange': '#ff9100',
+            'grey': '#bdbdbd',
+            'lightgreen': '#76ff03',
          }
-colorarray = ['yellow', 'green', 'purple', 'white', 'pink', 'brown']
+colororder = ['yellow', 'green', 'purple', 'white', 'pink', 'cyan', 'brown']
 
-randomcolors = {}
-randomcolors.update(colors)
-randomcolors.pop('red')
-randomcolors.pop('blue')
-randomcolors = [*randomcolors.keys()]
+colorarray = {}
+colorarray.update(colors)
+colorarray.pop('red')
+colorarray.pop('blue')
+colorarray = [*colorarray.keys()]
+random.shuffle(colorarray)
+colorarray.sort(key=lambda x: colororder.index(x) if colororder.count(x) else
+                              float('inf'))
 
+
+@app.route('/favicon.ico', methods=['GET'])
+def favicon():
+    '''
+    returns a favicon on a GET request
+    '''
+    return flask.send_from_directory(os.path.join(app.root_path, 'static'),
+                                     'favicon.ico')
 
 
 @app.route('/', methods=['GET'])
@@ -144,6 +159,7 @@ def generate():
 
     app.bg = bg = lcg.viz.from_visjs(graphdata)
     update_bg_data(bg)
+    random.shuffle(colorarray[len(colororder):])
 
     app.cg = cg = bg.build_coloring_graph(args.colors)
     app.mcg = mcg = cg.tarjans()
