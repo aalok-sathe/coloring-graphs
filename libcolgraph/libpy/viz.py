@@ -44,6 +44,7 @@ def _to_visjs(g, colordict={1: '#039be5', 0: '#ef5350'},
 
         if colorfn and colorfn(v):
             nodes[name]['color'] = colordict[colorfn(v)]
+            nodes[name]['label'] += ' '+nodes[name]['color']
         elif 'Base' in str(type(g)):
             nodes[name]['shape'] = 'triangle'
 
