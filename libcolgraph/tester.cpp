@@ -36,21 +36,21 @@ int main(int argc, char *argv[])
     cin >> k;
 
     bg->setup_recursion_matrix(k);
-    int bitsize = 32;
-    for (int i = 0; i < bg->vertices.size()*k; i++)
-    {
-        int128_t temp = bg->recursion_matrix[i];
+    // int bitsize = 32;
+    // for (int i = 0; i < bg->vertices.size()*k; i++)
+    // {
+    //     int128_t temp = bg->recursion_matrix[i];
 
-        for (int j = 0; j< bitsize; j++)
-        {
-            cout << (temp >> (bitsize-1-j)) % 2;
-        }
-        cout << endl;
-    }
-    cout << endl;
-    // ColoringGraph* cg = bg->build_coloring_graph(k);
+    //     for (int j = 0; j< bitsize; j++)
+    //     {
+    //         cout << (temp >> (bitsize-1-j)) % 2;
+    //     }
+    //     cout << endl;
+    // }
+    // cout << endl;
+    ColoringGraph* cg = bg->build_coloring_graph(k);
 
-    // cout << "coloring graph size: " << cg->size() << endl;
+    cout << "coloring graph size: " << cg->size() << endl;
 
     cout << "reached EOF tester" << endl;
 

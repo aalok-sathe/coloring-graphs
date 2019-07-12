@@ -2,7 +2,8 @@
 #define __GRAPH_CPP__
 
 #include "Graph.h"
-#include <cmath>
+#include <boost/multiprecision/cpp_int.hpp>
+using namespace boost::multiprecision;
 
 
 /*******************************************************************************
@@ -138,22 +139,7 @@ load_txt(char* path)
 }
 
 
-// DEPRECATED!
-//
-// ColoringGraph*
-// BaseGraph::
-// build_coloring_graph(int k)
-// {
-//     // TODO: make recursive backtracking based search
-//     ColoringGraph* cg = new ColoringGraph(k, this);
-//     for (long coloring=0; coloring<pow(k, size()); coloring++)
-//         if (is_valid_coloring(coloring, k))
-//             cg->add_vertex(coloring);
-//         else
-//             continue;
 
-//     return cg;
-// }
 
 void BaseGraph::setup_recursion_matrix(int k)
 {
@@ -208,78 +194,174 @@ build_coloring_graph(int k)
 {
     std::cerr << "generating ColoringGraph with k=" << k << std::endl;
 
-    std::vector<int> coloring(size(), -1);
+
     ColoringGraph* cg = new ColoringGraph(k, this);
 
     if (size())
-        find_all_colorings(0, k, cg, coloring);
+        find_all_colorings(k, cg);
 
     return cg;
 }
 
-void
-BaseGraph::
-find_all_colorings(int current, int k, ColoringGraph* cg,
-                   std::vector<int> coloring)
-{
-    while(true)
-    {
-        load_next_coloring(current, k, coloring);
 
-        if (coloring.at(current) >= k or current >= size())
-            break;
 
-        if (current == size()-1)
-            cg->add_vertex(encode(coloring, k));
-        else
-            find_all_colorings(current+1, k, cg, coloring);
-    }
-
-}
 
 void
 BaseGraph::
-load_next_coloring(int current, int k, std::vector<int>& coloring)
+find_all_colorings(int k, ColoringGraph* cg)
 {
-    while (true)
+    // using boost::multiprecision::cpp_int;
+    using default_ops::eval_bit_test;
+
+    setup_recursion_matrix(k);
+
+    int128_t state[k * size()];
+    int128_t assignment[k * size()];
+    int vertex[k * size()];
+    int color[k * size()];
+
+    state[0] = (1 << (k * size())) -1;
+    assignment[0] = 0;
+    vertex[0] = 0;
+    color[0] = -1;
+
+    int depth = 0;
+    while (depth >= 0)
     {
-        coloring[current]++;
+        std::cout << "top of while loop, depth = " << depth
+                  << ", state = " << state[depth] << std::endl;
+        color[depth]++;
 
-        if (coloring.at(current) > k)
-            return;
-
-        int i = 0;
-        while(i<size())
+        if (depth == size())
         {
-            if (vertices.find(current)->second->neighbors.find(i)
-                != vertices.find(current)->second->neighbors.end()
-                && coloring.at(current) == coloring.at(i))
-                {
-                    break;
-                    // std::cout << "conflict for current=" << current
-                    //           << " with color=" << coloring[current]
-                    //           << " and neighbor=" << i
-                    //           << " with color=" << coloring.at(i) << '\n';
-                }
-            i++;
+            std::cout << "1" << std::endl;
+            cg->add_vertex(encode(assignment[depth], k));
+
         }
 
-        if (i >= size())
-            return;
+        else if (color[depth] == k)
+        {
+            std::cout << "2" << std::endl;
+            depth--;
+        }
+
+        else if (bit_test(state[depth], vertex[depth] * k + color[depth]))
+        {
+            std::cout << "3" << std::endl;
+            int vertex_color_index = vertex[depth] * k + color[depth];
+
+            state[depth + 1] = state[depth] & recursion_matrix[vertex_color_index];
+            assignment[depth + 1] = assignment[depth];
+            bit_set(assignment[depth + 1], vertex_color_index);
+
+            int next_vertex = pick_next_vertex(state[depth + 1], assignment[depth + 1], depth);
+            if (next_vertex == -1)
+            {
+                depth--;
+            }
+            else
+            {
+                vertex[++depth] = next_vertex;
+                color[depth] = -1;
+            }
+        }
+
     }
+}
+
+int
+BaseGraph::
+pick_next_vertex(int128_t state, int128_t assignment, int depth)
+{
+    return depth;
 }
 
 
 long
 BaseGraph::
-encode(std::vector<int>& coloring, int k)
+encode(int128_t assignment, int k)
 {
-    long value = 0;
-    for (int i=0; i < size(); i++)
-        value = value*k + coloring.at(i);
+    int base = 1;
+    long sum = 0;
 
-    return value;
+    for (int i = 0; i < size(); i++)
+    {
+        for (int color = 0; color < k; color++)
+        {
+            if ((assignment & 1) == 1)
+                sum += (color * base);
+            assignment >>= 1;
+        }
+        base *= k;
+    }
+    std::cout << "Created coloring vertex " << sum << std::endl;
+
 }
+
+
+// void
+// BaseGraph::
+// find_all_colorings(int current, int k, ColoringGraph* cg,
+//                    std::vector<int> coloring)
+// {
+//     while(true)
+//     {
+//         load_next_coloring(current, k, coloring);
+
+//         if (coloring.at(current) >= k or current >= size())
+//             break;
+
+//         if (current == size()-1)
+//             cg->add_vertex(encode(coloring, k));
+//         else
+//             find_all_colorings(current+1, k, cg, coloring);
+//     }
+
+// }
+
+// void
+// BaseGraph::
+// load_next_coloring(int current, int k, std::vector<int>& coloring)
+// {
+//     while (true)
+//     {
+//         coloring[current]++;
+
+//         if (coloring.at(current) > k)
+//             return;
+
+//         int i = 0;
+//         while(i<size())
+//         {
+//             if (vertices.find(current)->second->neighbors.find(i)
+//                 != vertices.find(current)->second->neighbors.end()
+//                 && coloring.at(current) == coloring.at(i))
+//                 {
+//                     break;
+//                     // std::cout << "conflict for current=" << current
+//                     //           << " with color=" << coloring[current]
+//                     //           << " and neighbor=" << i
+//                     //           << " with color=" << coloring.at(i) << '\n';
+//                 }
+//             i++;
+//         }
+
+//         if (i >= size())
+//             return;
+//     }
+// }
+
+
+// long
+// BaseGraph::
+// encode(std::vector<int>& coloring, int k)
+// {
+//     long value = 0;
+//     for (int i=0; i < size(); i++)
+//         value = value*k + coloring.at(i);
+
+//     return value;
+// }
 
 
 int

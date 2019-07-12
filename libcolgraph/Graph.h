@@ -96,18 +96,24 @@ class BaseGraph : public Graph<BaseVertex>
         // builds a coloring graph with k colors for this graph
         ColoringGraph* build_coloring_graph(int k);
 
-        // recursive method with backtracking that takes a particular coloring
-        // sequence and explores possible colorings in a DFS manner
-        void find_all_colorings(int current, int k, ColoringGraph* cg,
-                                std::vector<int> coloring);
+        void find_all_colorings(int k, ColoringGraph* cg);
 
-        // given a coloring sequence by reference, produces the next coloring
-        // sequence in-place in the sequential order of the coloring DFS
-        void load_next_coloring(int current, int k, std::vector<int>& coloring);
+        int pick_next_vertex(int128_t state, int128_t assignment, int depth);
+
+        long encode(int128_t assignment, int k);
+
+        // recursive method with backtracking that takes a particular coloring
+        // // sequence and explores possible colorings in a DFS manner
+        // void find_all_colorings(int current, int k, ColoringGraph* cg,
+        //                         std::vector<int> coloring);
+
+        // // given a coloring sequence by reference, produces the next coloring
+        // // sequence in-place in the sequential order of the coloring DFS
+        // void load_next_coloring(int current, int k, std::vector<int>& coloring);
 
         // given a coloring sequence, produces the corresponding long encoding
         // in base K
-        long encode(std::vector<int>& coloring, int k);
+        // long encode(std::vector<int>& coloring, int k);
 
         // returns an iterator object pointer over this graph's vertices
         const BaseGraphVertexIterator* __iter__();
