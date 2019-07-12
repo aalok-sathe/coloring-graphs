@@ -1,0 +1,11 @@
+CFLAGS= -std=gnu++11 -g -Wall -I boost_1_68_0
+CCFLAGS= -g -Wall -I boost_1_68_0
+
+example: example.o
+	g++ $(CFLAGS) -o example example.cpp
+
+example.o: example.cpp
+	g++ $(CFLAGS) example.cpp
+
+clean:
+	/bin/rm -f *.out *.o tester example example2
