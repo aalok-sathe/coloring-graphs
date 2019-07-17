@@ -34,10 +34,14 @@ int main()
    // std::cout << (x << b) << std::endl;
    // std::cout << (a << b) << std::endl;
 
-   int128_t r = 34;
-   int numBits = 6;
-   for (int i = 0; i < numBits; i++)
-      std::cout << bit_test(r, i);
+   // int128_t r = 34;
+   // int numBits = 6;
+   // for (int i = 0; i < numBits; i++)
+   //    std::cout << bit_test(r, i);
+
+   int128_t c = 127;
+   int num = ((1 << 3) - 1) ^ ((1 << (1 - 1)) - 1);
+   std::cout << (c ^ num) << std::endl;
 
    return 0;
 

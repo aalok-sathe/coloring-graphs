@@ -225,17 +225,22 @@ find_all_colorings(int k, ColoringGraph* cg)
     vertex[0] = 0;
     color[0] = -1;
 
+    int128_t negation_gadget = ((1 << k * size()) - 1);
+
     int depth = 0;
     while (depth >= 0)
     {
-        std::cout << "top of while loop, depth = " << depth
+        std::cout << std::endl << "top of while loop, depth = " << depth
                   << ", state = " << state[depth] << std::endl;
         color[depth]++;
+
+        std::cout << "trying vertex " << vertex[depth] << " with color " << color[depth] << std::endl;
 
         if (depth == size())
         {
             std::cout << "1" << std::endl;
             cg->add_vertex(encode(assignment[depth], k));
+            depth--;
 
         }
 
@@ -245,12 +250,17 @@ find_all_colorings(int k, ColoringGraph* cg)
             depth--;
         }
 
+
+
         else if (bit_test(state[depth], vertex[depth] * k + color[depth]))
         {
             std::cout << "3" << std::endl;
             int vertex_color_index = vertex[depth] * k + color[depth];
 
-            state[depth + 1] = state[depth] & recursion_matrix[vertex_color_index];
+            std::cout << recursion_matrix[vertex_color_index] << std::endl;
+            std::cout << (recursion_matrix[vertex_color_index] ^ negation_gadget) << std::endl;
+
+            state[depth + 1] = state[depth] & (recursion_matrix[vertex_color_index] ^ negation_gadget);
             assignment[depth + 1] = assignment[depth];
             bit_set(assignment[depth + 1], vertex_color_index);
 
@@ -273,7 +283,7 @@ int
 BaseGraph::
 pick_next_vertex(int128_t state, int128_t assignment, int depth)
 {
-    return depth;
+    return depth + 1;
 }
 
 
