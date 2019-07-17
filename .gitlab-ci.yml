@@ -36,11 +36,7 @@ build:
         - if /opt/python/cp35-cp35m/bin/python -m twine upload dist/*.tar.gz  --verbose && /opt/python/cp35-cp35m/bin/python -m twine upload dist/*manylinux*.whl --verbose; then echo "PASSED JOB" && /opt/python/cp35-cp35m/bin/python -m anybadge --label=pipeline --value=passing --file=build.svg passing=green failing=red; else echo "FAILED JOB" && /opt/python/cp35-cp35m/bin/python -m anybadge --label=pipeline --value=failing --file=build.svg passing=green  failing=red; fi
         - mkdir -p public; mv build.svg public/build.svg
     after_script:
-        - yum install -y -q python34-tkinter
-        - /opt/python/cp35-cp35m/bin/python setup.py install --user
-        - /opt/python/cp35-cp35m/bin/python colgraphweb/__main__.py -p 5000 -i in/hexmod.in -k4 -r
-        - wget -E -k -p http://localhost:5000
-        - mv localhost*/* public/
+        - cp colgraphweb/static/favicon.ico public/static
     artifacts:
         paths:
             - public/
