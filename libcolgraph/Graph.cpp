@@ -200,7 +200,7 @@ build_coloring_graph(int k)
     if (size())
         find_all_colorings(k, cg);
 
-    return cg;
+    return cg;    
 }
 
 
@@ -210,10 +210,9 @@ void
 BaseGraph::
 find_all_colorings(int k, ColoringGraph* cg)
 {
-    // using boost::multiprecision::cpp_int;
-    using default_ops::eval_bit_test;
-
     setup_recursion_matrix(k);
+
+    std::cout << "coloring graph size: " << cg->size() << std::endl;
 
     int128_t state[k * size()];
     int128_t assignment[k * size()];
@@ -240,6 +239,7 @@ find_all_colorings(int k, ColoringGraph* cg)
         {
             std::cout << "1" << std::endl;
             cg->add_vertex(encode(assignment[depth], k));
+            std::cout << "coloring graph size: " << cg->size() << std::endl;
             depth--;
 
         }
@@ -297,6 +297,7 @@ encode(int128_t assignment, int k)
     for (int i = 0; i < size(); i++)
     {
         for (int color = 0; color < k; color++)
+        
         {
             if ((assignment & 1) == 1)
                 sum += (color * base);
@@ -304,8 +305,7 @@ encode(int128_t assignment, int k)
         }
         base *= k;
     }
-    std::cout << "Created coloring vertex " << sum << std::endl;
-
+    return sum;
 }
 
 
