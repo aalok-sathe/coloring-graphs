@@ -267,6 +267,7 @@ def colorbg_from_mcg():
         coloring = app.cg.get_possible_colors(avertices+bvertices)
         return colorbg(coloring)
 
+
 @app.route('/colorbg_from_cg', methods=['POST'])
 def colorbg_from_cg():
     '''
@@ -311,7 +312,7 @@ def colorbg(coloring_list=None):
         name = v.get_name()
         if len(coloring_list[name]) == 1:
             return colorarray[list(coloring_list[name])[0]]
-        return None
+        return [colorarray[c] for c in list(coloring_list[name])]
 
     data.update(lcg.viz.to_visjs(app.bg, colordict=colors,
                                  colorfn=color_from_coloring_list))
