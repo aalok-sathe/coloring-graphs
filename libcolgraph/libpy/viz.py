@@ -3,7 +3,30 @@
 import pyvis
 import json
 import math
+from matplotlib import pyplot as plt
+import io
+import urllib, base64
+
 from ..libcolgraph import *
+
+
+def get_piechart(hexcolors):
+    '''
+    given a list of colors in hex, returns an equally spaced out piechart
+    with all those colors, in the form
+    '''
+    plt.pie([1 for _ in hexcolors], colors=hexcolors)
+
+    # trick pyplot into saving a file in a buffer so we can use it later
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+
+    # encode it in base64 as visJS needs it
+    imgstr = base64.b64encode(buffer.read())
+    datauri = 'data:image/png;base64,' + urllib.parse.quote(imgstr)
+
+    return datauri
 
 
 def to_pyvis_network(g, *args, **kwargs):
@@ -42,11 +65,16 @@ def _to_visjs(g, colordict={1: '#039be5', 0: '#ef5350'},
                         'shape': 'dot',
                       }
 
-        if colorfn and colorfn(v):
+        if colorfn and type(colorfn(v)) is str:
             nodes[name]['color'] = colordict[colorfn(v)]
-            nodes[name]['label'] += ' '+nodes[name]['color']
+            nodes[name]['label'] += ' ' + nodes[name]['color']
         elif 'Base' in str(type(g)):
-            nodes[name]['shape'] = 'triangle'
+            if colorfn and type(colorfn(v)) is list:
+                nodes[name]['shape'] = 'image'
+                nodes[name]['image'] = get_piechart([colordict[c]
+                                                     for c in colorfn(v)])
+            else:
+                nodes[name]['shape'] = 'triangle'
 
         if hasattr(g, 'locations'):
             nodes[name]['x'], nodes[name]['y'] = g.locations[name]
