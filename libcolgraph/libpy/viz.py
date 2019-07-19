@@ -15,11 +15,12 @@ def get_piechart(hexcolors):
     given a list of colors in hex, returns an equally spaced out piechart
     with all those colors, in the form
     '''
-    plt.pie([1 for _ in hexcolors], colors=hexcolors)
+    plt.pie([1 for _ in hexcolors], colors=[*sorted(hexcolors)], startangle=0,
+            radius=2)
 
     # trick pyplot into saving a file in a buffer so we can use it later
     buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
+    plt.savefig(buffer, format='png', transparent=True)
     buffer.seek(0)
 
     # encode it in base64 as visJS needs it
