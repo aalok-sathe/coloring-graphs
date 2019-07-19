@@ -228,7 +228,7 @@ def get_stats():
     print('handling POST on get_stats!')
 
     retdict = {
-        'cgstats': ' '.join(['{}: {},'.format(k, v)
+        'stats': ' '.join(['{}: {},'.format(k, v)
                              for k, v in app.statsdict.items()]),
               }
 
@@ -252,11 +252,15 @@ def colorbg_from_mcg():
 
     if whatclicked == 'node':
         selected_meta_vertex = requestdata[0][0]
+        selected_meta_vertex = app.mcg.get_vertex(selected_meta_vertex)
 
-        vertices = [*app.mcg.get_vertex(selected_meta_vertex).get_vertices()]
+        vertices = [*selected_meta_vertex.get_vertices()]
         coloring = app.cg.get_possible_colors(vertices)
+        app.statsdict.update(dict(MetaVertex_size=selected_meta_vertex.size()))
 
-        return colorbg(coloring)
+        return colorbg(coloring,
+                       stats=' '.join(['{}: {},'.format(k, v)
+                                       for k, v in app.statsdict.items()]))
 
     elif whatclicked == 'edge':
         selected_edge = requestdata[0][0]
@@ -297,7 +301,7 @@ def colorbg_from_cg():
 
 
 @app.route('/colorbg', methods=['POST'])
-def colorbg(coloring_list=None):
+def colorbg(coloring_list=None, **kwargs):
     '''
     given a list of colors (or indetermined colors) for the basegraph, with
     each position in the list corresponding to a vertex, returns a colored
@@ -321,6 +325,7 @@ def colorbg(coloring_list=None):
         'bgcontainer': render_template('graphcontainer.html',
                                         container_type='bg', **data),
               }
+    retdict.update(kwargs)
 
     response = app.response_class(status=200, response=json.dumps(retdict),
                                   mimetype='application/json')
@@ -387,8 +392,10 @@ def save_graph():
 @app.route('/load', methods=['POST'])
 def load_grap_from_file():
     '''
+    loads an input graph from a file
     '''
     w = sg.Window('Get filename').Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
+    
     event, values = w.Read()
     w.Close()
     if event == 'OK':
@@ -441,7 +448,7 @@ def runflaskgui(url='http://localhost', port='5000'):
             is_connected=cg.is_connected(),
             is_biconnected=cg.is_biconnected(),
         )
-        data.update({'cgstats': ' '.join(['{}: {},'.format(k, v)
+        data.update({'stats': ' '.join(['{}: {},'.format(k, v)
                                 for k, v in app.statsdict.items()])})
 
     app.run(port=port)

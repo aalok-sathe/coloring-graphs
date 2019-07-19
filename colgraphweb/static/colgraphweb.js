@@ -59,6 +59,10 @@ function color_on_click (requesturl) {
                     var bgcontainer = $('#bgcontainer');
                     bgcontainer.html(response['bgcontainer']);
                     makebg();
+                    if ('stats' in response) {
+                        stats = response['stats'];
+                        $('#topstatsdisplay').text(stats);
+                    }
                 },
                 error: function (response) {
                     alert('ERROR', response);
@@ -266,7 +270,7 @@ function get_stats(e) {
         dataType: "json",
         success: function (response) {
             // alert('RESPONSE OK');
-            cgstats = response['cgstats'];
+            cgstats = response['stats'];
             $('#topstatsdisplay').text(cgstats);
         },
         error: function (response) {
