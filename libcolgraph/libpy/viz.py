@@ -3,9 +3,12 @@
 import pyvis
 import json
 import math
-from matplotlib import pyplot as plt
 import io
 import urllib, base64
+
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 
 from ..libcolgraph import *
 
@@ -15,14 +18,16 @@ def get_piechart(hexcolors):
     given a list of colors in hex, returns an equally spaced out piechart
     with all those colors, in the form
     '''
+    plt.ioff()
     plt.pie([1 for _ in hexcolors], colors=[*sorted(hexcolors)], startangle=0,
             radius=2)
 
     # trick pyplot into saving a file in a buffer so we can use it later
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png', transparent=True)
-    buffer.seek(0)
+    plt.close('all')
 
+    buffer.seek(0)
     # encode it in base64 as visJS needs it
     imgstr = base64.b64encode(buffer.read())
     datauri = 'data:image/png;base64,' + urllib.parse.quote(imgstr)

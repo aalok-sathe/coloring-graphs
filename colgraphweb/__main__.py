@@ -131,7 +131,11 @@ def update_mcg_data(mcg):
     '''
     '''
     global data
-    data.update(lcg.viz.to_visjs(mcg))
+    # data.update(lcg.viz.to_visjs(mcg))
+    data.update(lcg.viz.to_visjs(mcg, colordict=colors,
+                                 colorfn=cvcolorfngen(app.cut_verts,
+                                                [mcg.identify_mothership()]
+                                                      )))
 
 
 def update_pcg_data(pcg):
@@ -256,7 +260,7 @@ def colorbg_from_mcg():
 
         vertices = [*selected_meta_vertex.get_vertices()]
         coloring = app.cg.get_possible_colors(vertices)
-        app.statsdict.update(dict(MetaVertex_size=selected_meta_vertex.size()))
+        app.statsdict.update(dict(MetaVertex_size=len(selected_meta_vertex)))
 
         return colorbg(coloring,
                        stats=' '.join(['{}: {},'.format(k, v)
@@ -395,7 +399,7 @@ def load_grap_from_file():
     loads an input graph from a file
     '''
     w = sg.Window('Get filename').Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ])
-    
+
     event, values = w.Read()
     w.Close()
     if event == 'OK':
