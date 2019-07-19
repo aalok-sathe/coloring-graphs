@@ -60,6 +60,7 @@ pages:
         - build
     script:
         - mkdir -p public
+        - mv public/index.txt public/index.html
     artifacts:
         paths:
             - public/
