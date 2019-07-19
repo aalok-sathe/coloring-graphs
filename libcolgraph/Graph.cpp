@@ -124,6 +124,8 @@ load_txt(char* path)
     int n;
     file >> n;
 
+    vertices.clear();
+
     for (int i=0; i<n; i++)
         this->add_vertex((long)i);
 
@@ -504,34 +506,66 @@ long
 MetaGraph::
 identify_mothership()
 {
+    bool verbose = false;
+    char* verbosityptr = std::getenv("VERBOSE");
+    if (verbosityptr != NULL)
+        if (std::string(verbosityptr) == "1")
+            verbose = true;
+
+    if (verbose)
+    std::cerr << "top of identify_mothership()" << "\n";
+
     // pre-sort metavertices by size because largest is likely to be the
     // mothership
-    struct mvpaircomp
-    {
-        bool operator()(std::pair<long, MetaVertex*>& left,
-                        std::pair<long, MetaVertex*>& right)
-        { return left.second->size() >= right.second->size(); }
-    };
-    std::vector<std::pair<long, MetaVertex*> > metavertices(vertices.begin(),
-                                                            vertices.end());
-    std::sort(metavertices.begin(), metavertices.end(), mvpaircomp);
+    std::vector<MetaVertex*> metavertices;
+    for (auto& p : vertices)
+        metavertices.push_back(&get_vertex(p.first));
 
-    ColoringGraph* dummycg(colors, base);
-    for (auto& p : metavertices)
+    if (verbose)
+    std::cerr << "constructed metavertices vector. it contains "
+              << metavertices.size() << " items\n";
+
+    // sort using a lambda function comparator (since C++11)
+    std::sort(metavertices.begin(), metavertices.end(),
+              [] (MetaVertex* left, MetaVertex* right)
+                 { return left->size() > right->size(); });
+
+    if (verbose)
+    std::cerr << "finished sorting metavertices vector\n";
+
+    ColoringGraph dummycg(colors, base);
+    for (MetaVertex* mv : metavertices)
     {
-        MetaVertex* mv = p.second;
+        // MetaVertex* mv = &get_vertex(vname);
+        if (verbose)
+        std::cerr << "processing MetaVertex " << mv->name << "\n";
+
         long somevertex = *mv->vertices.begin();
+        if (verbose)
+        std::cerr << "looking at ColoringVertex " << somevertex << "\n";
+
         for (long othervertex : mv->vertices)
         {
             if (somevertex == othervertex)
                 continue;
 
+            if (verbose)
+            std::cerr << "loaded other vertex " << othervertex << "\n";
             // all we need is for _some_ vertex to be isomorphic to some other
             // vertex within the same component and we're done
-            if dummycg->is_isomorphic(somevertex, othervertex)
-                return p.first;
+            if (dummycg.is_isomorphic(somevertex, othervertex))
+            {
+                if (verbose)
+                std::cerr << "found isomorphism between " << somevertex
+                          << " and " << othervertex << "\n";
+
+                return mv->name;
+            }
         }
     }
+
+    if (verbose)
+        std::cerr << "no mothership metavertex found" << "\n";
 
     // so no two distinct vertices in this metavertex were found to be
     // isomorphic to each other. that is unfortunate---no mothership.
@@ -646,13 +680,15 @@ rebuild_partial_graph()
 
     // construct 'itercg', a graph of only the coloring vertices that are not
     // in the mothership or are cut vertices
-    if (distinctsizes)
+    long mothership = identify_mothership();
+    if (mothership >= 0 or distinctsizes)
     {
         for (auto& p : vertices)
         {
             MetaVertex* mv = p.second;
-            // if it's the mothership by our naive assumption
-            if (mv->size() == largest)
+            // if it's the mothership, or if it's the largest
+            if ((mothership >=0 and mv->name == mothership )
+                or mv->size() == largest)
             {
                 // find all neighbors of mothership of size 1, they must be
                 // the nearest cut vertices
@@ -663,7 +699,7 @@ rebuild_partial_graph()
                     {
                         if (verbose)
                         std::cerr << "DEBUG: " << *nbr->vertices.begin()
-                                  << " is a neighbor of the Mship of size 1\n";
+                                  << " is a neighbor of size 1 of the Mship\n";
                         // in that case, keep track of them by adding to
                         // a set
                         mothership_cut_vertices.insert(*nbr->vertices.begin());
