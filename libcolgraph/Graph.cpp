@@ -500,6 +500,45 @@ get_mothership_cut_vertices()
 }
 
 
+long
+MetaGraph::
+identify_mothership()
+{
+    // pre-sort metavertices by size because largest is likely to be the
+    // mothership
+    struct mvpaircomp
+    {
+        bool operator()(std::pair<long, MetaVertex*>& left,
+                        std::pair<long, MetaVertex*>& right)
+        { return left.second->size() >= right.second->size(); }
+    };
+    std::vector<std::pair<long, MetaVertex*> > metavertices(vertices.begin(),
+                                                            vertices.end());
+    std::sort(metavertices.begin(), metavertices.end(), mvpaircomp);
+
+    ColoringGraph* dummycg(colors, base);
+    for (auto& p : metavertices)
+    {
+        MetaVertex* mv = p.second;
+        long somevertex = *mv->vertices.begin();
+        for (long othervertex : mv->vertices)
+        {
+            if (somevertex == othervertex)
+                continue;
+
+            // all we need is for _some_ vertex to be isomorphic to some other
+            // vertex within the same component and we're done
+            if dummycg->is_isomorphic(somevertex, othervertex)
+                return p.first;
+        }
+    }
+
+    // so no two distinct vertices in this metavertex were found to be
+    // isomorphic to each other. that is unfortunate---no mothership.
+    return -1;
+}
+
+
 // helper method for the rebuild_partial_graph method
 void
 MetaGraph::

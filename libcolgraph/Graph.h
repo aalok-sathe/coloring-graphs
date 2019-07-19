@@ -187,7 +187,12 @@ class MetaGraph : public Graph<MetaVertex>
         void _DFS_and_add(ColoringGraph* cg, ColoringGraph* itercg, long name,
                           std::unordered_set<long>& mothership);
 
-        // TODO
+        // TODO only makes to call this on MetaGraph constructed from a
+        // ColoringGraph
+        long identify_mothership();
+
+        // construct a coloring graph with the mothership vertex/vertices left
+        // out, so only the polyps/polyp-like components get reconstructed
         ColoringGraph* rebuild_partial_graph();
 };
 
