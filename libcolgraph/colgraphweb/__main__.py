@@ -189,7 +189,7 @@ def generate():
     end = time.time()
     print('INFO: rebuilt a partial coloring graph {} from {}'.format(pcg, mcg),
           'in {} seconds'.format(end - start))
-    
+
     app.mother_verts = mother_verts = [*mcg.get_mothership_cut_vertices()]
     update_pcg_data(pcg)
 
@@ -416,7 +416,7 @@ def save_graph():
 
 
 @app.route('/load', methods=['POST'])
-def load_grap_from_file():
+def load_graph_from_file():
     '''
     loads an input graph from a file
     '''
@@ -430,6 +430,41 @@ def load_grap_from_file():
             args.input_file = resp
             bg = lcg.BaseGraph()
             bg.load_txt(args.input_file)
+            app.bg = bg
+            update_bg_data(app.bg)
+        else:
+            raise ValueError
+
+    retdict = {
+        'bgcontainer': render_template('graphcontainer.html',
+                                        container_type='bg', **data),
+              }
+    response = app.response_class(status=200, response=json.dumps(retdict),
+                                  mimetype='application/json')
+    return response
+
+
+@app.route('/generate_random', methods=['POST'])
+def generate_random():
+    '''
+    generates a randomgraph
+    '''
+    w = sg.Window('Enter Erdos-Reyni values:').Layout([
+            [sg.Text('number of vertices (V) '
+                     'and probability of spawning edges (p)')],
+            [sg.Text('V'), sg.Input()],
+            [sg.Text('p'), sg.Input()],
+            [sg.OK(), sg.Cancel()]
+        ])
+
+    event, values = w.Read()
+    w.Close()
+    if event == 'OK':
+        print(values)
+        v, p  = int(values[0]), float(values[1])
+        if (v, p):
+            bg = lcg.BaseGraph()
+            bg.generate_random(v, p)
             app.bg = bg
             update_bg_data(app.bg)
         else:

@@ -318,7 +318,24 @@ function load_file(e) {
 }
 
 
-
+function randomgraph(e) {
+    var value = exportNetwork(basegraph);
+    $.ajax({
+        type: "POST",
+        url: "/generate_random",
+        data: value,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var bgcontainer = $('#bgcontainer');
+            bgcontainer.html(response['bgcontainer']);
+            makebg();
+        },
+        error: function (response) {
+            alert('ERROR', response);
+        }
+    });
+}
 
 
 
