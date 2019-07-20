@@ -10,6 +10,7 @@ from flask import Flask, url_for, request, render_template, json
 from collections import defaultdict
 import webbrowser
 import random
+import time
 import PySimpleGUI as sg
 
 import libcolgraph as lcg
@@ -40,6 +41,9 @@ parser.add_argument('-r', '--render_on_launch', default=False,
                                               'on initial launch?')
 parser.add_argument('-d', '--debug', default=False, action='store_true',
                     help='launch Flask app in debug mode?')
+parser.add_argument('-t', '--threaded', default=False, action='store_true',
+                    help='allow multiple threads?')
+
 args = parser.parse_args()
 
 global data
@@ -165,13 +169,27 @@ def generate():
     update_bg_data(bg)
     random.shuffle(colorarray[len(colororder):])
 
+    start = time.time()
     app.cg = cg = bg.build_coloring_graph(args.colors)
+    end = time.time()
+    print('INFO: generated a coloring graph {} from {}'.format(cg, bg),
+          'in {} seconds'.format(end - start))
+
+    start = time.time()
     app.mcg = mcg = cg.tarjans()
+    end = time.time()
+    print('INFO: ran tarjans on graph {}'.format(cg),
+          'in {} seconds'.format(end - start))
+
     app.cut_verts = cut_verts = [*mcg.get_cut_vertices()]
     update_mcg_data(mcg)
 
+    start = time.time()
     app.pcg = pcg = mcg.rebuild_partial_graph()
-    print('DEBUG: pcg:', pcg)
+    end = time.time()
+    print('INFO: rebuilt a partial coloring graph {} from {}'.format(pcg, mcg),
+          'in {} seconds'.format(end - start))
+    
     app.mother_verts = mother_verts = [*mcg.get_mothership_cut_vertices()]
     update_pcg_data(pcg)
 
@@ -320,7 +338,11 @@ def colorbg(coloring_list=None, **kwargs):
         name = v.get_name()
         if len(coloring_list[name]) == 1:
             return colorarray[list(coloring_list[name])[0]]
-        return [colorarray[c] for c in list(coloring_list[name])]
+        try:
+            return [colorarray[c] for c in list(coloring_list[name])]
+        except IndexError as e:
+            print('ERROR: too many colors')
+            return None
 
     data.update(lcg.viz.to_visjs(app.bg, colordict=colors,
                                  colorfn=color_from_coloring_list))
@@ -455,7 +477,7 @@ def runflaskgui(url='http://localhost', port='5000'):
         data.update({'stats': ' '.join(['{}: {},'.format(k, v)
                                 for k, v in app.statsdict.items()])})
 
-    app.run(port=port)
+    app.run(port=port, threaded=args.threaded)
 
 
 def main():
