@@ -318,6 +318,10 @@ function load_file(e) {
 }
 
 
+
+
+
+
 function refresh_page(e) {
     location.reload();
     // $(document).ready( function() {

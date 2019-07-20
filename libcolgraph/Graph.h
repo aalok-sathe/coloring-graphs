@@ -79,6 +79,16 @@ class BaseGraph : public Graph<BaseVertex>
         // description of a graph
         void load_txt(char* path);
 
+        // TODO method that creates a random graph at the current BaseGraph
+        // instance using the Erdos-Reyni random graph model
+        // int v: how many vertices the graph should have
+        // double p: what probability to use while generating edges between
+        // pairs of vertices
+        // void generate_random(int v, double p);
+
+        // TODO resets the graph
+        void reset() { vertices.clear(); };
+
         // adds a vertex of supplied name to the vertex list
         void add_vertex(long name);
         // adds an edge between two vertices with supplied names

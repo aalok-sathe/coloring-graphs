@@ -2,6 +2,7 @@
    <div id="optionsbar">
       <button id="generate-button" onclick="generate()">Generate</button>
       <input id="numcolors-textfield" type="text" name="k" value="{{ colors }}">
+      <button id="random-button" onclick="randomgraph()">Random</button>
       <button id="save-button" onclick="save()">Save</button>
       <button id="load-button" onclick="load_file()">Load</button>
       <button id="refresh-button" onclick="refresh_page()">
@@ -13,7 +14,7 @@
   </div>
   <div>
       <p style="display:inline"> STATS: </p>
-      <p style="display:inline" id="topstatsdisplay">{{ cgstats }}</p>
+      <p style="display:inline" id="topstatsdisplay">{{ stats }}</p>
    </div>
    <div class="parent grid-parent">
 
