@@ -398,15 +398,13 @@ def save_graph():
 
     if event == 'OK':
         dest = Path(values[0])
-
         bgmat = to_matrix_str(app.bg)
-        mcgmat = to_matrix_str(app.mcg)
-        # pcgmat = to_matrix_str(app.pcg)
 
         with dest.open('w') as f:
             f.write(bgmat)
-            f.write(mcgmat)
-            # f.write(pcgmat)
+            if len(app.mcg) <= 128:
+                mcgmat = to_matrix_str(app.mcg)
+                f.write(mcgmat)
 
         response = app.response_class(status=200, mimetype='application/json',
                                       response=json.dumps({'status': 'OK'}))
