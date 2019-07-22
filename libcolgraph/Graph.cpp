@@ -162,6 +162,13 @@ ColoringGraph*
 BaseGraph::
 build_coloring_graph(int k)
 {
+    bool verbose = false;
+    char* verbosityptr = std::getenv("VERBOSE");
+    if (verbosityptr != NULL)
+        if (std::string(verbosityptr) == "1")
+            verbose = true;
+
+    if (verbose)
     std::cerr << "generating ColoringGraph with k=" << k << std::endl;
 
     std::vector<int> coloring(size(), -1);
