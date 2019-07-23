@@ -48,6 +48,23 @@
 };
 %extend BaseGraph {
     %pythoncode %{
+        def load_from_nx(self, g=None):
+            '''
+            method that accepts an instance of a networkx graph
+            and loads that graph into this instance of BaseGraph
+            '''
+            import networkx as nx
+           
+            self.reset()  
+            lookup = dict()
+            for i, (v, adjdict) in enumerate(g.adjacency()):
+                lookup[v] = i
+                self.add_vertex(i)
+            for i, (v, adjdict) in enumerate(g.adjacency()):
+                for otherv in adjdict:
+                    self.make_edge(lookup[v], lookup[otherv])
+
+
         def generate_random(self, v:int, p:float):
             '''
             method that creates a random graph at the current BaseGraph
@@ -61,11 +78,7 @@
             assert 0. <= p <= 1., ValueError('invalid probabilities')
             assert 0 <= v, ValueError('bad number of vertices')
 
-            self.reset()
             g = nx.erdos_renyi_graph(v, p)
-            for i, v in enumerate(g.nodes()):
-                self.add_vertex(v)
-            for i, (a, b) in enumerate(g.edges()):
-                self.make_edge(a, b)
+            self.load_from_nx(g) 
     %}
 }
