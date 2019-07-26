@@ -107,6 +107,12 @@ class BaseGraph : public Graph<BaseVertex>
         // builds a coloring graph with k colors for this graph
         ColoringGraph* build_coloring_graph(int k);
 
+        // just counts the number of valid colorings without actually
+        // generating a coloring graph
+        long count_all_colorings(int k);
+        void _count_all_colorings(int current, int k, long& count, 
+                                  std::vector<int> coloring);
+        
         // recursive method with backtracking that takes a particular coloring
         // sequence and explores possible colorings in a DFS manner
         void find_all_colorings(int current, int k, ColoringGraph* cg,

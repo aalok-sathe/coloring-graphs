@@ -202,6 +202,49 @@ find_all_colorings(int current, int k, ColoringGraph* cg,
 }
 
 
+long
+BaseGraph::
+count_all_colorings(int k)
+{
+    bool verbose = false;
+    char* verbosityptr = std::getenv("VERBOSE");
+    if (verbosityptr != NULL)
+        if (std::string(verbosityptr) == "1")
+            verbose = true;
+
+    if (verbose)
+    std::cerr << "counting ColoringGraph vertices with k=" << k << std::endl;
+
+    std::vector<int> coloring(size(), -1);
+    long count = 0;
+
+    if (size())
+        _count_all_colorings(0, k, count, coloring);
+
+    return count;
+}
+
+
+void
+BaseGraph::
+_count_all_colorings(int current, int k, long& count, std::vector<int> coloring)
+{
+    while(true)
+    {
+        load_next_coloring(current, k, coloring);
+
+        if (coloring.at(current) >= k or current >= size())
+            break;
+
+        if (current == size()-1)
+            count++;
+        else
+            _count_all_colorings(current+1, k, count, coloring);
+    }
+
+}
+
+
 void
 BaseGraph::
 load_next_coloring(int current, int k, std::vector<int>& coloring)
