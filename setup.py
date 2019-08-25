@@ -12,7 +12,7 @@ class build_py(_build_py):
         self.run_command('build_ext')
         return super().run()
 
-colgraph_module = Extension('libcolgraph._libcolgraph',
+colgraph_cpp_module = Extension('libcolgraph._libcolgraph',
                             sources=['libcolgraph/libcolgraph.i',
                                      'libcolgraph/Graph.cpp',
                                      'libcolgraph/Vertex.cpp'],
@@ -26,7 +26,7 @@ with open('README.md', 'r') as readme:
 
 setup(name='libcolgraph',
       cmdclass = {'build_py': build_py},
-      ext_modules=[colgraph_module],
+      ext_modules=[colgraph_cpp_module],
       py_modules=['libcolgraph',
                   'libcolgraph.colgraphweb'],
       entry_points = {
