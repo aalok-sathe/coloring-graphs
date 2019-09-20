@@ -1,9 +1,13 @@
-#include <boost/multiprecision/cpp_int.hpp>
+#include <bitset>
+
 #include <iostream>
 
 int main()
 {
-   using namespace boost::multiprecision;
+   
+   std::bitset<128> foo;
+   foo = 6;
+   std::cout << foo << std::endl;
 
    // int128_t v = 1;
 
@@ -39,9 +43,9 @@ int main()
    // for (int i = 0; i < numBits; i++)
    //    std::cout << bit_test(r, i);
 
-   int128_t c = 127;
-   int num = ((1 << 3) - 1) ^ ((1 << (1 - 1)) - 1);
-   std::cout << (c ^ num) << std::endl;
+   // int128_t c = 127;
+   // int num = ((1 << 3) - 1) ^ ((1 << (1 - 1)) - 1);
+   // std::cout << (c ^ num) << std::endl;
 
    return 0;
 

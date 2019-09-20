@@ -11,8 +11,9 @@
 #include <stack>
 #include "GraphTemplates.h"
 #include "Vertex.h"
-#include <boost/multiprecision/cpp_int.hpp>
-using namespace boost::multiprecision;
+#include <bitset>
+// #include <boost/multiprecision/cpp_int.hpp>
+// using namespace boost::multiprecision;
 
 
 // forward declarations
@@ -98,9 +99,9 @@ class BaseGraph : public Graph<BaseVertex>
 
         void find_all_colorings(int k, ColoringGraph* cg);
 
-        int pick_next_vertex(int128_t state, int128_t assignment, int depth);
+        int pick_next_vertex(std::bitset<128> state, std::bitset<128> assignment, int depth);
 
-        long encode(int128_t assignment, int k);
+        long encode(std::bitset<128> assignment, int k);
 
         // recursive method with backtracking that takes a particular coloring
         // // sequence and explores possible colorings in a DFS manner
@@ -119,7 +120,7 @@ class BaseGraph : public Graph<BaseVertex>
         const BaseGraphVertexIterator* __iter__();
         const BaseGraphVertexIterator* get_vertices();
 
-        std::vector<int128_t> recursion_matrix;
+        std::vector<std::bitset<128>> recursion_matrix;
 };
 
 

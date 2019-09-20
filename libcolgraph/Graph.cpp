@@ -2,8 +2,9 @@
 #define __GRAPH_CPP__
 
 #include "Graph.h"
-#include <boost/multiprecision/cpp_int.hpp>
-using namespace boost::multiprecision;
+#include <bitset>
+// #include <boost/multiprecision/cpp_int.hpp>
+// using namespace boost::multiprecision;
 
 
 /*******************************************************************************
@@ -153,7 +154,7 @@ void BaseGraph::setup_recursion_matrix(int k)
         // std::cout << vertices.find(i)->second->block_bits << std::endl;
     }
 
-    int128_t temp = 1;
+    std::bitset<128> temp = 1;
     for (int i = 0; i < vertices.size(); i++)
     {
         // std::cout << "for loop 2, iteration: " << i << std::endl;
@@ -212,8 +213,8 @@ find_all_colorings(int k, ColoringGraph* cg)
 {
     setup_recursion_matrix(k);
 
-    int128_t state[k * size()];
-    int128_t assignment[k * size()];
+    std::bitset<128> state[k * size()];
+    std::bitset<128> assignment[k * size()];
     int vertex[k * size()];
     int color[k * size()];
 
@@ -222,42 +223,42 @@ find_all_colorings(int k, ColoringGraph* cg)
     vertex[0] = 0;
     color[0] = -1;
 
-    int128_t negation_gadget = ((1 << k * size()) - 1);
+    std::bitset<128> negation_gadget = ((1 << k * size()) - 1);
 
     int depth = 0;
     while (depth >= 0)
     {
-        // std::cout << std::endl << "top of while loop, depth = " << depth
-        //           << ", state = " << state[depth] << std::endl;
+        std::cout << std::endl << "top of while loop, depth = " << depth
+                  << ", state = " << state[depth] << std::endl;
         color[depth]++;
 
-        // std::cout << "trying vertex " << vertex[depth] << " with color " << color[depth] << std::endl;
+        std::cout << "trying vertex " << vertex[depth] << " with color " << color[depth] << std::endl;
 
         if (depth == size())
         {
-            // std::cout << "1" << std::endl;
+            std::cout << "1" << std::endl;
             cg->add_vertex(encode(assignment[depth], k));
-            // std::cout << "coloring graph size: " << cg->size() << std::endl;
+            std::cout << "coloring graph size: " << cg->size() << std::endl;
             depth--;
 
         }
 
         else if (color[depth] == k)
         {
-            // std::cout << "2" << std::endl;
+            std::cout << "2" << std::endl;
             depth--;
         }
 
 
 
-        else if (bit_test(state[depth], vertex[depth] * k + color[depth]))
+        else if (state[depth].test(vertex[depth] * k + color[depth]))
         {
-            // std::cout << "3" << std::endl;
+            std::cout << "3" << std::endl;
             int vertex_color_index = vertex[depth] * k + color[depth];
 
             state[depth + 1] = state[depth] & (recursion_matrix[vertex_color_index] ^ negation_gadget);
             assignment[depth + 1] = assignment[depth];
-            bit_set(assignment[depth + 1], vertex_color_index);
+            assignment[depth + 1].set(vertex_color_index);
 
             int next_vertex = pick_next_vertex(state[depth + 1], assignment[depth + 1], depth);
             if (next_vertex == -1)
@@ -276,7 +277,7 @@ find_all_colorings(int k, ColoringGraph* cg)
 
 int
 BaseGraph::
-pick_next_vertex(int128_t state, int128_t assignment, int depth)
+pick_next_vertex(std::bitset<128> state, std::bitset<128> assignment, int depth)
 {
     return depth + 1;
 }
@@ -284,17 +285,18 @@ pick_next_vertex(int128_t state, int128_t assignment, int depth)
 
 long
 BaseGraph::
-encode(int128_t assignment, int k)
+encode(std::bitset<128> assignment, int k)
 {
     int base = 1;
     long sum = 0;
+    std::bitset<128> one = 1;
 
     for (int i = 0; i < size(); i++)
     {
         for (int color = 0; color < k; color++)
         
         {
-            if ((assignment & 1) == 1)
+            if ((assignment & one) == 1)
                 sum += (color * base);
             assignment >>= 1;
         }

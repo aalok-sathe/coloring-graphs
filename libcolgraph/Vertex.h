@@ -7,12 +7,13 @@
 #include <stdexcept>
 #include <math.h>
 #include <limits.h>
+#include <bitset>
 
 #include "Graph.h"
 #include "GraphTemplates.h"
 
-#include <boost/multiprecision/cpp_int.hpp>
-using namespace boost::multiprecision;
+// #include <boost/multiprecision/cpp_int.hpp>
+// using namespace boost::multiprecision;
 
 // forward declarations
 class Vertex;
@@ -152,8 +153,8 @@ class BaseVertex : public Vertex
         BaseVertexNeighborIterator* __iter__();
         BaseVertexNeighborIterator* get_neighbors();
 
-        int128_t block_bits;
-        int128_t adjacency_bits;
+        std::bitset<128> block_bits;
+        std::bitset<128> adjacency_bits;
 };
 
 
