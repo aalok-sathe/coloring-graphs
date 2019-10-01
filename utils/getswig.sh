@@ -19,3 +19,5 @@ export PATH="$PATH:$HOME/.swig/bin"
 # make it persistent
 echo 'export PATH="$PATH:$HOME/.swig/bin"' >> ~/.bash_profile
 echo 'export PATH="$PATH:$HOME/.swig/bin"' >> ~/.bashrc
+source ~/.bash_profile
+source ~/.bashrc

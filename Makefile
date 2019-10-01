@@ -15,6 +15,9 @@ deps:
 	python3 -m pip install --user -r requirements.txt
 	echo "please make sure you have SWIG installed"
 
+swig:
+	./utils/getswig.sh
+
 build: cpp py
 
 cpp:
