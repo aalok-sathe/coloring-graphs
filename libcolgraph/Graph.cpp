@@ -1114,6 +1114,7 @@ tarjans()
             for (long v : mv->neighbors)
                 std::cerr << v << ',' << mg->vertices[v] << ' ';
         }
+        if (verbose)
         std::cout << "\n";
 
         if (count < 2 and size() > 1)
