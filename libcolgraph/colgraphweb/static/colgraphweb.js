@@ -338,6 +338,28 @@ function randomgraph(e) {
 }
 
 
+function toggle_physics(e) {
+    function toggle_physics_on_network(network) { 
+        network.setOptions( 
+            { physics: !network.physics["physicsEnabled"] } 
+        );
+    }
+    var toggleables = ['coloringgraph', 'partialcoloringgraph', 'basegraph'];
+    for (i in toggleables) {
+        network = toggleables[i];
+        if(window.hasOwnProperty(network))
+            toggle_physics_on_network(window[network]); 
+    }
+    var value = $('#toggle-physics-button').html();  
+    if (value.includes('ON')) {
+       $('#toggle-physics-button').html('Physics: OFF'); 
+    } else {
+       $('#toggle-physics-button').html('Physics: ON'); 
+    }
+    return;
+}
+
+
 
 function refresh_page(e) {
     location.reload();
