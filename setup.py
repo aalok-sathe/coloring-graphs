@@ -48,8 +48,18 @@ setup(name='libcolgraph',
       author='Coloring Graphs lab, Univeristy of Richmond',
       author_email='aalok.sathe@richmond.edu',
       license='LGPL-3',
-      install_requires = [line[:-1] 
-                          for line in open('requirements.txt', 'r').readlines()], 
+      install_requires = [
+            'coloredlogs>=10.0',
+            'typing>=3.6.6',
+            'tqdm>=4.19.4',
+            'pyvis>=0.1.6.0',
+            'setuptools>=38.5.1',
+            'Flask>=0.12.2',
+            'networkx>=2.3',
+            'PySimpleGUI>=4.0.0'
+          ]
+                 #[line[:-1] 
+                 #for line in open('requirements.txt', 'r').readlines()], 
       python_requires='>=3.4',
       classifiers=[
           'Intended Audience :: Education',
