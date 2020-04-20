@@ -36,7 +36,7 @@ setup(name='libcolgraph',
       packages = setuptools.find_packages(),
       include_package_data=True,
       package_data={'colgraphweb': ['*.html', '*.css', '*.js']},
-      version='0.0.5.post1',
+      version='0.0.5.post2',
       description='this library provides support to construct graphs and their '
                   'coloring graphs. a coloring graph is a metagraph '
                   'representing all the valid colorings of a graph. each '
@@ -56,7 +56,8 @@ setup(name='libcolgraph',
             'setuptools>=38.5.1',
             'Flask>=0.12.2',
             'networkx>=2.3',
-            'PySimpleGUI>=4.0.0'
+            'PySimpleGUI>=4.0.0',
+            'matplotlib>=3.0',
           ]
                  #[line[:-1] 
                  #for line in open('requirements.txt', 'r').readlines()], 
