@@ -58,7 +58,7 @@ setup(name='libcolgraph',
             'networkx>=2.3',
             'PySimpleGUI>=4.0.0',
             'matplotlib>=3.0',
-          ]
+          ],
                  #[line[:-1] 
                  #for line in open('requirements.txt', 'r').readlines()], 
       python_requires='>=3.4',
