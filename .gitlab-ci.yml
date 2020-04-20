@@ -9,7 +9,7 @@ stages:
     - status
 
 build:
-    image: "quay.io/pypa/manylinux1_x86_64"
+    image: "quay.io/pypa/manylinux2010_x86_64"
     stage: deploy
     before_script:
         - yum -y -q update
