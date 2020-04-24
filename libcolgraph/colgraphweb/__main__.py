@@ -11,7 +11,11 @@ from collections import defaultdict
 import webbrowser
 import random
 import time
-import PySimpleGUI as sg
+
+try:
+    import PySimpleGUI as sg
+except ImportError as e:
+    import PySimpleGUIWeb as sg
 
 import libcolgraph as lcg
 
