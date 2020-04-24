@@ -24,4 +24,5 @@ source ~/.bashrc
 echo "INFO finished installing swig: $(which swig)"
 
 cd ..
+make
 make install
