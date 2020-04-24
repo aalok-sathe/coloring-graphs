@@ -6,4 +6,5 @@ setuptools>=38.5.1
 Flask>=0.12.2
 networkx>=2.3
 PySimpleGUI>=4.0.0
+PySimpleGUIWeb
 matplotlib>=3.0
