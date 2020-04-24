@@ -1,3 +1,2 @@
 
-python3 setup.py install
-make
+python3 -m pip install libcolgraph
