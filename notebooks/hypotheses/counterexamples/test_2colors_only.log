@@ -1,0 +1,12 @@
+
+Hypothesis only 2 colors within a polyp log entry
+================================================================================	Performing 2 tests, at least 1 failure occurred
+	Test <bound method HypercubeHypothesis.test_2colors_only of <__main__.HypercubeHypothesis object at 0x7f8a8ca1fb00>> failed on graph <Graph (size=9) of <class 'libcolgraph.libcolgraph.BaseGraph'> > with path ../bigpolyp/9/v=9_k=4__p=0.5_cg=1056_0.txt	Halting.
+
+Hypothesis only 2 colors within a polyp log entry
+================================================================================	Performing 2 tests, at least 1 failure occurred
+	Test <bound method HypercubeHypothesis.test_2colors_only of <__main__.HypercubeHypothesis object at 0x7f8a8ca1fb00>> failed on graph <Graph (size=12) of <class 'libcolgraph.libcolgraph.BaseGraph'> > with path ../discovered/12/v=12_k=4__p=0.4_cg=6336_0.txt	Halting.
+
+Hypothesis only 2 colors within a polyp log entry
+================================================================================	Performing 2 tests, at least 1 failure occurred
+	Test <bound method HypercubeHypothesis.test_2colors_only of <__main__.HypercubeHypothesis object at 0x7fd12bc01cf8>> failed on graph <Graph (size=9) of <class 'libcolgraph.libcolgraph.BaseGraph'> > with path ../bigpolyp/9/v=9_k=4__p=0.5_cg=1056_0.txt	Halting.

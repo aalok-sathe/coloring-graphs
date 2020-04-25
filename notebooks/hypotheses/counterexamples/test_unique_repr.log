@@ -1,0 +1,12 @@
+
+Hypothesis unique difference representation within a polyp log entry
+================================================================================	Performing 2 tests, at least 1 failure occurred
+	Test <bound method HypercubeHypothesis.test_unique_repr of <__main__.HypercubeHypothesis object at 0x7f2cdfccdc50>> failed on graph <Graph (size=12) of <class 'libcolgraph.libcolgraph.BaseGraph'> > with path ../discovered/12/v=12_k=4__p=0.4_cg=4920_0.txt	Halting.
+
+Hypothesis unique difference representation within a polyp log entry
+================================================================================	Performing 2 tests, at least 1 failure occurred
+	Test <bound method HypercubeHypothesis.test_unique_repr of <__main__.HypercubeHypothesis object at 0x7f55c3835cc0>> failed on graph <Graph (size=12) of <class 'libcolgraph.libcolgraph.BaseGraph'> > with path ../discovered/12/v=12_k=4__p=0.4_cg=4920_0.txt	Halting.
+
+Hypothesis unique difference representation within a polyp log entry
+================================================================================	Performing 2 tests, at least 1 failure occurred
+	Test <bound method HypercubeHypothesis.test_unique_repr of <__main__.HypercubeHypothesis object at 0x7f6562953cc0>> failed on graph <Graph (size=11) of <class 'libcolgraph.libcolgraph.BaseGraph'> > with path ../discovered/11/v=11_k=4__p=0.4_cg=8064_0.txt	Halting.
