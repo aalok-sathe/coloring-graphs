@@ -1,4 +1,8 @@
 ## coloring-graphs
+
+![](https://img.shields.io/badge/status-DEPRECATED-red?style=for-the-badge) 
+### please visit the [new home of libcolgraph](https://aalok-sathe.gitlab.io/libcolgraph)
+
 [![pipeline status](https://aalok-sathe.gitlab.io/coloring-graphs/build.svg?v=3995749904447735810)](https://gitlab.com/aalok-sathe/coloring-graphs/)
 
 a coloring graphs library written in C++ for speedy computation and wrapped in
